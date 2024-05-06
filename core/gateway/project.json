@@ -4,6 +4,7 @@
 	"sourceRoot": "core/gateway/src",
 	"projectType": "library",
 	"tags": [],
-	"// targets": "to see all targets run: nx show project core-gateway --web",
-	"targets": {}
+	"targets": {
+		"lint": {}
+	}
 }

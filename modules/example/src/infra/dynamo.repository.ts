@@ -1,5 +1,5 @@
-import { ExampleRepository } from '../domain';
 import { IDBPagination, IDatabases } from '@nxms/core-main/domain';
+import { ExampleRepository } from '../domain';
 
 export class XXTECHNOLOGYExampleRepository implements ExampleRepository {
 	private database: IDatabases;
@@ -15,7 +15,7 @@ export class XXTECHNOLOGYExampleRepository implements ExampleRepository {
 				return result;
 			}
 
-			//do something
+			// Do something
 			return result;
 		} catch (error) {
 			return null;

@@ -15,6 +15,18 @@
 		"sharedGlobals": []
 	},
 	"targetDefaults": {
+		"lint": {
+			"cache": true,
+			"dependsOn": ["^lint", "lint"],
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/src/**/*.ts"],
+				"fix": true,
+				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
+				"format": "html"
+			}
+		},
 		"@nx/esbuild:esbuild": {
 			"cache": true,
 			"dependsOn": ["^build"],

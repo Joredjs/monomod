@@ -5,6 +5,7 @@
 	"projectType": "application",
 	"tags": [],
 	"targets": {
+		"lint": {},
 		"build": {
 			"executor": "@nx/esbuild:esbuild",
 			"outputs": ["{options.outputPath}"],

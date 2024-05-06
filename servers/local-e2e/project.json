@@ -4,6 +4,7 @@
 	"projectType": "application",
 	"implicitDependencies": ["server-local"],
 	"targets": {
+		"lint": {},
 		"e2e": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],

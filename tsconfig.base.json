@@ -18,6 +18,7 @@
 			"@nxms/core-gateway": ["core/gateway/src/index.ts"],
 			"@nxms/core-main/domain": ["core/main/src/domain/index.ts"],
 			"@nxms/core-main/infra": ["core/main/src/infra/index.ts"],
+			"@nxms/framework-express": ["frameworks/express/src/index.ts"],
 			"@nxms/module-example/application": [
 				"modules/example/src/application/index.ts"
 			],

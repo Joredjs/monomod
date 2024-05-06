@@ -12,18 +12,19 @@ import {
 } from '@nxms/core-main/domain';
 
 export class AppServiceSchemaValidator {
-	private validator: Ajv;
+	// eslint-disable-next-line no-use-before-define
+	private static instance: InstanceType<typeof AppServiceSchemaValidator>;
 
 	constructor() {
 		this.validator = new Ajv({ allErrors: true, strict: false });
 		ajvErrors.default(this.validator, { singleError: true });
 	}
 
-	private static instance: InstanceType<typeof this>;
-
-	public static getInstance(): InstanceType<typeof this> {
+	public static getInstance(): InstanceType<typeof AppServiceSchemaValidator> {
 		return this.instance || (this.instance = new this());
 	}
+
+	private validator: Ajv;
 
 	private setSchema(schema: ISchema) {
 		const errMessages = {};

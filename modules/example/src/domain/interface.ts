@@ -1,6 +1,9 @@
-// export interface ILocation {
-// 	nombre: string;
-// 	uuid: string;
-// }
+/* Export interface ILocation {
+   	nombre: string;
+   	uuid: string;
+   } */
 
-export interface IExample {}
+export interface IExample {
+	something?: any;
+}
+

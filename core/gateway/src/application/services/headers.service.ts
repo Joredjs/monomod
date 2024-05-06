@@ -12,7 +12,8 @@ import { HeadersInfo } from '../../domain';
 import { IncomingHttpHeaders } from 'http2';
 
 export class AppServiceHeaders {
-	// Private cryptoService: CryptoService;
+	// eslint-disable-next-line no-use-before-define
+	private static instance: InstanceType<typeof AppServiceHeaders>;
 
 	private headersInfo: IHeadersInfo = {};
 
@@ -25,12 +26,9 @@ export class AppServiceHeaders {
 		this.setMyHeaders();
 	}
 
-	private static instance: InstanceType<typeof this>;
-
-	public static getInstance(): InstanceType<typeof this> {
+	public static getInstance(): InstanceType<typeof AppServiceHeaders> {
 		return this.instance || (this.instance = new this());
 	}
-
 	// Llena la lista de headers (all y mandatory)
 
 	private setMyHeaders(): void {
@@ -220,4 +218,3 @@ export class AppServiceHeaders {
 		}
 	}
 }
-
