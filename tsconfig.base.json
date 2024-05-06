@@ -1,0 +1,29 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "es2015",
+		"module": "esnext",
+		"lib": ["es2020", "dom"],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@nxms/core-gateway": ["core/gateway/src/index.ts"],
+			"@nxms/core-main/domain": ["core/main/src/domain/index.ts"],
+			"@nxms/core-main/infra": ["core/main/src/infra/index.ts"],
+			"@nxms/module-example/application": [
+				"modules/example/src/application/index.ts"
+			],
+			"@nxms/module-example/domain": ["modules/example/src/domain/index.ts"],
+			"@nxms/module-example/infra": ["modules/example/src/infra/index.ts"]
+		}
+	},
+	"exclude": ["node_modules", "tmp"]
+}
