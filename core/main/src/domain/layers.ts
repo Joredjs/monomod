@@ -1,6 +1,13 @@
-import { TFrameworkRequest, TFrameworkResponse } from "./frameworks";
-import { IDatabases } from "./database";
-import { TDomainGroups } from "./rutas";
+import {
+	IAllUseCases,
+	IUseCaseParams,
+	TExternalUseCases,
+	TFrameworkRequest,
+	TFrameworkResponse,
+	IDatabases,
+	TDomainGroups,
+	TIncomingHttpHeaders,
+} from '.';
 
 export interface IController<TFwReq, TFwRes> {
 	handler(
@@ -8,20 +15,17 @@ export interface IController<TFwReq, TFwRes> {
 		res: TFrameworkResponse<TFwRes>,
 		next: any
 	): void | Promise<void>;
-
-	// Handler: TFrameworkParams<TFwParams>;
-
-	// GetInstance(appValidations: IAppValidations): any;
-
 }
 
 export type TControllers<TFwReq, TFwRes> = {
 	[index in TDomainGroups]: IController<TFwReq, TFwRes>;
 };
 
-// TODO: generar interface no any de services
+export interface IServiceHeader {
+	validateToken<IToken>(reqHeader: TIncomingHttpHeaders): IToken;
+}
 
-export interface IAppServices {
+export interface IServices {
 	crypto?: {
 		encrypt(texto: any): string;
 		decrypt(encrypted: string): string;
@@ -31,15 +35,29 @@ export interface IAppServices {
 		encode(texto: string): string;
 		decode(texto: string): string;
 	};
-	headers?: any;
+	headers?: IServiceHeader;
 	mail?: {
-		send(para: string, asunto: string, cuerpo: string): Promise<any>;
+		send(para: string, asunto: string, cuerpo: string): Promise<boolean>;
+	};
+	storage?: {
+		upload(key: string, data: string): Promise<string>;
+		read(key: string): Promise<string>;
+
+		// TODO: crear interface para reemplazar IBanner
+
+		list(): Promise<any[]>;
 	};
 }
 export interface IPort {
-	appServices: IAppServices;
+	usecaseParams: IUseCaseParams<unknown>;
+	getPublicUseCases(): IAllUseCases;
 }
 
 export type TPorts = {
 	[index in TDomainGroups]: IPort;
 };
+
+export interface IPortParams {
+	services?: IServices;
+	externalUseCases?: TExternalUseCases;
+}

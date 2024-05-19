@@ -1,47 +1,44 @@
-// Import { IRuta } from '../rutas/rutas.interface';
-
-import { IErrResponse, TResult } from "./result";
-import { TFrameworkRequest, TFrameworkResponse } from "./frameworks";
-
-// Import { IJSONObject } from './values';
+import {
+	THeadersVersion,
+	TFrameworkRequest,
+	TFrameworkResponse,
+	ITransactionValid,
+} from '.';
 
 export interface IAppValidations<TFwReq, TFwRes> {
-
-  manager(
-    req: TFrameworkRequest<TFwReq>,
-    res: TFrameworkResponse<TFwRes>
-  ): TResult<any, IErrResponse>;
-
+	manager(
+		req: TFrameworkRequest<TFwReq>,
+		res?: TFrameworkResponse<TFwRes>
+	): ITransactionValid;
 }
 
-type THeadersVersion = "v1" | "v2";
 interface IHeadersPrefixStructure {
-  letter: string;
-  prefix: string;
+	letter: string;
+	prefix: string;
 }
 export type IHeadersPrefix = {
-  [id in THeadersVersion]: IHeadersPrefixStructure;
+	[id in THeadersVersion]: IHeadersPrefixStructure;
 };
 
 export interface IHeadersStructure {
-  desc: string;
-  key: string;
-  mandatory?: boolean;
-  name?: string;
-  prefix: IHeadersPrefixStructure;
-  private?: boolean;
-  values?: string[];
+	desc: string;
+	key: string;
+	mandatory?: boolean;
+	name?: string;
+	prefix: IHeadersPrefixStructure;
+	private?: boolean;
+	values?: string[];
 }
 
 export interface IHeadersInfo {
-  [id: string]: IHeadersStructure;
+	[id: string]: IHeadersStructure;
 }
 
 export interface IHeaderData {
-  key: string;
-  values: string[];
+	key: string;
+	values: string[];
 }
 
 export interface IHeadersValues {
-  [id: string]: string;
+	[id: string]: string;
 }

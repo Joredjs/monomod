@@ -4,4 +4,4 @@
 [ ] Translate everything to English
 [ ] Verify where should be the headers info
 [ ] Invert dependency gateway->module
-[ ] Whe the function is not configured at port, response error
+[ ] When the function is not configured at port, response error

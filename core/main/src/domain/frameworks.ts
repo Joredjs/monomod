@@ -1,14 +1,14 @@
-import { IErrResponse, IOKResponse } from "./result";
+import { IErrResponse, IOKResponse } from '.';
 
 export interface IRequestParams {
-  body: any;
-  params: any;
-  query: any;
-  headers: any;
+	body: any;
+	params: any;
+	query: any;
+	headers: any;
 }
 
 export interface IResponseParams {
-  locals: any;
+	locals: any;
 }
 
 // TExpressReq
@@ -26,15 +26,14 @@ export type TFrameworkParams<TFwParams> = TFwParams;
 // IExpressResponse;
 
 export interface IFrameworkResponseInfo<TFwRes> {
-  status: number;
-  resBody: IOKResponse<any> | IErrResponse;
-  resInstance: TFwRes;
+	status: number;
+	resBody: IOKResponse<any> | IErrResponse;
+	resInstance: TFwRes;
 }
 
 export interface IFrameworkService<TFwRes> {
-  returnInfo(responseInfo: IFrameworkResponseInfo<TFwRes>): void;
+	returnInfo(responseInfo: IFrameworkResponseInfo<TFwRes>): void;
 }
-
 
 export interface IMicroAppConfig {
 	addGroupName?: boolean;

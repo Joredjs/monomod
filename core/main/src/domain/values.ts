@@ -16,28 +16,27 @@ export interface IError {
 }
 
 export type TErroresValues =
-  | "alreadyExists"
-  | "badInfo"
-  | "badUser"
-  | "forbidden"
-  | "gone"
-  | "headers"
-  | "invalid"
-  | "noInfo"
-  | "nocatch"
-  | "params"
-  | "sesionAbierta"
-  | "uncompleted";
+	| 'alreadyExists'
+	| 'badInfo'
+	| 'badUser'
+	| 'forbidden'
+	| 'gone'
+	| 'headers'
+	| 'invalid'
+	| 'noInfo'
+	| 'nocatch'
+	| 'params'
+	| 'session'
+	| 'uncompleted';
 export type TErrores = {
   [key in TErroresValues]: IError;
 };
+// export interface IDialogInfo {
+//   title?: string;
+//   text: string;
+// }
 
-export interface IDialogInfo {
-  title?: string;
-  text: string;
-}
-
-export interface IDialogData {
-  type:string;
-  info:IDialogInfo
-}
+// export interface IDialogData {
+//   type:string;
+//   info:IDialogInfo
+// }

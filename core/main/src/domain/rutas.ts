@@ -1,9 +1,7 @@
-import { IPort } from './layers';
-import { TFrameworkParams } from './frameworks';
-import { THttpMethods } from './http';
+import { IPort, TFrameworkParams, THttpMethods } from '.';
 
 export type TDomainGroups = 'example';
-type TVersion = 'v1' | 'v2';
+export type THeadersVersion = 'v1' | 'v2';
 
 export enum EVersions {
 	alpha = 'v1',
@@ -31,6 +29,8 @@ export interface ISchemaProperties {
 	then?: any;
 	else?: any;
 	allOf?: any;
+	minimum?: number;
+	maximum?: number;
 }
 
 export interface ISchema {
@@ -41,6 +41,8 @@ export type TRutaSchema = {
 	[index in EVersions]?: ISchema;
 };
 
+// TODO: definir niveles de acceso en vez de private
+
 export interface IRuta {
 	globalHeaders?: string[];
 	headers: string[];
@@ -49,7 +51,7 @@ export interface IRuta {
 	port?: IPort;
 	private: boolean;
 	schema: TRutaSchema;
-	version?: TVersion;
+	version?: THeadersVersion;
 }
 
 export interface IRouteGroup<TFwParams> {
@@ -60,5 +62,5 @@ export interface IRouteGroup<TFwParams> {
 	paths: IRuta[];
 	puerto: number;
 	port?: IPort;
-	versions: TVersion[];
+	versions: THeadersVersion[];
 }

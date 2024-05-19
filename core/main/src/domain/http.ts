@@ -1,27 +1,32 @@
-import { IErrResponse, IOKResponse } from "./result";
-import { IAppServices } from "./layers";
-import { IJSONObject } from "./values";
-import { IRuta } from "./rutas";
-import { IncomingHttpHeaders } from "http2";
+import {
+	IErrResponse,
+	IOKResponse,
+	IJSONObject,
+	IRuta,
+	IUseCaseParams,
+} from '.';
+import { IncomingHttpHeaders } from 'http2';
 
-export type THttpMethods = "get" | "post" | "delete" | "put";
+export type TIncomingHttpHeaders = IncomingHttpHeaders;
+
+export type THttpMethods = 'get' | 'post' | 'delete' | 'put';
 
 export enum EHttpMethods {
-  "GET" = "get",
-  "POST" = "post",
-  "PUT" = "put",
-  "DELETE" = "delete",
+	'GET' = 'get',
+	'POST' = 'post',
+	'PUT' = 'put',
+	'DELETE' = 'delete',
 }
 
 export interface ITransactionParams {
-  bodyParams?: IJSONObject;
-  reqHeader?: IncomingHttpHeaders;
-  ruta?: IRuta;
+	bodyParams?: IJSONObject;
+	reqHeader?: TIncomingHttpHeaders;
+	ruta?: IRuta;
 }
 
 export interface ITransactionValid extends ITransactionParams {
-  useCase: (
-    info: ITransactionParams
-  ) => Promise<IOKResponse<any> | IErrResponse>;
-  appServices?: IAppServices;
+	useCase: (
+		info?: ITransactionParams
+	) => Promise<IOKResponse<unknown> | IErrResponse>;
+	usecaseParams?: IUseCaseParams<unknown>;
 }
