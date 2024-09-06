@@ -1,30 +1,36 @@
 import {
 	EHttpMethods,
+	EPrivacyLevel,
 	EVersions,
+	IModule,
 	IRouteGroup,
-	domainKeys,
+	IRuta,
+	TDomainGroups,
 } from '@nxms/core-main/domain';
 
-export class ExampleRoutes<TFwParams> {
-	rutas: IRouteGroup<TFwParams> = {
-		cors: [],
-		group: 'example',
-		headers: [],
-		paths: [
+export class ExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
+	#modulo: IModule<TGTMod>;
+
+	constructor(modulo: IModule<TGTMod>) {
+		this.#modulo = modulo;
+	}
+
+	#getPaths(): IRuta[] {
+		return [
 			// vacía: no se ha creado el metodo en el port
 			{
 				headers: [],
 				method: EHttpMethods.GET,
 				path: 'vacia',
-				private: false,
-				schema: { [EVersions.alpha]: {} },
+				privacy: [EPrivacyLevel.public],
+				schema: this.#modulo.schemas.empty,
 			},
 			// noschema: No existe schema para la version
 			{
 				headers: [],
 				method: EHttpMethods.GET,
 				path: 'noschema',
-				private: false,
+				privacy: [EPrivacyLevel.public],
 				schema: {},
 			},
 			// test: Ejecuta el usecase
@@ -32,11 +38,20 @@ export class ExampleRoutes<TFwParams> {
 				headers: [],
 				method: EHttpMethods.GET,
 				path: 'test',
-				private: false,
-				schema: { [EVersions.alpha]: {} },
+				privacy: [EPrivacyLevel.user],
+				schema: this.#modulo.schemas.empty,
 			},
-		],
-		puerto: domainKeys.modulos.example.puerto,
-		versions: [EVersions.alpha, EVersions.beta],
-	};
+		];
+	}
+
+	getRutas(): IRouteGroup<TFwParams> {
+		return {
+			cors: [],
+			group: this.#modulo.name,
+			headers: [],
+			paths: this.#getPaths(),
+			puerto: this.#modulo.puerto,
+			versions: this.#modulo.versions,
+		};
+	}
 }

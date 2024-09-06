@@ -1,23 +1,29 @@
 import { TestUseCase } from './useCases';
 import {
-	IAppServices,
+	IAllUseCases,
 	IErrResponse,
 	IOKResponse,
 	IPort,
+	IPortParams,
 	ITransactionParams,
+	IUseCaseParams,
 } from '@nxms/core-main/domain';
 
-export class ExamplePort implements IPort {
-	appServices: IAppServices = {};
+export class PortExample implements IPort {
+	usecaseParams: IUseCaseParams<any>;
 
-	constructor(appServices: IAppServices) {
-		this.appServices = appServices;
+	constructor(params: IPortParams) {
+		this.usecaseParams = params;
+	}
+
+	getPublicUseCases(): IAllUseCases {
+		return {};
 	}
 
 	get_test(
 		info: ITransactionParams
 	): Promise<IOKResponse<string> | IErrResponse> {
-		const useCase = new TestUseCase(this.appServices);
+		const useCase = new TestUseCase(this.usecaseParams.services);
 		return useCase.execute(info);
 	}
 }

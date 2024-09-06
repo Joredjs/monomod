@@ -3,8 +3,8 @@
 # compiled output
 dist
 tmp
-/out-tsc
 results
+/out-tsc
 
 # dependencies
 node_modules

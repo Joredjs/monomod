@@ -1,17 +1,19 @@
 {
 	"name": "@nxms/source",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"license": "MIT",
 	"scripts": {
 		"dep:modules": "depcruise --collapse \"^(servers|frameworks|core)\" servers --output-type dot | dot -T svg > results/deps/modules.svg",
 		"dep:core": "depcruise --collapse \"^(servers|frameworks|modules)\" servers --output-type dot | dot -T svg > results/deps/core.svg",
 		"dep:core-gateway": "depcruise --collapse \"^(servers|frameworks|modules|core/main)\" servers --output-type dot | dot -T svg > results/deps/core_gateway.svg",
+		"dep:core-gateway2": "depcruise --collapse \"^(servers|frameworks|modules|core/main|core/gateway/src/domain|core/gateway/src/application/services|core/gateway/src/application/security)\" servers --output-type dot | dot -T svg > results/deps/core_gateway2.svg",
 		"dep:core-main": "depcruise --collapse \"^(servers|frameworks|modules|core/gateway)\" servers --output-type dot | dot -T svg > results/deps/core_main.svg",
 		"dep:frameworks": "depcruise --collapse \"^(servers|core|modules)\" servers --output-type dot | dot -T svg > results/deps/frameworks.svg",
 		"dep:server-local": "depcruise --collapse \"^(frameworks|core|modules)\" servers/local --output-type dot | dot -T svg > results/deps/server_local.svg",
 		"dep:servers": "depcruise --collapse \"^(frameworks|core|modules)\" servers --output-type dot | dot -T svg > results/deps/servers.svg",
 		"dep:all": "depcruise servers --output-type dot | dot -T svg > results/deps/all.svg",
-		"dep": "mkdirp results/deps && run-p dep:*"
+		"dep": "mkdirp results/deps && run-p dep:*",
+		"prepare": "husky"
 	},
 	"private": true,
 	"devDependencies": {
@@ -36,6 +38,7 @@
 		"eslint": "~8.57.0",
 		"eslint-config-prettier": "^9.0.0",
 		"express": "^4.19.2",
+		"husky": "^9.0.11",
 		"jest": "^29.4.1",
 		"jest-environment-node": "^29.4.1",
 		"mkdirp": "^3.0.1",
@@ -49,6 +52,9 @@
 	},
 	"dependencies": {
 		"axios": "^1.6.0",
+		"cors": "^2.8.5",
+		"express": "^4.19.2",
 		"tslib": "^2.3.0"
-	}
+	},
+	"nx": {}
 }

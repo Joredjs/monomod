@@ -2,43 +2,6 @@
 	"root": true,
 	"ignorePatterns": ["**/*"],
 	"plugins": ["@nx"],
-	"overrides": [
-		{
-			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-			"rules": {
-				"@nx/enforce-module-boundaries": [
-					"error",
-					{
-						"enforceBuildableLibDependency": true,
-						"allow": [],
-						"depConstraints": [
-							{
-								"sourceTag": "*",
-								"onlyDependOnLibsWithTags": ["*"]
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"files": ["*.ts", "*.tsx"],
-			"extends": ["plugin:@nx/typescript"],
-			"rules": {}
-		},
-		{
-			"files": ["*.js", "*.jsx"],
-			"extends": ["plugin:@nx/javascript"],
-			"rules": {}
-		},
-		{
-			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-			"env": {
-				"jest": true
-			},
-			"rules": {}
-		}
-	],
 	"rules": {
 		/*
 		"id-match": [
@@ -53,7 +16,7 @@
 				"ignoreArrayIndexes": true,
 				"ignoreDefaultValues": true,
 				"ignoreClassFieldInitialValues": true,
-				"ignore": [0, 1, 2, 3, 4, 5, 6]
+				"ignore": [0, 1, 2, 3]
 			}
 		],
 		"no-console": ["error", { "allow": ["error", "debug", "trace"] }],
@@ -64,7 +27,10 @@
 		"id-length": ["error", { "min": 3, "max": 30, "properties": "never" }],
 		"eqeqeq": "error",
 		"no-use-before-define": ["error", { "classes": false }],
-		"camelcase": ["error", { "allow": ["(^(get|post|put|delete)_\\w*)$"] }],
+		"camelcase": [
+			"error",
+			{ "allow": ["(get|post|put|delete)([_$]+[a-zA-Z0-9]+)*$"] }
+		],
 		"init-declarations": "error",
 		"consistent-return": "error",
 		"default-case": "error",
@@ -211,5 +177,47 @@
 			{ "skipBlankLines": true, "skipComments": true }
 		],
 		"quotes": ["error", "double"]
-	}
+	},
+	"overrides": [
+		{
+			"files": "*.json",
+			"parser": "jsonc-eslint-parser",
+			"rules": {}
+		},
+		{
+			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"rules": {
+				"@nx/enforce-module-boundaries": [
+					"error",
+					{
+						"enforceBuildableLibDependency": true,
+						"allow": [],
+						"depConstraints": [
+							{
+								"sourceTag": "*",
+								"onlyDependOnLibsWithTags": ["*"]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"files": ["*.ts", "*.tsx"],
+			"extends": ["plugin:@nx/typescript"],
+			"rules": {}
+		},
+		{
+			"files": ["*.js", "*.jsx"],
+			"extends": ["plugin:@nx/javascript"],
+			"rules": {}
+		},
+		{
+			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+			"env": {
+				"jest": true
+			},
+			"rules": {}
+		}
+	]
 }

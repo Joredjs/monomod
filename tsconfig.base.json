@@ -8,17 +8,20 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"importHelpers": true,
-		"target": "es2015",
+		"target": "ESNext",
 		"module": "esnext",
-		"lib": ["es2020", "dom"],
+		"lib": ["ESNext", "dom"],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@nxms/core-gateway": ["core/gateway/src/index.ts"],
-			"@nxms/core-main/domain": ["core/main/src/domain/index.ts"],
-			"@nxms/core-main/infra": ["core/main/src/infra/index.ts"],
-			"@nxms/framework-express": ["frameworks/express/src/index.ts"],
+			"@nxms/core-gateway": ["libs/core/gateway/src/index.ts"],
+			"@nxms/core-main/application": [
+				"libs/core/main/src/application/index.ts"
+			],
+			"@nxms/core-main/domain": ["libs/core/main/src/domain/index.ts"],
+			"@nxms/core-main/infra": ["libs/core/main/src/infra/index.ts"],
+			"@nxms/framework-express": ["libs/framework/express/src/index.ts"],
 			"@nxms/module-example/application": [
 				"modules/example/src/application/index.ts"
 			],

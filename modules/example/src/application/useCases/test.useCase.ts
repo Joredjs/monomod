@@ -1,5 +1,5 @@
 import {
-	IAppServices,
+	IServices,
 	IErrResponse,
 	IOKResponse,
 	ITransactionParams,
@@ -9,10 +9,10 @@ import {
 } from '@nxms/core-main/domain';
 
 export class TestUseCase implements IUseCase {
-	private appServices: IAppServices;
+	#appServices: IServices;
 
-	constructor(appServices: IAppServices) {
-		this.appServices = appServices;
+	constructor(appServices: IServices) {
+		this.#appServices = appServices;
 	}
 
 	async execute(
