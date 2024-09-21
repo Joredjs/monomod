@@ -1,23 +1,24 @@
 {
 	"name": "server-local",
 	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "apps/servers/server-local/src",
+	"sourceRoot": "{projectRoot}/src",
 	"projectType": "application",
 	"tags": [],
 	"targets": {
 		"lint": {},
 		"build": {
+			"dependsOn": ["lint", "^lint"],
 			"executor": "@nx/esbuild:esbuild",
 			"outputs": ["{options.outputPath}"],
 			"defaultConfiguration": "production",
 			"options": {
 				"platform": "node",
-				"outputPath": "dist/apps/servers/server-local",
+				"outputPath": "dist/{projectRoot}",
 				"format": ["cjs"],
 				"bundle": false,
-				"main": "apps/servers/server-local/src/main.ts",
-				"tsConfig": "apps/servers/server-local/tsconfig.app.json",
-				"assets": ["apps/servers/server-local/src/assets"],
+				"main": "{projectRoot}/src/main.ts",
+				"tsConfig": "{projectRoot}/tsconfig.app.json",
+				"assets": ["{projectRoot}/src/assets"],
 				"generatePackageJson": true,
 				"esbuildOptions": {
 					"sourcemap": true,
@@ -39,6 +40,7 @@
 			}
 		},
 		"serve": {
+			"dependsOn": ["build", "^build"],
 			"executor": "@nx/js:node",
 			"defaultConfiguration": "development",
 			"options": {

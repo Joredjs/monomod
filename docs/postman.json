@@ -1,0 +1,266 @@
+{
+	"info": {
+		"_postman_id": "0c4f3044-e295-489b-8ac0-cba87e66449c",
+		"name": "API",
+		"description": "# Bienvenido\n\n## Headers Obligatorios\n\n- **so**: Sistema operativo `x-rx-so`\n\n[Scripting in Postman](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)\n\n[Test script examples](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)\n\n[Postman Sandbox API reference](https://learning.postman.com/docs/sending-requests/grpc/postman-sandbox-api/#writing-assertions)\n\n[Using the Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8011604",
+		"_collection_link": "https://residentex.postman.co/workspace/Team-Workspace~357d9c2c-2f89-41da-8e50-40328df86053/collection/8011604-0c4f3044-e295-489b-8ac0-cba87e66449c?action=share&source=collection_link&creator=8011604"
+	},
+	"item": [
+		{
+			"name": "general",
+			"item": [
+				{
+					"name": "cddata",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Retorna la data codificada\", () => {\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.collectionVariables.set('cddata', pm.response.text())\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rx-so",
+								"value": "asd",
+								"description": "Sistema operativo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":\"{\\\"x\\\":\\\"a\\\",\\\"b\\\":2}\"\r\n    //\"data\":\"asd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}{{path}}/general/cddata",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{path}}",
+							"path": [
+								"general",
+								"cddata"
+							]
+						},
+						"description": "Codifica lo que se envíe en el parámetro _data_. SI se envía un json, debe ser en string, ej:\n\n`\"{\\\"x\\\":\\\"a\\\",\\\"b\\\":2}\"`\n`'{\"x\":\"a\",\"b\":2}'`\n\n\n> Debe usar el backslash como carácter de escape de las comillas dobles, o en su defecto iniciar con comillas sencillas mientras las comillas dobles se reservan para adentro del json \n  \n\nLa salida de este servicio es lo que se debe enviar en el header del servicio de desencriptar"
+					},
+					"response": []
+				},
+				{
+					"name": "crinfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Retorna la data codificada\", () => {\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.collectionVariables.set('crinfo', pm.response.text())\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rx-so",
+								"value": "asd",
+								"description": "Sistema operativo",
+								"type": "text"
+							},
+							{
+								"key": "xx-rsx-crdata",
+								"value": "{{cddata}}",
+								"description": "Información (codificada) a encriptar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"info\":\"eyJ4IjoiYSIsImIiOjJ9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}{{path}}/general/crinfo",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{path}}",
+							"path": [
+								"general",
+								"crinfo"
+							]
+						},
+						"description": "Encripta la información que reciba en la cabecera. Normalmente la salida de este servicio se envía como cabecera en otros servicios.\n\nEl parametro **info** debe ser un base64 con la misma información que va codificada en el header **xx-rsx-crdata**"
+					},
+					"response": []
+				},
+				{
+					"name": "home",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rx-so",
+								"value": "asd",
+								"description": "Sistema operativo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}{{path}}/general/home",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{path}}",
+							"path": [
+								"general",
+								"home"
+							]
+						},
+						"description": "Servicio de prueba"
+					},
+					"response": []
+				}
+			],
+			"description": "Grupo que contiene los servicios generales para todo el sistema"
+		},
+		{
+			"name": "property",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rx-so",
+								"value": "asd",
+								"description": "Sistema operativo",
+								"type": "text"
+							},
+							{
+								"key": "x-rx-up",
+								"value": "{{crinfo}}",
+								"description": "Usuario y contraseña encriptado",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"xx\",\r\n    \"pass\":\"\",\r\n    \"rol\":\"\",\r\n    \"x\":\"a\",\r\n    \"b\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}{{path}}/property/login",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}{{path}}",
+							"path": [
+								"property",
+								"login"
+							]
+						},
+						"description": "Inicio de sesión como usuario *property* con un rol definido"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}{{path}}/info",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}{{path}}",
+					"path": [
+						"info"
+					]
+				},
+				"description": "Retorna el listado de rutas que están activas en el api, donde se deben tener en cuenta los siguientes parámetros:\n- *method*: Es el método o verbo http por el cual se va a consumir la ruta.\n- *headers*: Es un listado con las llaves que deben ir obligatoriamente en las cabeceras de la petición.\n- *params*: Es un listado con las llaves que debe ir obligatoriamente en el body de la petición.\n- *group*: Es la parte inicial de la concatenación de la ruta\n- *path*: Es la parte final de la concatenación de la ruta\n\n> Ej: `ruta=group+\"/\"+path`\n"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": "https://postman-integration-testing.glitch.me/"
+		},
+		{
+			"key": "cddata",
+			"value": ""
+		},
+		{
+			"key": "crinfo",
+			"value": ""
+		}
+	]
+}

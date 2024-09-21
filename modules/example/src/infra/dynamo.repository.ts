@@ -1,24 +1,24 @@
-import { IDBPagination, IDatabases } from '@nxms/core-main/domain';
-import { ExampleRepository } from '../domain';
+/* Import { IDBPagination, IDatabases } from '@nxms/core/domain';
+   import { ExampleRepository } from '../domain'; */
 
-export class XXTECHNOLOGYExampleRepository implements ExampleRepository {
-	#database: IDatabases;
+/* Export class ExampleRepository implements ExampleRepository {
+   	#database: IDatabases; */
 
-	constructor(database: IDatabases) {
-		this.#database = database;
-	}
+/* 	Constructor(database: IDatabases) {
+   		this.#database = database;
+   	} */
 
-	async search(pagination: IDBPagination): Promise<any[]> {
-		try {
-			const result = await this.#database.getAll('ciudades', pagination);
-			if (!result) {
-				return result;
-			}
+/* 	Async search(pagination: IDBPagination): Promise<any[]> {
+   		try {
+   			const result = await this.#database.getAll('ciudades', pagination);
+   			if (!result) {
+   				return result;
+   			} */
 
-			// Do something
-			return result;
-		} catch (error) {
-			return null;
-		}
-	}
-}
+/* 			// Do something
+   			return result;
+   		} catch (error) {
+   			return null;
+   		}
+   	}
+   } */

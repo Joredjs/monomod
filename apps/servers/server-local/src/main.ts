@@ -1,6 +1,10 @@
-import { getServices } from '@nxms/framework-express';
+import { ExpressFramework } from '@nxms/framework-express';
 
-const microServices = getServices({ addGroupName: true });
+const framework = new ExpressFramework({
+	debug: { routes: true },
+});
+
+const microServices = framework.getServices();
 for (const service in microServices) {
 	if (microServices[service]) {
 		const myPort = microServices[service].port;

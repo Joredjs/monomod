@@ -16,8 +16,8 @@
 	},
 	"targetDefaults": {
 		"lint": {
-			"cache": true,
 			"dependsOn": ["^lint", "lint"],
+			"cache": true,
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
@@ -25,6 +25,14 @@
 				"fix": true,
 				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
 				"format": "html"
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/results/coverage/{e2eProjectRoot}"],
+			"options": {
+				"jestConfig": "{projectRoot}/jest.config.ts",
+				"passWithNoTests": true
 			}
 		},
 		"@nx/esbuild:esbuild": {

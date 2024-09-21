@@ -1,9 +1,5 @@
 import { Express, NextFunction, Request, Response } from 'express';
-import {
-	IErrResponse,
-	IOKResponse,
-	TDomainGroups,
-} from '@nxms/core-main/domain';
+import { IErrResponse, IOKResponse, TDomainGroups } from '@nxms/core/domain';
 
 export type TExpressReq = Request;
 export type TExpressRes = Response;
