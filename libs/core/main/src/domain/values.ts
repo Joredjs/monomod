@@ -31,12 +31,12 @@ export type TErroresValues =
 export type TErrores = {
 	[key in TErroresValues]: IError;
 };
-// export interface IDialogInfo {
-//   title?: string;
-//   text: string;
-// }
+/* Export interface IDialogInfo {
+     title?: string;
+     text: string;
+   } */
 
-// export interface IDialogData {
-//   type:string;
-//   info:IDialogInfo
-// }
+/* Export interface IDialogData {
+     type:string;
+     info:IDialogInfo
+   } */

@@ -1,11 +1,6 @@
 import { CipherCCM, CipherCCMTypes, DecipherCCM, randomBytes } from 'crypto';
-import {
-	ICryptoClient,
-	ICryptoOptions,
-	ICryptoRequest,
-	ICryptoResponse,
-	domainKeys,
-} from '@nxms/core-main/domain';
+import { ICryptoClient, ICryptoOptions, ICryptoRequest, ICryptoResponse } from '../../domain/crypto';
+import { domainKeys } from '../../domain/keys/index';
 
 export class ServiceCrypto {
 	#client: ICryptoClient;

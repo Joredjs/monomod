@@ -1,4 +1,4 @@
-import { setError } from "@nxms/core-main/domain";
+import { setError } from '../../domain/result';
 
 export class ServiceEncode {
 	#codeNum = parseInt(process.env.CODE_num) || 0;

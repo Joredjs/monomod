@@ -1,11 +1,12 @@
 import {
+	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
 	IRouteGroup,
-	TControllers,
-	TPorts,
+	IServicesDependencies,
 } from '@nxms/core-main/domain';
-import { PortRoutes, ServiceLayers } from '../application';
+import { PortPorts, PortRoutes, ServiceLayers } from '../application';
+import { AdapterControllers } from './controllers.adapter';
 
 export class AdapterRoutes<
 	TFwParams,
@@ -13,12 +14,23 @@ export class AdapterRoutes<
 	TFwRes extends IResponseParams
 > {
 	#routeList: IRouteGroup<TFwParams>[] = [];
+
 	#layersService;
 
-	constructor(controllers: TControllers<TFwReq, TFwRes>, ports: TPorts) {
+	constructor(
+		frameworkService: IFrameworkService<TFwRes>,
+		dependencies: IServicesDependencies
+	) {
 		const routePort = new PortRoutes<TFwParams>();
+		const ports = new PortPorts(dependencies);
+		const controllers = new AdapterControllers<TFwReq, TFwRes>(
+			frameworkService
+		);
 		this.#routeList = routePort.routeList();
-		this.#layersService = new ServiceLayers<TFwReq, TFwRes>(controllers, ports);
+		this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
+			controllers.getAll(dependencies),
+			ports.getAll()
+		);
 	}
 
 	getAll(): IRouteGroup<TFwParams>[] {

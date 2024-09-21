@@ -17,7 +17,7 @@ export class PortRoutes<TFwParams> {
 	#modules: TMyModuleRoute<TFwParams> = {};
 
 	constructor() {
-		//TODO: obtener los modules de forma más dinámica
+		// TODO: obtener los modules de forma más dinámica
 		this.example = new ExampleRoutes(modulos.example);
 	}
 

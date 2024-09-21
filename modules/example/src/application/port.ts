@@ -1,4 +1,3 @@
-import { TestUseCase } from './useCases';
 import {
 	IAllUseCases,
 	IErrResponse,
@@ -8,6 +7,7 @@ import {
 	ITransactionParams,
 	IUseCaseParams,
 } from '@nxms/core-main/domain';
+import { TestUseCase } from './useCases';
 
 export class PortExample implements IPort {
 	usecaseParams: IUseCaseParams<any>;

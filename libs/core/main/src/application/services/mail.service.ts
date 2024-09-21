@@ -1,9 +1,5 @@
-import {
-	IMailClient,
-	IMailConfig,
-	IMailOptions,
-	setError,
-} from '@nxms/core-main/domain';
+import { IMailClient, IMailConfig, IMailOptions } from '../../domain/mail';
+import { setError } from '../../domain/result';
 
 export class ServiceMail {
 	#transporter;

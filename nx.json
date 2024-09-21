@@ -16,8 +16,8 @@
 	},
 	"targetDefaults": {
 		"lint": {
-			"cache": true,
 			"dependsOn": ["^lint", "lint"],
+			"cache": true,
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {

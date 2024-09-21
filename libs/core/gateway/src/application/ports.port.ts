@@ -1,4 +1,4 @@
-import { IPortParams, IServices, TPorts } from '@nxms/core-main/domain';
+import { IPortParams, IServices, IServicesDependencies, TPorts } from '@nxms/core-main/domain';
 import {
 	ServiceCrypto,
 	ServiceEncode,
@@ -6,22 +6,24 @@ import {
 	ServiceMail,
 	ServiceUseCases,
 } from '@nxms/core-main/application';
-import { clientCrypto, clientMailer } from '../infra/dependencies';
 import { DataHeaders } from '../domain';
 import { PortExample } from '@nxms/module-example/application';
-export class AdapterPorts {
+export class PortPorts {
 	services: IServices = {};
 
-	constructor() {
+	// TODO: inject dependencies
+	constructor(dependencies: IServicesDependencies) {
 		const infoHeaders = new DataHeaders();
 
-		this.services.crypto = ServiceCrypto.getInstance(clientCrypto);
+		this.services.crypto = ServiceCrypto.getInstance(
+			dependencies.crypto.client
+		);
 		this.services.encode = new ServiceEncode();
 		this.services.headers = ServiceHeaders.getInstance(
 			infoHeaders.headers,
 			this.services.crypto
 		);
-		this.services.mail = new ServiceMail(clientMailer);
+		this.services.mail = new ServiceMail(dependencies.mail.client);
 		this.services.useCases = new ServiceUseCases();
 	}
 

@@ -3,12 +3,13 @@ import {
 	IExternalUseCaseParams,
 	IUseCaseParams,
 	TExternalUseCases,
-} from "./useCases";
-import { IDefaultToken, TDomainGroups } from "./rutas";
-import { ITransactionParams, TIncomingHttpHeaders } from "./http";
-import { TFrameworkRequest, TFrameworkResponse } from "./frameworks";
-import { IDatabase } from "./database";
-import { IHeadersValues } from "./validations";
+} from './useCases';
+import { IDefaultToken, ISchema, TDomainGroups } from './rutas';
+import { ITransactionParams, TIncomingHttpHeaders } from './http';
+import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
+import { IDatabase } from './database';
+import { IHeadersValues } from './validations';
+import { IJSONObject } from './values';
 
 export interface IController<TFwReq, TFwRes> {
 	handler(
@@ -43,6 +44,9 @@ export interface IServices {
 	mail?: {
 		send(para: string, asunto: string, cuerpo: string): Promise<boolean>;
 	};
+	schema?: {
+		validate(schema: ISchema, keys: string[], params: IJSONObject): boolean;
+	};
 	storage?: {
 		upload(key: string, data: string, section?: string): Promise<string>;
 		read(key: string, section?: string): Promise<string>;
@@ -58,6 +62,19 @@ export interface IServices {
 		): Promise<TGReturn>;
 	};
 }
+
+export interface IServicesDependencies {
+	crypto?: {
+		client: any;
+	};
+	mail?: {
+		client: any;
+	};
+	schema?: {
+		client: any;
+	};
+}
+
 export interface IPort {
 	usecaseParams: IUseCaseParams<unknown>;
 	getPublicUseCases(): IAllUseCases;

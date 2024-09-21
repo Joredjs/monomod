@@ -1,4 +1,4 @@
-import { IDatabaseAdapter } from "@nxms/core-main/domain";
+import { IDatabaseAdapter } from '../../domain/database';
 
 export class ServiceDatabase {
 	#adapters: IDatabaseAdapter;
@@ -9,7 +9,7 @@ export class ServiceDatabase {
 
 	getAll() {
 		return {
-			//mydb=sql,mongo,dynamo,firebase,etc
+			// Mydb=sql,mongo,dynamo,firebase,etc
 			mydb: this.#adapters.mydb,
 		};
 	}

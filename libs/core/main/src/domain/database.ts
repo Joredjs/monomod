@@ -1,3 +1,15 @@
+// TODO: TItemsResult and IQueryFilters Generic
+
+export type TItemsResult<T> = {
+	[K in keyof T]: any;
+};
+
+export interface IQueryFilters {
+	attributes?: object;
+	condition: string;
+	values: Record<string, { [key in any]?: string }>;
+}
+
 export interface IDBPagination {
 	start: string;
 	limit: number;
@@ -44,16 +56,3 @@ export interface ITypesDatabse {
 	updateInput: any;
 	updateOutput: any;
 }
-
-//TODO: TItemsResult and IQueryFilters Generic
-
-export type TItemsResult<T> = {
-	[K in keyof T]: any;
-};
-
-export interface IQueryFilters {
-	attributes?: object;
-	condition: string;
-	values: Record<string, { [key in any]?: string }>;
-}
-

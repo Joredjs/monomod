@@ -1,9 +1,6 @@
-import {
-	IErrResponse,
-	IExternalUseCaseParams,
-	domainKeys,
-	setError,
-} from '@nxms/core-main/domain';
+import { IErrResponse, setError } from '../../domain/result';
+import { IExternalUseCaseParams } from '../../domain/useCases';
+import { domainKeys } from '../../domain/keys/index';
 export class ServiceUseCases {
 	async requestExternal<TGReturn>(
 		params: IExternalUseCaseParams

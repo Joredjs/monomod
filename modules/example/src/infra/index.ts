@@ -1,2 +1,2 @@
 export * from "./controller";
-export * from "./dynamo.repository";
+// Export * from "./dynamo.repository";

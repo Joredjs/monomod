@@ -1,15 +1,12 @@
-//TODO: no importar dependencias de ajv  aquí
+// TODO: no importar dependencias de ajv  aquí
 import Ajv, { JSONSchemaType } from 'ajv';
-import {
-	IJSONObject,
-	ISchema,
-	ISchemaClient,
-	ISchemaProperties,
-	setError,
-} from '@nxms/core-main/domain';
+import { ISchema, ISchemaClient, ISchemaProperties } from '../../domain/rutas';
+import { IJSONObject } from '../../domain/values';
+import { setError } from '../../domain/result';
 
 export class ServiceSchema {
 	#schemaClient: ISchemaClient;
+
 	#validator: Ajv;
 
 	constructor(schemaClient: ISchemaClient) {

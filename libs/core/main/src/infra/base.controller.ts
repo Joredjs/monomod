@@ -4,11 +4,12 @@ import {
 	IErrResponse,
 	IFrameworkService,
 	IOKResponse,
+	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
 	domainKeys,
 	resultErr,
-} from '@nxms/core-main/domain';
+} from '../domain';
 
 export class BaseController<TFwReq, TFwRes>
 	implements IController<TFwReq, TFwRes>
@@ -29,10 +30,10 @@ export class BaseController<TFwReq, TFwRes>
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
 	) => {
-		//TODO: 2 chained try are neccesary? do await instead then
+		// TODO: 2 chained try are neccesary? do await instead then
 		try {
 			try {
-				const info = this.validations.manager(req, res);
+				const info: ITransactionValid = this.validations.manager(req, res);
 
 				info
 					.useCase(info)

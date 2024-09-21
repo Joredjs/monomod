@@ -1,14 +1,12 @@
+import { EPrivacyLevel, IDefaultToken } from '../../domain/rutas';
 import {
-	EPrivacyLevel,
-	IDefaultToken,
 	IHeaderData,
 	IHeadersInfo,
 	IHeadersValues,
-	IServices,
-	ITransactionParams,
-	TIncomingHttpHeaders,
-	setError,
-} from "@nxms/core-main/domain";
+} from '../../domain/validations';
+import { ITransactionParams, TIncomingHttpHeaders } from '../../domain/http';
+import { IServices } from '../../domain/layers';
+import { setError } from '../../domain/result';
 
 export class ServiceHeaders {
 	#headersInfo: IHeadersInfo = {};
@@ -17,9 +15,9 @@ export class ServiceHeaders {
 
 	#allHeaders: { [id: string]: IHeaderData } = {};
 
-	#cryptoService: IServices["crypto"];
+	#cryptoService: IServices['crypto'];
 
-	constructor(headers: IHeadersInfo, cryptoService: IServices["crypto"]) {
+	constructor(headers: IHeadersInfo, cryptoService: IServices['crypto']) {
 		this.#headersInfo = headers;
 		this.#setHeaders();
 		this.#cryptoService = cryptoService;
@@ -29,7 +27,7 @@ export class ServiceHeaders {
 
 	public static getInstance(
 		headers: IHeadersInfo,
-		cryptoService: IServices["crypto"]
+		cryptoService: IServices['crypto']
 	): InstanceType<typeof this> {
 		return (
 			this.#instance || (this.#instance = new this(headers, cryptoService))
@@ -58,13 +56,13 @@ export class ServiceHeaders {
 	// Obtiene el detalle de un header
 
 	#getHeaderInfo(headerName: string) {
-		return this.#allHeaders[headerName] || { key: "fail", values: ["error"] };
+		return this.#allHeaders[headerName] || { key: 'fail', values: ['error'] };
 	}
 
 	// Obtiene el valor enviado en un header
 
 	#getHeaderValue(headers: TIncomingHttpHeaders, headerName: string): string {
-		return (headers[this.#getHeaderInfo(headerName).key] as string) || "";
+		return (headers[this.#getHeaderInfo(headerName).key] as string) || '';
 	}
 
 	#validateListHeaders(
@@ -105,8 +103,8 @@ export class ServiceHeaders {
 		if (diffHoras > 1) {
 			throw setError({
 				detail: info.reqHeader,
-				errType: "session",
-				text: "Para continuar inicia sesión nuevamente",
+				errType: 'session',
+				text: 'Para continuar inicia sesión nuevamente',
 			});
 		}
 
@@ -121,8 +119,8 @@ export class ServiceHeaders {
 		if (!permisos) {
 			throw setError({
 				detail: info.reqHeader,
-				errType: "session",
-				text: "No tienes permiso para realizar esta acción",
+				errType: 'session',
+				text: 'No tienes permiso para realizar esta acción',
 			});
 		}
 
@@ -135,11 +133,11 @@ export class ServiceHeaders {
 	): IToken {
 		const decryptInfo = this.#cryptoService.decrypt(token);
 
-		if (decryptInfo === "error") {
+		if (decryptInfo === 'error') {
 			throw setError({
 				detail: info.reqHeader,
-				errType: "badInfo",
-				text: "Para continuar debes iniciar sesión correctamente",
+				errType: 'badInfo',
+				text: 'Para continuar debes iniciar sesión correctamente',
 			});
 		}
 
@@ -151,16 +149,16 @@ export class ServiceHeaders {
 		info: ITransactionParams
 	): IToken {
 		try {
-			const headerMsg = this.#validateSpecificHeader("token", info.reqHeader);
+			const headerMsg = this.#validateSpecificHeader('token', info.reqHeader);
 			if (!headerMsg.headersOk) {
 				throw setError({
 					detail: info.reqHeader,
-					errType: "session",
-					text: "Para continuar inicia sesión",
+					errType: 'session',
+					text: 'Para continuar inicia sesión',
 				});
 			}
 
-			const activeHeader = this.#getHeaderInfo("token");
+			const activeHeader = this.#getHeaderInfo('token');
 			const tokenValue = info.reqHeader[activeHeader.key] as string;
 			return this.#decryptToken<IToken>(info, tokenValue);
 		} catch (error) {
@@ -173,7 +171,7 @@ export class ServiceHeaders {
 	public validateRutaHeaders(info: ITransactionParams): IHeadersValues {
 		try {
 			if (!info.reqHeader || !info.ruta?.headers || !info.ruta?.globalHeaders) {
-				throw setError({ errType: "headers", text: "información incompleta" });
+				throw setError({ errType: 'headers', text: 'información incompleta' });
 			}
 
 			const isPublic = info.ruta.privacy.some(
@@ -221,15 +219,15 @@ export class ServiceHeaders {
 		headerName: string,
 		headersReq: TIncomingHttpHeaders
 	) {
-		let headerMsg = { errDetail: "", headersOk: true };
+		let headerMsg = { errDetail: '', headersOk: true };
 
-		headerName = headerName || "";
+		headerName = headerName || '';
 
 		const activeHeader = this.#getHeaderInfo(headerName);
 		const keyHeader = activeHeader.key;
 		const keyExist = Boolean(headersReq[keyHeader]);
 		if (!keyExist) {
-			headerMsg = this.#setHeaderError("Verifica las cabeceras.");
+			headerMsg = this.#setHeaderError('Verifica las cabeceras.');
 		}
 		if (headerMsg.headersOk) {
 			headerMsg.headersOk = this.#validateHeaderValue(
@@ -238,7 +236,7 @@ export class ServiceHeaders {
 			);
 
 			if (!headerMsg.headersOk) {
-				headerMsg = this.#setHeaderError("Verifica bien las cabeceras.");
+				headerMsg = this.#setHeaderError('Verifica bien las cabeceras.');
 			}
 		}
 
@@ -248,16 +246,16 @@ export class ServiceHeaders {
 	// TODO: no llamar esto 2 veces
 
 	validateMandatory(headersReq: TIncomingHttpHeaders): boolean {
-		let headerMsg = { errDetail: "", headersOk: true };
+		let headerMsg = { errDetail: '', headersOk: true };
 		for (const head of this.#mandatoryHeaders) {
 			if (!headersReq[head.key]) {
-				headerMsg = this.#setHeaderError("Verifica las cabeceras");
+				headerMsg = this.#setHeaderError('Verifica las cabeceras');
 				break;
 			}
 
 			const reqValue = headersReq[head.key] as string;
 			if (!this.#validateHeaderValue(reqValue, head.values)) {
-				headerMsg = this.#setHeaderError("Verifica bien las cabeceras");
+				headerMsg = this.#setHeaderError('Verifica bien las cabeceras');
 				break;
 			}
 		}
@@ -267,7 +265,7 @@ export class ServiceHeaders {
 		}
 		throw setError({
 			detail: headersReq,
-			errType: "headers",
+			errType: 'headers',
 			text: headerMsg.errDetail,
 		});
 	}
@@ -276,7 +274,7 @@ export class ServiceHeaders {
 
 	public validate(headersReq: TIncomingHttpHeaders, key?: string): boolean {
 		try {
-			let headerMsg = { errDetail: "", headersOk: true };
+			let headerMsg = { errDetail: '', headersOk: true };
 
 			// HeaderMsg = this.validateMandatory(headersReq);
 
@@ -290,7 +288,7 @@ export class ServiceHeaders {
 			}
 			throw setError({
 				detail: headersReq,
-				errType: "headers",
+				errType: 'headers',
 				text: headerMsg.errDetail,
 			});
 		} catch (error) {

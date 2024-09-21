@@ -1,15 +1,12 @@
-import {
-	IStorageClient,
-	ITypesStorage,
-	domainKeys,
-	setError,
-} from '@nxms/core-main/domain';
+import { IStorageClient, ITypesStorage } from '../../domain/storage';
 import { Readable } from 'stream';
+import { domainKeys } from '../../domain/keys/index';
+import { setError } from '../../domain/result';
 
 export class ServiceStorage<TGTStorage extends ITypesStorage> {
 	#storage: IStorageClient;
 
-	//TODO: recibir bucketname
+	// TODO: recibir bucketname
 	#bucketName = 'aws-bucket-betplay-multimedia';
 
 	#pngtype = 'data:image/{{extension}};base64';

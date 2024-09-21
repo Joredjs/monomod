@@ -30,5 +30,9 @@ export interface IFrameworkService<TFwRes> {
 export interface IMicroServiceConfig {
 	addGroupName?: boolean;
 	removePrefix?: boolean;
-	debug?: boolean;
+	debug?: {
+		cors?: boolean;
+		paths?: boolean;
+		routes?: boolean;
+	};
 }

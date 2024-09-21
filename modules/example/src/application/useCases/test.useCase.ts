@@ -1,7 +1,7 @@
 import {
-	IServices,
 	IErrResponse,
 	IOKResponse,
+	IServices,
 	ITransactionParams,
 	IUseCase,
 	resultErr,
@@ -19,8 +19,8 @@ export class TestUseCase implements IUseCase {
 		info: ITransactionParams
 	): Promise<IOKResponse<string> | IErrResponse> {
 		try {
-			// do something
-			return resultOk('Test usecase').unwrap();
+			// Do something
+			return await resultOk('Test usecase').unwrap();
 		} catch (error) {
 			throw resultErr(error).unwrap();
 		}

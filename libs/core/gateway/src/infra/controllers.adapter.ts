@@ -3,6 +3,7 @@ import {
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
+	IServicesDependencies,
 	TControllers,
 } from '@nxms/core-main/domain';
 import { AppValidations } from '../application';
@@ -18,8 +19,8 @@ export class AdapterControllers<
 		this.#framework = frameworkService;
 	}
 
-	getAll(): TControllers<TFwReq, TFwRes> {
-		const appValidations = new AppValidations<TFwReq, TFwRes>();
+	getAll(dependencies: IServicesDependencies): TControllers<TFwReq, TFwRes> {
+		const appValidations = new AppValidations<TFwReq, TFwRes>(dependencies);
 
 		const example = this.#getExample(appValidations);
 

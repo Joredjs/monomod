@@ -8,7 +8,7 @@ export interface IAppValidations<TFwReq, TFwRes> {
 	): ITransactionValid;
 }
 
-//TODO: importar el THeadersVersion de rutas ??
+// TODO: importar el THeadersVersion de rutas ??
 type THeadersVersion = "v1" | "v2";
 interface IHeadersPrefixStructure {
 	letter: string;

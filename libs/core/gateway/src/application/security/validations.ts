@@ -6,6 +6,7 @@ import {
 	IResponseParams,
 	IRuta,
 	ISchema,
+	IServicesDependencies,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
@@ -14,11 +15,10 @@ import {
 import {
 	ServiceCrypto,
 	ServiceHeaders,
+	ServiceSchema
 } from "@nxms/core-main/application";
-import { clientCrypto, clientSchema } from "../../infra/dependencies";
 import { DataHeaders } from "../../domain";
 import { SecurityClass } from './security';
-import { ServiceSchema } from '../services';
 
 export class AppValidations<
 	TFwReq extends IRequestParams,
@@ -29,16 +29,16 @@ export class AppValidations<
 
 	#schemaValidator;
 
-	constructor() {
+	constructor(dependencies: IServicesDependencies) {
 		// TODO: no triplicar la dependencia de headerservice y por ende de cryptoservice y dataheaders
 
 		const infoHeaders = new DataHeaders();
 		const headerService = ServiceHeaders.getInstance(
 			infoHeaders.headers,
-			ServiceCrypto.getInstance(clientCrypto)
+			ServiceCrypto.getInstance(dependencies.crypto.client)
 		);
 		this.#security = new SecurityClass<TFwReq>(headerService);
-		this.#schemaValidator = new ServiceSchema(clientSchema);
+		this.#schemaValidator = new ServiceSchema(dependencies.schema.client);
 	}
 
 	#getBodyParams(ruta: IRuta, req: TFrameworkRequest<TFwReq>): IJSONObject {
@@ -69,6 +69,7 @@ export class AppValidations<
 		return this.#security.validateRoute(info);
 	}
 
+	// Obtiene la info (locals) del req
 	#getTransactionInfo(
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
@@ -149,6 +150,7 @@ export class AppValidations<
 		});
 	}
 
+	// Valida: Headers, locals y params
 	#validateInitialTransaction(
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
@@ -181,14 +183,9 @@ export class AppValidations<
 		res: TFrameworkResponse<TFwRes>
 	): ITransactionValid {
 		try {
-			// Valida: Headers, locals y params
-
 			const resInitialValidations = this.#validateInitialTransaction(req, res);
 			if (resInitialValidations) {
-				// Obtiene la info (locals) del req
-
 				const info = this.#getTransactionInfo(req, res);
-
 
 				this.#validateRouteTransaction(info);
 

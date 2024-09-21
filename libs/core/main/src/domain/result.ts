@@ -59,7 +59,7 @@ export interface IErrResponse {
 	};
 }
 
-//TODO: reults not dependent on domainKeys
+// TODO: reults not dependent on domainKeys
 
 export function resultOk<T>(value?: T): TResult<T, IErrResponse> {
 	const res: IOKResponse<any> = {
@@ -80,16 +80,48 @@ interface IErrorMap {
 	text?: string;
 	detail?: any;
 	showDetail?: boolean;
+	saveLog?: boolean;
 }
-export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
+
+// TODO: volver clase
+function saveLog(errInfo: IErrorMap) {
+	if (errInfo && errInfo.saveLog) {
+		/*  TODO: manjear LOGS
+       TODO: Guardar info del req y del header */
+
+		console.error('------ERROR:---------');
+		console.trace(errInfo);
+		console.error('----------------------');
+	}
+}
+
+export function setError(errInfo: IErrorMap) {
+	if (!errInfo.errType && !errInfo.detail) {
+		// Si entra acá es porque el error viene sin dormatear cprrectamente
+		const oldErr = errInfo;
+		errInfo = {
+			detail:
+				typeof oldErr === 'string'
+					? oldErr
+					: JSON.stringify(oldErr, Object.getOwnPropertyNames(oldErr)),
+			errType: 'nocatch',
+		};
+	}
+
+	return errInfo;
+}
+
+function setErrorInfo(errInfo: IErrorMap): IErrResponse {
 	let res: IErrResponse = {
 		code: 500,
 		error: {
-			detail: '',
+			detail: 'Error no mapeado',
 			text: 'Error sin definir',
 		},
 	};
+
 	if ('code' in errInfo && 'error' in errInfo) {
+		// Si entra por acá es pq viene un IErrResponse
 		const myerror = errInfo as any;
 		res = {
 			code: myerror.code as number,
@@ -111,32 +143,30 @@ export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
 			}
 		}
 
-
-		//TODO: not set in true by default
-		errInfo.showDetail = true;
-
 		res = {
 			code: msj.code,
 			error: {
-				detail: errInfo.showDetail ? errDetail : "No está permitido ver el detalle del error",
+				detail: errInfo.showDetail
+					? errDetail
+					: 'No está permitido ver el detalle del error',
 
 				text: errInfo.text || msj.text,
 			},
 		};
 	}
 
-	if (errInfo) {
-		/*  TODO: manjear LOGS
-       TODO: Guardar info del req y del header */
+	return res;
+}
 
-		// Console.error("------ERROR:---------");
+export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
+	errInfo.saveLog =
+		typeof errInfo.saveLog === 'undefined' ? true : errInfo.saveLog;
+	errInfo.showDetail =
+		typeof errInfo.showDetail === 'undefined' ? true : errInfo.showDetail;
 
-		console.trace(errInfo);
+	const res: IErrResponse = setErrorInfo(errInfo);
 
-		// Console.error("----------------------");
-	}
-
-	// TODO: mejorar objetos de error para traer el detalle
+	saveLog(errInfo);
 
 	return {
 		isErr: () => true,
@@ -145,19 +175,4 @@ export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
 		unwrap: () => res,
 		value: res,
 	};
-}
-
-export function setError(errInfo: IErrorMap) {
-	if (!errInfo.errType && !errInfo.detail) {
-		const oldErr = errInfo;
-		errInfo = {
-			detail:
-				typeof oldErr === 'string'
-					? oldErr
-					: JSON.stringify(oldErr, Object.getOwnPropertyNames(oldErr)),
-			errType: 'nocatch',
-		};
-	}
-
-	return errInfo;
 }

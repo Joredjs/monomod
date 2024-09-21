@@ -1,7 +1,7 @@
+import { IHeadersStructure } from './validations';
+import { IPort } from './layers';
 import { TFrameworkParams } from './frameworks';
 import { THttpMethods } from './http';
-import { IPort } from './layers';
-import { IHeadersStructure } from './validations';
 
 export type TDomainGroups = 'example';
 type TVersion = 'v1' | 'v2';
