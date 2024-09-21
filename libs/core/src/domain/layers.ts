@@ -81,7 +81,7 @@ export interface IPort {
 }
 
 export type TPorts = {
-	[index in TDomainGroups]: IPort;
+	[index in TDomainGroups]?: IPort;
 };
 
 export interface IPortParams {

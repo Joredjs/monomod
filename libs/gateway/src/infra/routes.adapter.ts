@@ -4,9 +4,12 @@ import {
 	IResponseParams,
 	IRouteGroup,
 	IServicesDependencies,
+	TMyModuleList,
 } from '@nxms/core/domain';
 import { PortPorts, PortRoutes, ServiceLayers } from '../application';
 import { AdapterControllers } from './controllers.adapter';
+import { ExampleRoutes } from '@nxms/module-example/domain';
+import { PortExample } from '@nxms/module-example/application';
 
 export class AdapterRoutes<
 	TFwParams,
@@ -15,14 +18,18 @@ export class AdapterRoutes<
 > {
 	#routeList: IRouteGroup<TFwParams>[] = [];
 
+	#modulesList: TMyModuleList = {};
+
 	#layersService;
 
 	constructor(
 		frameworkService: IFrameworkService<TFwRes>,
 		dependencies: IServicesDependencies
 	) {
-		const routePort = new PortRoutes<TFwParams>();
-		const ports = new PortPorts(dependencies);
+		this.#modulesList.example = { Port: PortExample, Route: ExampleRoutes };
+
+		const routePort = new PortRoutes<TFwParams>(this.#modulesList);
+		const ports = new PortPorts(dependencies, this.#modulesList);
 		const controllers = new AdapterControllers<TFwReq, TFwRes>(
 			frameworkService
 		);

@@ -104,3 +104,9 @@ export type TModules = {
 export interface IModuleRoute<TFwParams> {
 	getRutas(): IRouteGroup<TFwParams>;
 }
+
+
+// TODO: dont use any (use class instance)
+export type TMyModuleList = {
+	[domain in TDomainGroups]?: {Route:any,Port:any};
+};

@@ -8,7 +8,6 @@
 	},
 	"exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
 	"include": [
-		"src/**/*.ts",
-		"../main/src/application/services/schema.service.ts"
+		"src/**/*.ts"
 	]
 }
