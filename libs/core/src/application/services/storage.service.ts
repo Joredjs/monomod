@@ -1,7 +1,10 @@
-import { IStorageClient, ITypesStorage } from '../../domain/storage';
+import {
+	IStorageClient,
+	ITypesStorage,
+	domainKeys,
+	setError,
+} from '../../domain';
 import { Readable } from 'stream';
-import { domainKeys } from '../../domain/keys/index';
-import { setError } from '../../domain/result';
 
 export class ServiceStorage<TGTStorage extends ITypesStorage> {
 	#storage: IStorageClient;
