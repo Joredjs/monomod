@@ -1,4 +1,4 @@
-import { setError } from '../../domain/result';
+import { setError } from '../../domain';
 
 export class ServiceEncode {
 	#codeNum = parseInt(process.env.CODE_num) || 0;

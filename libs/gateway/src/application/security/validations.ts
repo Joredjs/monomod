@@ -6,18 +6,12 @@ import {
 	IResponseParams,
 	IRuta,
 	ISchema,
-	IServicesDependencies,
+	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
 	setError,
 } from '@nxms/core/domain';
-import {
-	ServiceCrypto,
-	ServiceHeaders,
-	ServiceSchema,
-} from '@nxms/core/application';
-import { DataHeaders } from '../../domain';
 import { SecurityClass } from './security';
 
 export class AppValidations<
@@ -26,19 +20,11 @@ export class AppValidations<
 > implements IAppValidations<TFwReq, TFwRes>
 {
 	#security: SecurityClass<TFwReq>;
-
 	#schemaValidator;
 
-	constructor(dependencies: IServicesDependencies) {
-		// TODO: no triplicar la dependencia de headerservice y por ende de cryptoservice y dataheaders
-
-		const infoHeaders = new DataHeaders();
-		const headerService = ServiceHeaders.getInstance(
-			infoHeaders.headers,
-			ServiceCrypto.getInstance(dependencies.crypto.client)
-		);
-		this.#security = new SecurityClass<TFwReq>(headerService);
-		this.#schemaValidator = new ServiceSchema(dependencies.schema.client);
+	constructor(services: IServices) {
+		this.#security = new SecurityClass<TFwReq>(services.headers);
+		this.#schemaValidator = services.schema;
 	}
 
 	#getBodyParams(ruta: IRuta, req: TFrameworkRequest<TFwReq>): IJSONObject {

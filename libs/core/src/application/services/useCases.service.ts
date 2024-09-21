@@ -1,6 +1,10 @@
-import { IErrResponse, setError } from '../../domain/result';
-import { IExternalUseCaseParams } from '../../domain/useCases';
-import { domainKeys } from '../../domain/keys/index';
+import {
+	IErrResponse,
+	IExternalUseCaseParams,
+	domainKeys,
+	setError,
+} from '../../domain';
+
 export class ServiceUseCases {
 	async requestExternal<TGReturn>(
 		params: IExternalUseCaseParams

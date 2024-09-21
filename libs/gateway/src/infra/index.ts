@@ -1,2 +1,1 @@
-export * from './routes.adapter';
-export * from './dependencies';
+export * from './api.adapter';

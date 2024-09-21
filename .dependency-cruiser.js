@@ -175,6 +175,26 @@ module.exports = {
 				dependencyTypes: ['npm-peer'],
 			},
 		},
+		{
+			name: 'not-to-unlisted',
+			severity: 'error',
+			comment: 'All dependencies must be listed in package.json',
+			from: {},
+			to: {
+				dependencyTypes: ['npm-no-pkg', 'npm-unknown'],
+			},
+		},
+		{
+			name: 'no-dev-deps',
+			severity: 'error',
+			comment: 'Production code should not depend on dev dependencies',
+			from: {
+				path: '^src',
+			},
+			to: {
+				dependencyTypes: ['npm-dev'],
+			},
+		},
 	],
 	options: {
 		/* conditions specifying which files not to follow further when encountered:
@@ -234,7 +254,7 @@ module.exports = {
        folder the cruise is initiated from. Useful for how (some) mono-repos
        manage dependencies & dependency definitions.
      */
-		// combinedDependencies: false,
+		combinedDependencies: true,
 
 		/* if true leave symlinks untouched, otherwise use the realpath */
 		// preserveSymlinks: false,

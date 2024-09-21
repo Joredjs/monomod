@@ -1,45 +1,19 @@
-import { DataHeaders, modulesList } from '../domain';
+import { modulesList } from '../domain';
 import {
 	IPortParams,
 	IServices,
-	IServicesDependencies,
 	TDomainGroups,
-	TMyModuleList,
+	TMyModulesInstances,
 	TPorts,
 } from '@nxms/core/domain';
-import {
-	ServiceCrypto,
-	ServiceEncode,
-	ServiceHeaders,
-	ServiceMail,
-	ServiceUseCases,
-} from '@nxms/core/application';
 export class PortPorts {
-	services: IServices = {};
+	#services: IServices = {};
+	#modulesInstances: TMyModulesInstances;
 
-	#modulesInstances: TMyModuleList;
-
-	constructor(
-		dependencies: IServicesDependencies,
-		modulesInstances: TMyModuleList
-	) {
+	constructor(services: IServices, modulesInstances: TMyModulesInstances) {
 		this.#modulesInstances = modulesInstances;
-
-		const infoHeaders = new DataHeaders();
-
-		this.services.crypto = ServiceCrypto.getInstance(
-			dependencies.crypto.client
-		);
-		this.services.encode = new ServiceEncode();
-		this.services.headers = ServiceHeaders.getInstance(
-			infoHeaders.headers,
-			this.services.crypto
-		);
-		this.services.mail = new ServiceMail(dependencies.mail.client);
-		this.services.useCases = new ServiceUseCases();
+		this.#services = services;
 	}
-
-	// TODO: obtener los módulos de forma más dinámica
 
 	getAll(): TPorts {
 		const ports: TPorts = {};
@@ -53,7 +27,7 @@ export class PortPorts {
 
 	#setModulePort(module: TDomainGroups) {
 		const params: IPortParams = {
-			services: this.services,
+			services: this.#services,
 		};
 		return new this.#modulesInstances[module].Port(params);
 	}

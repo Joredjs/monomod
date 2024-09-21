@@ -4,12 +4,14 @@ import {
 	IUseCaseParams,
 	TExternalUseCases,
 } from './useCases';
-import { IDefaultToken, ISchema, TDomainGroups } from './rutas';
+import { IDefaultToken, ISchema, ISchemaClient, TDomainGroups } from './rutas';
 import { ITransactionParams, TIncomingHttpHeaders } from './http';
 import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
+import { ICryptoClient } from './crypto';
 import { IDatabase } from './database';
 import { IHeadersValues } from './validations';
 import { IJSONObject } from './values';
+import { IMailClient } from './mail';
 
 export interface IController<TFwReq, TFwRes> {
 	handler(
@@ -20,7 +22,7 @@ export interface IController<TFwReq, TFwRes> {
 }
 
 export type TControllers<TFwReq, TFwRes> = {
-	[index in TDomainGroups]: IController<TFwReq, TFwRes>;
+	[index in TDomainGroups]?: IController<TFwReq, TFwRes>;
 };
 
 export interface IServiceHeader {
@@ -29,6 +31,16 @@ export interface IServiceHeader {
 	validate(headersReq: TIncomingHttpHeaders, key?: string): boolean;
 	validateRutaHeaders(info: ITransactionParams): IHeadersValues;
 }
+
+export type TServicesList =
+	| 'crypto'
+	| 'db'
+	| 'encode'
+	| 'headers'
+	| 'mail'
+	| 'schema'
+	| 'storage'
+	| 'useCases';
 
 export interface IServices {
 	crypto?: {
@@ -63,15 +75,17 @@ export interface IServices {
 	};
 }
 
+// TODO: change the any type in client
+
 export interface IServicesDependencies {
 	crypto?: {
-		client: any;
+		client: ICryptoClient;
 	};
 	mail?: {
-		client: any;
+		client: IMailClient;
 	};
 	schema?: {
-		client: any;
+		client: ISchemaClient;
 	};
 }
 

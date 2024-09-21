@@ -1,5 +1,4 @@
-import { IMailClient, IMailConfig, IMailOptions } from '../../domain/mail';
-import { setError } from '../../domain/result';
+import { IMailClient, IMailConfig, IMailOptions, setError } from '../../domain';
 
 export class ServiceMail {
 	#transporter;

@@ -2,12 +2,10 @@ import {
 	IModuleRoute,
 	IRouteGroup,
 	TDomainGroups,
-	TMyModuleList,
+	TMyModulesInstances,
 	domainKeys,
 } from '@nxms/core/domain';
-
 import { modulesList, modulos } from '../domain';
-// Import { ExampleRoutes } from '@nxms/module-example/domain';
 
 type TMyModuleRoute<TFwParams> = {
 	[domain in TDomainGroups]?: IModuleRoute<TFwParams>;
@@ -17,9 +15,9 @@ export class PortRoutes<TFwParams> {
 
 	#modules: TMyModuleRoute<TFwParams> = {};
 
-	#modulesInstances: TMyModuleList;
+	#modulesInstances: TMyModulesInstances;
 
-	constructor(modulesInstances: TMyModuleList) {
+	constructor(modulesInstances: TMyModulesInstances) {
 		this.#modulesInstances = modulesInstances;
 	}
 
@@ -42,7 +40,6 @@ export class PortRoutes<TFwParams> {
 	}
 
 	#setModulesRoutes(module: TDomainGroups) {
-		// This.#modules[module] = this[module];
 		this.#modules[module] = new this.#modulesInstances[module].Route(
 			modulos[module]
 		);

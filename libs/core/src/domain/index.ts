@@ -1,6 +1,7 @@
 export * from './crypto';
 export * from './database';
 export * from './frameworks';
+export * from './headers.info';
 export * from './http';
 export * from './keys';
 export * from './layers';

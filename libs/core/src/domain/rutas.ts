@@ -1,5 +1,5 @@
+import { IPort, TServicesList } from './layers';
 import { IHeadersStructure } from './validations';
-import { IPort } from './layers';
 import { TFrameworkParams } from './frameworks';
 import { THttpMethods } from './http';
 
@@ -87,6 +87,7 @@ export interface IRouteGroup<TFwParams> {
 	puerto: number;
 	port?: IPort;
 	versions: TVersion[];
+	// services: TServicesList[];
 }
 
 export interface IModule<TGTMod> {
@@ -94,6 +95,7 @@ export interface IModule<TGTMod> {
 	puerto: number;
 	headers?: { [head: string]: IHeadersStructure };
 	schemas: ISchemaObject;
+	services: TServicesList[];
 	versions: TVersion[];
 }
 
@@ -105,8 +107,7 @@ export interface IModuleRoute<TFwParams> {
 	getRutas(): IRouteGroup<TFwParams>;
 }
 
-
 // TODO: dont use any (use class instance)
-export type TMyModuleList = {
-	[domain in TDomainGroups]?: {Route:any,Port:any};
+export type TMyModulesInstances = {
+	[domain in TDomainGroups]?: { Route: any; Port: any; Controller: any };
 };

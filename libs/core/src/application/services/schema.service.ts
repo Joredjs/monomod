@@ -1,8 +1,12 @@
 // TODO: no importar dependencias de ajv  aquí
 import Ajv, { JSONSchemaType } from 'ajv';
-import { ISchema, ISchemaClient, ISchemaProperties } from '../../domain/rutas';
-import { IJSONObject } from '../../domain/values';
-import { setError } from '../../domain/result';
+import {
+	IJSONObject,
+	ISchema,
+	ISchemaClient,
+	ISchemaProperties,
+	setError,
+} from '../../domain';
 
 export class ServiceSchema {
 	#schemaClient: ISchemaClient;

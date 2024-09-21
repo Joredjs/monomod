@@ -1,11 +1,11 @@
-import { CipherCCM, CipherCCMTypes, DecipherCCM, randomBytes } from 'crypto';
 import {
 	ICryptoClient,
 	ICryptoOptions,
 	ICryptoRequest,
 	ICryptoResponse,
-} from '../../domain/crypto';
-import { domainKeys } from '../../domain/keys/index';
+	domainKeys,
+} from '../../domain';
+import { CipherCCMTypes } from 'crypto';
 
 export class ServiceCrypto {
 	#client: ICryptoClient;
@@ -17,7 +17,7 @@ export class ServiceCrypto {
 		hashType: 'sha256',
 		key: { hash: 'x', valor: process.env.CRYPTO_key },
 		mode: 'aes-256-ccm',
-		tag: new Int32Array(randomBytes(domainKeys.core.crypto.defaultBytes)),
+		tag: new Int32Array(),
 		texto: Buffer.from('x', 'utf-8'),
 		vector: {
 			hash: 'x',
@@ -28,18 +28,13 @@ export class ServiceCrypto {
 	constructor(client: ICryptoClient, options?: ICryptoOptions) {
 		this.#client = client;
 
+		this.#cryptoOptions.tag = new Int32Array(
+			client.random(domainKeys.core.crypto.defaultBytes)
+		);
+
 		if (options) {
 			this.#cryptoOptions = options;
 		}
-	}
-
-	static #instance: InstanceType<typeof this>;
-
-	public static getInstance(
-		client: ICryptoClient,
-		options?: ICryptoOptions
-	): InstanceType<typeof this> {
-		return this.#instance || (this.#instance = new this(client, options));
 	}
 
 	#getModeInfo() {
@@ -62,7 +57,7 @@ export class ServiceCrypto {
 	#setVector() {
 		const vectorsize = this.#cryptoOptions.vector.size || 0;
 		this.#cryptoOptions.vector.valor =
-			this.#cryptoOptions.vector.valor || randomBytes(vectorsize);
+			this.#cryptoOptions.vector.valor || this.#client.random(vectorsize);
 	}
 
 	#setCryptoCredentials(attr: keyof ICryptoOptions) {
@@ -105,7 +100,7 @@ export class ServiceCrypto {
 		try {
 			this.#cryptoOptions.texto = texto;
 			this.#setupCrypto();
-			const cipher: CipherCCM = this.#client.encrypt(
+			const cipher = this.#client.encrypt(
 				this.#cryptoOptions.mode,
 				this.#cryptoOptions.key.hash,
 				this.#cryptoOptions.vector.hash,
@@ -163,7 +158,7 @@ export class ServiceCrypto {
 			};
 
 			this.#setupCrypto(true, cryptoReq);
-			const decipher: DecipherCCM = this.#client.decrypt(
+			const decipher = this.#client.decrypt(
 				this.#cryptoOptions.mode,
 				this.#cryptoOptions.key.hash,
 				this.#cryptoOptions.vector.hash,

@@ -1,4 +1,4 @@
-import { IDatabaseAdapter } from '../../domain/database';
+import { IDatabaseAdapter } from '../../domain';
 
 export class ServiceDatabase {
 	#adapters: IDatabaseAdapter;

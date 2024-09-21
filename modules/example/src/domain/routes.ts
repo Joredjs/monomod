@@ -50,6 +50,7 @@ export class ExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
 			headers: [],
 			paths: this.#getPaths(),
 			puerto: this.#modulo.puerto,
+			// services: this.#modulo.services,
 			versions: this.#modulo.versions,
 		};
 	}

@@ -3,7 +3,7 @@
 
 import { IError, TErroresValues } from './values';
 import { domainKeys } from './keys';
-import { httpCodes } from './keys/http';
+
 
 /** Represents a failed computation.*/
 
@@ -64,7 +64,7 @@ export interface IErrResponse {
 export function resultOk<T>(value?: T): TResult<T, IErrResponse> {
 	const res: IOKResponse<any> = {
 		body: value || 'OK',
-		code: httpCodes[200].code,
+		code: domainKeys.httpCodes[200].code,
 	};
 	return {
 		isErr: () => false,

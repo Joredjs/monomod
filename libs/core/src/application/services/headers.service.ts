@@ -1,12 +1,15 @@
-import { EPrivacyLevel, IDefaultToken } from '../../domain/rutas';
 import {
+	DataHeaders,
+	EPrivacyLevel,
+	IDefaultToken,
 	IHeaderData,
 	IHeadersInfo,
 	IHeadersValues,
-} from '../../domain/validations';
-import { ITransactionParams, TIncomingHttpHeaders } from '../../domain/http';
-import { IServices } from '../../domain/layers';
-import { setError } from '../../domain/result';
+	IServices,
+	ITransactionParams,
+	TIncomingHttpHeaders,
+	setError,
+} from '../../domain';
 
 export class ServiceHeaders {
 	#headersInfo: IHeadersInfo = {};
@@ -17,21 +20,10 @@ export class ServiceHeaders {
 
 	#cryptoService: IServices['crypto'];
 
-	constructor(headers: IHeadersInfo, cryptoService: IServices['crypto']) {
-		this.#headersInfo = headers;
+	constructor(cryptoService: IServices['crypto']) {
+		this.#headersInfo = new DataHeaders().headers;
 		this.#setHeaders();
 		this.#cryptoService = cryptoService;
-	}
-
-	static #instance: InstanceType<typeof this>;
-
-	public static getInstance(
-		headers: IHeadersInfo,
-		cryptoService: IServices['crypto']
-	): InstanceType<typeof this> {
-		return (
-			this.#instance || (this.#instance = new this(headers, cryptoService))
-		);
 	}
 
 	// Llena la lista de headers (all y mandatory)

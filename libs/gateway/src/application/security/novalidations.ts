@@ -1,12 +1,10 @@
 import {
 	IAppValidations,
 	IRequestParams,
-	IServicesDependencies,
+	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
 } from '@nxms/core/domain';
-import { ServiceCrypto, ServiceHeaders } from '@nxms/core/application';
-import { DataHeaders } from '../../domain';
 import { SecurityClass } from './security';
 
 export class NoValidations<TFwReq extends IRequestParams, TFwRes>
@@ -14,13 +12,8 @@ export class NoValidations<TFwReq extends IRequestParams, TFwRes>
 {
 	#security: SecurityClass<TFwReq>;
 
-	constructor(dependencies: IServicesDependencies) {
-		const infoHeaders = new DataHeaders();
-		const headerService = ServiceHeaders.getInstance(
-			infoHeaders.headers,
-			ServiceCrypto.getInstance(dependencies.crypto.client)
-		);
-		this.#security = new SecurityClass<TFwReq>(headerService);
+	constructor(services: IServices) {
+		this.#security = new SecurityClass<TFwReq>(services.headers);
 	}
 
 	#getTransactionInfo(req: TFrameworkRequest<TFwReq>): ITransactionValid {
