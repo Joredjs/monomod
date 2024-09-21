@@ -6,7 +6,7 @@ import {
 	IRouteGroup,
 	IRuta,
 	TDomainGroups,
-} from '@nxms/core-main/domain';
+} from '@nxms/core/domain';
 
 export class ExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
 	#modulo: IModule<TGTMod>;

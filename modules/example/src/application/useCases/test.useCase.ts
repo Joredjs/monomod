@@ -6,7 +6,7 @@ import {
 	IUseCase,
 	resultErr,
 	resultOk,
-} from '@nxms/core-main/domain';
+} from '@nxms/core/domain';
 
 export class TestUseCase implements IUseCase {
 	#appServices: IServices;

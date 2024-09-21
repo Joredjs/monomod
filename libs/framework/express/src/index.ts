@@ -10,8 +10,8 @@ import {
 	IRouteGroup,
 	domainKeys,
 	resultErr,
-} from '@nxms/core-main/domain';
-import { ApiCore } from '@nxms/core-gateway';
+} from '@nxms/core/domain';
+import { ApiCore } from '@nxms/gateway';
 import { ExpressService } from './service';
 import cors from 'cors';
 import express from 'express';
@@ -228,4 +228,3 @@ export class ExpressFramework {
    		});
    	};
    } */
-

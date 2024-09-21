@@ -6,7 +6,7 @@ import {
 	IPortParams,
 	ITransactionParams,
 	IUseCaseParams,
-} from '@nxms/core-main/domain';
+} from '@nxms/core/domain';
 import { TestUseCase } from './useCases';
 
 export class PortExample implements IPort {

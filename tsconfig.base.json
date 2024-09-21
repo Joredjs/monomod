@@ -15,13 +15,11 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@nxms/core-gateway": ["libs/core/gateway/src/index.ts"],
-			"@nxms/core-main/application": [
-				"libs/core/main/src/application/index.ts"
-			],
-			"@nxms/core-main/domain": ["libs/core/main/src/domain/index.ts"],
-			"@nxms/core-main/infra": ["libs/core/main/src/infra/index.ts"],
+			"@nxms/core/application": ["libs/core/src/application/index.ts"],
+			"@nxms/core/domain": ["libs/core/src/domain/index.ts"],
+			"@nxms/core/infra": ["libs/core/src/infra/index.ts"],
 			"@nxms/framework-express": ["libs/framework/express/src/index.ts"],
+			"@nxms/gateway": ["libs/gateway/src/index.ts"],
 			"@nxms/module-example/application": [
 				"modules/example/src/application/index.ts"
 			],

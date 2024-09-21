@@ -1,4 +1,4 @@
-/* Import { IDBPagination, IDatabases } from '@nxms/core-main/domain';
+/* Import { IDBPagination, IDatabases } from '@nxms/core/domain';
    import { ExampleRepository } from '../domain'; */
 
 /* Export class XXTECHNOLOGYExampleRepository implements ExampleRepository {
