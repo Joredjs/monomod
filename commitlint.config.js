@@ -22,4 +22,3 @@ module.exports = {
     'type-enum': [2, 'always', [...reglas]],
   },
 };
-

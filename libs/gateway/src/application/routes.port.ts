@@ -5,7 +5,7 @@ import {
 	domainKeys,
 } from '@nxms/core/domain';
 
-// Import { modulesList, modulos } from '../domain';
+import { modulesList, modulos } from '../domain';
 import { ExampleRoutes } from '@nxms/module-example/domain';
 
 type TMyModuleRoute<TFwParams> = {
@@ -17,8 +17,8 @@ export class PortRoutes<TFwParams> {
 	#modules: TMyModuleRoute<TFwParams> = {};
 
 	constructor() {
-		/*  TODO: obtener los modules de forma más dinámica
-		   this.example = new ExampleRoutes(modulos.example); */
+		// TODO: obtener los modules de forma más dinámica
+		this.example = new ExampleRoutes(modulos.example);
 	}
 
 	#addGlobalCors(ruta: IRouteGroup<TFwParams>) {
@@ -30,11 +30,11 @@ export class PortRoutes<TFwParams> {
 
 	routeList(): IRouteGroup<TFwParams>[] {
 		const rutas: IRouteGroup<TFwParams>[] = [];
-		/* For (const module of modulesList) {
-		   	this.#setModulesRoutes(module);
-		   	const paths = this.#modules[module].getRutas();
-		   	rutas.push(this.#addGlobalCors(paths));
-		   } */
+		for (const module of modulesList) {
+			this.#setModulesRoutes(module);
+			const paths = this.#modules[module].getRutas();
+			rutas.push(this.#addGlobalCors(paths));
+		}
 
 		return rutas;
 	}

@@ -10,7 +10,7 @@ import {
 	ServiceHeaders,
 	ServiceMail,
 	ServiceUseCases,
-} from '@nxms/core';
+} from '@nxms/core/application';
 import { DataHeaders } from '../domain';
 import { PortExample } from '@nxms/module-example/application';
 export class PortPorts {

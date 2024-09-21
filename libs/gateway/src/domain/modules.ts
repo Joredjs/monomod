@@ -1,7 +1,5 @@
-import { schemas } from './schemas';
 import { EVersions, TDomainGroups, TModules } from '@nxms/core/domain';
-
-console.debug('SMS', EVersions);
+import { schemas } from './schemas';
 
 export const puertos: { [domain in TDomainGroups]: number } = {
 	example: 11001,
@@ -16,6 +14,6 @@ export const modulos: TModules = {
 		name: 'example',
 		puerto: puertos.example,
 		schemas,
-		versions: ['v1'],
+		versions: [EVersions.alpha],
 	},
 };

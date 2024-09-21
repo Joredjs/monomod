@@ -11,4 +11,3 @@ export * from './storage';
 export * from './useCases';
 export * from './validations';
 export * from './values';
-export * from './versions';

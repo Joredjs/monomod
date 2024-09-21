@@ -15,7 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@nxms/core": ["libs/core/src/application/index.ts"],
+			"@nxms/core/application": ["libs/core/src/application/index.ts"],
 			"@nxms/core/domain": ["libs/core/src/domain/index.ts"],
 			"@nxms/core/infra": ["libs/core/src/infra/index.ts"],
 			"@nxms/framework-express": ["libs/framework/express/src/index.ts"],

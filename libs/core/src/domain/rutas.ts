@@ -2,12 +2,14 @@ import { IHeadersStructure } from './validations';
 import { IPort } from './layers';
 import { TFrameworkParams } from './frameworks';
 import { THttpMethods } from './http';
-import { EVersions, TVersion } from './versions';
-
-console.debug('INIT RUTASSS');
-console.debug('V', EVersions);
 
 export type TDomainGroups = 'example';
+type TVersion = 'v1' | 'v2';
+
+export enum EVersions {
+	alpha = 'v1',
+	beta = 'v2',
+}
 
 export enum EPrivacyLevel {
 	public,

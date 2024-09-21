@@ -26,8 +26,7 @@ export class AdapterRoutes<
 		const controllers = new AdapterControllers<TFwReq, TFwRes>(
 			frameworkService
 		);
-		// this.#routeList = routePort.routeList();
-		this.#routeList = this.setModules();
+		this.#routeList = routePort.routeList();
 		this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
 			controllers.getAll(dependencies),
 			ports.getAll()
@@ -41,16 +40,5 @@ export class AdapterRoutes<
 			return rgroup;
 		});
 		return this.#routeList;
-	}
-
-	setModules() {
-		const rutas: IRouteGroup<TFwParams>[] = [];
-		/* For (const module of modulesList) {
-		   	this.#setModulesRoutes(module);
-		   	const paths = this.#modules[module].getRutas();
-		   	rutas.push(this.#addGlobalCors(paths));
-		   } */
-
-		return rutas;
 	}
 }

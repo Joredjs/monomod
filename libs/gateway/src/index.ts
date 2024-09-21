@@ -1,4 +1,9 @@
-import { AdapterRoutes, clientCrypto, clientMailer } from './infra';
+import {
+	AdapterRoutes,
+	clientCrypto,
+	clientMailer,
+	clientSchema,
+} from './infra';
 import {
 	IFrameworkService,
 	IRequestParams,
@@ -20,6 +25,7 @@ export class ApiCore<
 		this.#dependencies = {
 			crypto: { client: clientCrypto },
 			mail: { client: clientMailer },
+			schema: { client: clientSchema },
 		};
 		this.#framework = frameworkService;
 	}

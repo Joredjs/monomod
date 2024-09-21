@@ -1,6 +1,7 @@
 import {
 	EHttpMethods,
 	EPrivacyLevel,
+	EVersions,
 	IModule,
 	IRouteGroup,
 	IRuta,
@@ -44,7 +45,6 @@ export class ExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
 	}
 
 	getRutas(): IRouteGroup<TFwParams> {
-		console.debug('MOD', this.#modulo);
 		return {
 			cors: [],
 			group: this.#modulo.name,

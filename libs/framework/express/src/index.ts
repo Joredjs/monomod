@@ -1,4 +1,3 @@
-// TODO: volver clase
 import {
 	IExpressApps,
 	IExpressMicroApp,
@@ -9,10 +8,8 @@ import {
 import {
 	IMicroServiceConfig,
 	IRouteGroup,
-	IRuta,
 	domainKeys,
 	resultErr,
-	setError,
 } from '@nxms/core/domain';
 import { ApiCore } from '@nxms/gateway';
 import { ExpressService } from './service';

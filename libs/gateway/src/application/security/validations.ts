@@ -6,14 +6,17 @@ import {
 	IResponseParams,
 	IRuta,
 	ISchema,
-	IServices,
 	IServicesDependencies,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
 	setError,
 } from '@nxms/core/domain';
-import { ServiceCrypto, ServiceHeaders, ServiceSchema } from '@nxms/core';
+import {
+	ServiceCrypto,
+	ServiceHeaders,
+	ServiceSchema,
+} from '@nxms/core/application';
 import { DataHeaders } from '../../domain';
 import { SecurityClass } from './security';
 
