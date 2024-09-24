@@ -1,93 +1,73 @@
-# Estructura
+# Project Structure
 
-La arquitectura principal usada en la mayoría de librerías es la arquitectura hexagonal o *ports & adapters*. Cada librería que use esta arquitectura debe contener las siguientes carpetas (capas):
+This document outlines the structural organization of the project. The primary architectural pattern employed across most libraries is the hexagonal architecture, also known as ports & adapters. Each library adhering to this pattern should consist of the following folders (layers):
 
-* application
-* domain
-* infra
+- application: This layer contains the application logic, orchestrating the interaction between domain entities and infrastructure concerns.
+- domain: This layer encapsulates the core business logic, including entities, value objects, and business rules. It remains independent of any framework or infrastructure concerns.
+- infra: This layer provides concrete implementations for interacting with external dependencies, such as databases, APIs, or the file system. It adapts the domain logic to specific technologies.
 
-La estructura del sitio se divide El monorepo se divide en 2 capas de abstracción **apps** y **libs**
+The monorepo itself is structured into three abstraction layers: apps, libs, and modules.
 
 ## Apps
 
-Están los proyectos que se pueden "servir", es decir, ejecutar por si solos para ver el resultado de este, un ejemplo puede ser el uso del comando `nx serve`, se divide en 2 según su funcionalidad: **back** y **front**
+This layer houses projects capable of being "served" or executed independently. It is further categorized into ***servers*** and ***fronts***.
 
-### Back
+### Servers
 
-El back está pensando para que se sirva en "microservicios", estas apps deben estar desacopladas a cualquier framewor de desarrollo de backend, cada *grupo de dominio* se debe servir en un app aparte.
+This category encompasses the various server configurations, each decoupled from specific backend frameworks. Examples include local servers, AWS deployments, Firebase functions, Google Cloud functions, Azure functions, etc.
 
-* local: Servidor local en nodejs
-* firebase: Servidor local/remoto configurado para firebase/google cloud functions
+Due to the typically concise nature of server implementations, adhering to the hexagonal architecture within this layer is not mandatory.
 
-#### Front
+### Front
 
-* Usuario
-* Admin
-* Landing
-  
+While currently not extensively defined within the repository, this category accommodates frontend applications that may be part of the monorepo.
+
 ## Libs
 
-Están los módulos reutilizables tanto desde las apps como desde otros módulos, se dividen en 3 **core**, **front** y **modules**
+This layer comprises reusable modules accessible by both apps and individual modules. It is subdivided into gateway, framework, and core.
 
-### core(librerias)
+### Framework
 
-#### express
+This category manages the configuration of backend frameworks (e.g., Express, Fastify, Koa, NestJS) utilized by the servers defined in the previous layer. To minimize framework coupling, these frameworks act as intermediaries, with the core application logic residing in the core layer.
 
-Genera las microapps utilizando el framework express, se crea una microapp por cada *grupo de dominio*
+The project comes pre-configured with the Express framework.
 
-#### main
+Given the often compact implementation of framework-related code, strict adherence to the hexagonal architecture is not always necessary. However, as implementations grow, following the architectural guidelines is recommended.
 
-Se encarga de generar el listado de rutas según cada *grupo de dominio* y exponerlas para su implementación en el framework correspondiente, estas rutas deben ser desacopladas a cualquier framework de desarrollo backend
+### Gateway
 
-Está librería se estructura bajo la arquitectura hexagonal, dentro de esta librería se encuentran los servicios(lógica) y las reglas de seguridad compartidos entre los diferentes módulos, estos servicios y reglas se inyectan a los modulos (via puerto y controlador respectivamente) para que puedan hacer uso de estos.
+This layer functions as an API gateway, gathering information about modules to be exposed and presenting them to the chosen framework for serving. The gateway facilitates API control, handling aspects like authentication, authorization, dynamic routing, module injection, security validations, etc.
 
-### modules
+It generates route listings based on domain groups and exposes them for framework-specific implementation. These routes are designed to be agnostic of any particular backend framework.
 
-#### core(modulo)
+### Core
 
-En este módulo estan las reglas de dominio principales compartidos por todos los módulos, así como el *BaseController* el cual es controlador general del caul extienden todos los controladores de los otros módulos.
+This layer represents the project's core, serving as a dependency for all other layers without having dependencies itself. It houses central logic, interface definitions, keys, services, base controllers, and other fundamental components.
 
-Los módulos diferentes a *modules-core* deben tener la siguiente estructura:
+## Modules
 
-```markdown
+This layer contains the individual modules (domain groups) of the application.
+
+Each module should adhere to the following structure:
+
 ./mymodule
 ├── src
-| ├── application/
-│ │ ├── useCases/
-│ │ └── mymodule.port.ts
-| ├── domain/
-│ │ └── mymodule.routes.ts
-│ ├── infra/
-│ │ └── mymodule.controller.ts
+│   ├── application/
+│   │   ├── useCases/
+│   │   │   └── myfeature.useCase.ts
+│   │   └── port.ts
+│   ├── domain/
+│   │   ├── interface.ts (If applicable)
+│   │   ├── repository.ts (If applicable)
+│   │   └── routes.ts
+│   ├── infra/
+│   │   └── controller.ts
 └── ... (config files)
 
-```
+Explanation:
 
-#### asamblea
+- application: Contains use cases (application logic) and port definitions (interfaces for interacting with other layers).
+- domain: Houses domain entities, interfaces, and repositories (if applicable).
+- infra: Provides concrete implementations for controllers, interacting with external systems or frameworks.
 
-#### conjunto
-
-#### general
-
-#### unidad
-
-### front
-
-#### services
-
-#### components
-
-#### styles
-
-## Dependencias
-
-Ejecutar `nx graph`
-
-## faqs
-
-libs/core/main puede depender de los modulos, pero los modulos no pueden depender de el
-
-Del modules/core pueden depender los otros mudulos pero este no debe depender de los otros módulos, es decir modules/core debe poder funcionar solito sin los otros módulos
-
-Como saber cuando va en libs/core/main o en /libs/modules/core
-Si se usa en los modulos va en /libs/modules/core si no va en libs/core/main
+This structure promotes modularity, maintainability, and testability by clearly separating concerns and adhering to the principles of hexagonal architecture.

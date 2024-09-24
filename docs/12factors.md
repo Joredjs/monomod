@@ -1,71 +1,79 @@
-# 12 Factors
+# 12 Factors in NXMS
 
-## Codebase
+This document outlines how the NXMS project strives to adhere to the principles of the 12-Factor App methodology, a set of best practices for building modern, scalable, and maintainable web applications.
 
-Monorepo gestionado con *NX*, con la siguiente estuctura
+## I. Codebase
 
-### Ramas
+### One codebase tracked in revision control, many deploys 
 
-Se utliza como metódlogía de ramas *trunk based development* tomando ***main*** como rama base para los desarrollos
+NXMS utilizes a monorepo structure managed with NX, enabling a single codebase for all modules and applications. This ensures consistency across deployments and simplifies version control.
 
-### Contenido
+### Branching Strategy 
 
-#### Apps
+The project adopts a trunk-based development approach, with the main branch serving as the primary integration point. Feature branches are merged into main, and releases are made from there.
 
-> Servidores:
+## II. Dependencies
 
-- **local**: App básica que ejecuta localmente un servidor nodejs : `nx serve local`
-- **firebase**: App básica que ejecuta localmente un servidor nodejs usando [firebase-functions](https://firebase.google.com/docs/functions?hl=es) : `nx serve fbfunc`
+### Explicitly declare and isolate dependencies
 
-> Frameworks:
+NXMS leverages the package management capabilities of NPM. Each module and application within the monorepo explicitly declares its dependencies in its respective package.json file. This ensures consistent dependency resolution across environments and avoids conflicts.
 
-- **express**: Punto de entrada desde las apps de servidores hacia la lógica, usa [express](https://expressjs.com) como framework
+## III. Config
 
-> Lógica:
+### Store config in the environment
 
-- **core**: Lógica de la aplicación
+Configuration values, such as database credentials, API keys, and environment-specific settings, are stored as environment variables. This separation of configuration from code promotes portability and simplifies deployment to different environments.
 
-## Dependencies
+## IV. Backing Services
 
-En el package.json
+### Treat backing services as attached resources
 
-## Config
+NXMS promotes the concept of treating external services, such as databases, message queues, and APIs, as attached resources. This means that the application should be able to connect to different instances of these services without code changes, typically achieved through configuration.
 
-Archivo .ENV
+## V. Build, Release, Run
 
-## Banking Services
+### Strictly separate build and run stages
 
-N/A
+NXMS encourages the use of CI/CD pipelines to automate the build, release, and run stages. This ensures consistent and repeatable deployments.
 
-## Build, Release, Run
+## VI. Processes
 
-TODO: Enable CI & CD
+### Execute the app as one or more stateless processes
 
-## Processes
+NXMS applications are designed to be stateless, meaning that they do not store any data in memory or on disk that is required for subsequent requests. This allows for horizontal scalability and resilience.
 
-Stateles processes
+## VII. Port Binding
 
-## Port Binding
+### Export services via port binding
 
-Listado de puertos
+NXMS applications expose their services on specific ports, making them accessible to other processes or services. This promotes modularity and allows for independent deployment and scaling.
 
-## Concurrency
+## VIII. Concurrency
 
-??
+### Scale out via the process model
 
-## Disposability
+NXMS applications are designed to be horizontally scalable, meaning that they can handle increased load by adding more instances of the application processes. This is facilitated by the stateless nature of the applications.
 
-??
+## IX. Disposability
 
-## Dev/Pord parity
+### Maximize robustness with fast startup and graceful shutdown
 
-N/A
+NXMS applications strive for fast startup times and graceful shutdown procedures. This ensures that applications can be quickly deployed and scaled, and that they can handle unexpected terminations without data loss or corruption.
 
-## LOGS
+## X. Dev/Prod Parity
 
-N/A
+### Keep development, staging, and production as similar as possible
 
-## Admin Processes
+NXMS encourages the use of consistent environments across development, staging, and production. This minimizes the risk of environment-specific issues and promotes predictability.
 
+## XI. Logs
 
- 
+### Treat logs as event streams
+
+NXMS applications treat logs as event streams, meaning that they are written to a centralized logging system rather than to local files. This allows for easier monitoring, analysis, and troubleshooting.
+
+## XII. Admin Processes
+
+### Run admin/management tasks as one-off processes
+
+Administrative tasks, such as database migrations or cache clearing, are treated as one-off processes that are run independently of the main application processes. This ensures that these tasks do not interfere with the normal operation of the application.
