@@ -16,7 +16,7 @@
 		"dep:gateway": "depcruise --collapse \"^(apps|modules|libs/framework|libs/core|libs/gateway/src/domain|libs/gateway/src/application|libs/gateway/src/infra)\" apps --output-type dot | dot -T svg > results/deps/gateway.svg",
 		"dep:gateway-full": "depcruise --collapse \"^(apps|modules|libs/framework|libs/core)\" apps --output-type dot | dot -T svg > results/deps/gateway-full.svg",
 		"dep:framework": "depcruise --collapse \"^(apps|modules|libs/core|libs/gateway)\" apps --output-type dot | dot -T svg > results/deps/framework.svg",
-		"dep:libs": "depcruise --collapse \"^(apps|modules|libs/core|libs/framework|libs/gateway)\" apps --output-type dot | dot -T svg > results/deps/libs.svg",
+		"dep:libs": "depcruise --collapse \"^(apps/servers|modules|libs/core|libs/framework|libs/gateway)\" apps --output-type dot | dot -T svg > results/deps/libs.svg",
 		"dep:libs-full": "depcruise --collapse \"^(apps|modules)\" apps --output-type dot | dot -T svg > results/deps/libs-full.svg",
 		"dep:server-local": "depcruise --collapse \"^(libs|modules)\" apps/servers/server-local --output-type dot | dot -T svg > results/deps/server-local.svg",
 		"dep:apps": "depcruise --collapse \"^(libs|modules)\" apps --output-type dot | dot -T svg > results/deps/apps.svg",

@@ -34,8 +34,11 @@ export class AdapterApi<
 	TFwRes extends IResponseParams
 > {
 	#routeList: IRouteGroup<TFwParams>[] = [];
+
 	#modulesInstances: TMyModulesInstances = {};
+
 	#services: IServices = {};
+
 	#layersService;
 
 	constructor(frameworkService: IFrameworkService<TFwRes>) {

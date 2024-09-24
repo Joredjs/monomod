@@ -64,9 +64,10 @@ NXMS employs a layered architecture, promoting separation of concerns and mainta
 
 ## Documentation and Resources
 
-- Structure: Detailed explanation of the project structure
-- Definitions: Module definitions and specifications
-- 12 Factors: Adherence to the 12-Factor App methodology
+- [Structure](./docs/structure.md): Detailed explanation of the project structure
+- [Definitions](./docs/definitions.md): Module definitions and specifications
+- [12 Factors](./docs/12factors.md): Adherence to the 12-Factor App methodology
+- [Code Style](./docs/codeStyle.md): Coding conventions and style guidelines
 
 ## Contributing
 

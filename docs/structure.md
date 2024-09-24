@@ -71,3 +71,26 @@ Explanation:
 - infra: Provides concrete implementations for controllers, interacting with external systems or frameworks.
 
 This structure promotes modularity, maintainability, and testability by clearly separating concerns and adhering to the principles of hexagonal architecture.
+
+## Diagrams
+
+These are the main diagrams about the project structure, ypu can generate it yourself:
+
+```shell
+nx dep
+nx graph
+```
+
+### Dependecy cruiser
+
+- Compact:
+
+![Dependecy Cruiser](./img/libs.svg)
+
+- Full:
+
+![Dependecy Cruiser FULL](./img/all-full.svg)
+
+### Graph
+
+![Graph](./img/graph.png)

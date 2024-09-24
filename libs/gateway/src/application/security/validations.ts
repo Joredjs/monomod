@@ -20,6 +20,7 @@ export class AppValidations<
 > implements IAppValidations<TFwReq, TFwRes>
 {
 	#security: SecurityClass<TFwReq>;
+
 	#schemaValidator;
 
 	constructor(services: IServices) {
