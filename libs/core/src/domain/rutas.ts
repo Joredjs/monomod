@@ -1,10 +1,10 @@
-import { IPort, TServicesList } from './layers';
+import { IController, IPort, TServicesList } from './layers';
 import { IHeadersStructure } from './validations';
 import { TFrameworkParams } from './frameworks';
 import { THttpMethods } from './http';
 
 export type TDomainGroups = 'example';
-type TVersion = 'v1' | 'v2';
+export type TVersion = 'v1' | 'v2';
 
 export enum EVersions {
 	alpha = 'v1',
@@ -87,7 +87,7 @@ export interface IRouteGroup<TFwParams> {
 	puerto: number;
 	port?: IPort;
 	versions: TVersion[];
-	// services: TServicesList[];
+	// Services: TServicesList[];
 }
 
 export interface IModule<TGTMod> {
@@ -109,5 +109,9 @@ export interface IModuleRoute<TFwParams> {
 
 // TODO: dont use any (use class instance)
 export type TMyModulesInstances = {
-	[domain in TDomainGroups]?: { Route: any; Port: any; Controller: any };
+	[domain in TDomainGroups]?: {
+		Route: any;
+		Port: any;
+		Controller: any;
+	};
 };

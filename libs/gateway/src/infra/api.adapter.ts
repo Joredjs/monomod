@@ -66,9 +66,9 @@ export class AdapterApi<
 
 	#setModulesList() {
 		this.#modulesInstances.example = {
+			Controller: ModExampleController,
 			Port: ModExamplePort,
 			Route: ModExampleRoutes,
-			Controller: ModExampleController,
 		};
 	}
 

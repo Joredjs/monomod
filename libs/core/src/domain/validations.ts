@@ -1,5 +1,6 @@
 import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
 import { ITransactionValid } from './http';
+import { TVersion as THeadersVersion } from './rutas';
 
 export interface IAppValidations<TFwReq, TFwRes> {
 	manager(
@@ -8,8 +9,7 @@ export interface IAppValidations<TFwReq, TFwRes> {
 	): ITransactionValid;
 }
 
-// TODO: importar el THeadersVersion de rutas ??
-type THeadersVersion = 'v1' | 'v2';
+
 interface IHeadersPrefixStructure {
 	letter: string;
 	prefix: string;

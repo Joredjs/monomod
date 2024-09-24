@@ -1,10 +1,10 @@
-import { AdapterApi } from './infra';
 import {
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
 	IRouteGroup,
 } from '@nxms/core/domain';
+import { AdapterApi } from './infra';
 
 export class ApiCore<
 	TFwParams,
@@ -12,6 +12,7 @@ export class ApiCore<
 	TFwRes extends IResponseParams
 > {
 	#framework: IFrameworkService<TFwRes>;
+
 	constructor(frameworkService: IFrameworkService<TFwRes>) {
 		this.#framework = frameworkService;
 	}

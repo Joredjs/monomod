@@ -235,8 +235,6 @@ export class ServiceHeaders {
 		return headerMsg;
 	}
 
-	// TODO: no llamar esto 2 veces
-
 	validateMandatory(headersReq: TIncomingHttpHeaders): boolean {
 		let headerMsg = { errDetail: '', headersOk: true };
 		for (const head of this.#mandatoryHeaders) {
@@ -267,8 +265,6 @@ export class ServiceHeaders {
 	public validate(headersReq: TIncomingHttpHeaders, key?: string): boolean {
 		try {
 			let headerMsg = { errDetail: '', headersOk: true };
-
-			// HeaderMsg = this.validateMandatory(headersReq);
 
 			if (key && headerMsg.headersOk) {
 				const specificHeader = this.#validateSpecificHeader(key, headersReq);

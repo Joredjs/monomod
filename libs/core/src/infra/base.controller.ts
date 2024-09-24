@@ -26,53 +26,46 @@ export class BaseController<TFwReq, TFwRes>
 		this.framework = frameworkService;
 	}
 
-	public handler = (
+	public handler = async (
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
 	) => {
-		// TODO: 2 chained try are neccesary? do await instead then
 		try {
-			try {
-				const info: ITransactionValid = this.validations.manager(req, res);
-
-				info
-					.useCase(info)
-					.then((useCaseResponse: IOKResponse<unknown>) => {
-						const resInfo = {
-							resBody: useCaseResponse,
-							resInstance: res as TFwRes,
-							status: useCaseResponse.code,
-						};
-						this.framework.returnInfo(resInfo);
-					})
-					.catch((useCaseErr: IErrResponse) => {
-						const resErrInfo = {
-							resBody: useCaseErr,
-							resInstance: res as TFwRes,
-							status: useCaseErr.code || domainKeys.errores.nocatch.code,
-						};
-						this.framework.returnInfo(resErrInfo);
-					});
-			} catch (error) {
-				const infoError = resultErr(error).unwrap();
-				const resErrInfo = {
-					resBody: infoError,
-					resInstance: res as TFwRes,
-					status: infoError.code,
-				};
-				this.framework.returnInfo(resErrInfo);
-			}
+			const info: ITransactionValid = this.validations.manager(req, res);
+			const useCaseResponse = await this.#executeUseCase(info);
+			this.#returnResponse(res, useCaseResponse.code, useCaseResponse);
 		} catch (error) {
-			console.error('ERROR en handler', error);
-			const resErrInfo = {
-				resBody: {
-					body: 'Por el momento no es posible acceder a la información',
-					code: 500,
-				},
-				resInstance: res as TFwRes,
-				status: 500,
-			};
-			this.framework.returnInfo(resErrInfo);
+			this.#handleError(res, error);
 		}
 	};
+
+	async #executeUseCase(
+		info: ITransactionValid
+	): Promise<IOKResponse<unknown> | IErrResponse> {
+		try {
+			return (await info.useCase(info)) as IOKResponse<unknown>;
+		} catch (err: unknown) {
+			const useCaseErr = err as IErrResponse;
+			useCaseErr.code ??= domainKeys.errores.nocatch.code;
+			throw useCaseErr;
+		}
+	}
+
+	#returnResponse(
+		res: TFrameworkResponse<TFwRes>,
+		statusCode: number,
+		responseBody: IOKResponse<unknown> | IErrResponse
+	): void {
+		const resInfo = {
+			resBody: responseBody,
+			resInstance: res,
+			status: statusCode,
+		};
+		this.framework.returnInfo(resInfo);
+	}
+
+	#handleError(res: TFrameworkResponse<TFwRes>, error): void {
+		const errorInfo = resultErr(error).unwrap();
+		this.#returnResponse(res, errorInfo.code, errorInfo);
+	}
 }

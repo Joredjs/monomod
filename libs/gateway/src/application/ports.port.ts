@@ -1,4 +1,3 @@
-import { modulesList } from '../domain';
 import {
 	IPortParams,
 	IServices,
@@ -6,6 +5,7 @@ import {
 	TMyModulesInstances,
 	TPorts,
 } from '@nxms/core/domain';
+import { modulesList } from '../domain';
 export class PortPorts {
 	#services: IServices = {};
 	#modulesInstances: TMyModulesInstances;

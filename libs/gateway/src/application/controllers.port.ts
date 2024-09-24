@@ -26,8 +26,8 @@ export class PortControllers<
 	}
 
 	getAll(services: IServices): TControllers<TFwReq, TFwRes> {
-		//TODO: obetner las validaciones dinámicamente
-		//TODO: O quitar el novalidations y dejar siempre obligatorio el appvalidations
+		/* TODO: obetner las validaciones dinámicamente
+		   TODO: O quitar el novalidations y dejar siempre obligatorio el appvalidations */
 		const appValidations = new AppValidations<TFwReq, TFwRes>(services);
 
 		const controllers: TControllers<TFwReq, TFwRes> = {};

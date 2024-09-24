@@ -86,7 +86,7 @@ interface IErrorMap {
 // TODO: volver clase
 function saveLog(errInfo: IErrorMap) {
 	if (errInfo && errInfo.saveLog) {
-		/*  TODO: manjear LOGS
+		/*  TODO: manejar LOGS
        TODO: Guardar info del req y del header */
 
 		console.error('------ERROR:---------');

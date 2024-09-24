@@ -62,9 +62,6 @@ export interface IServices {
 	storage?: {
 		upload(key: string, data: string, section?: string): Promise<string>;
 		read(key: string, section?: string): Promise<string>;
-
-		// TODO: crear interface para reemplazar IBanner
-
 		list(section?: string): Promise<any[]>;
 		remove(key: string, section?: string): void;
 	};
@@ -74,8 +71,6 @@ export interface IServices {
 		): Promise<TGReturn>;
 	};
 }
-
-// TODO: change the any type in client
 
 export interface IServicesDependencies {
 	crypto?: {
