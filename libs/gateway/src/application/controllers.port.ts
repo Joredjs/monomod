@@ -1,4 +1,6 @@
+import { AppValidations, NoValidations } from './security';
 import {
+	IAppValidations,
 	IController,
 	IFrameworkService,
 	IRequestParams,
@@ -7,8 +9,7 @@ import {
 	TControllers,
 	TMyModulesInstances,
 } from '@nxms/core/domain';
-import { AppValidations } from './security';
-import { modulesList } from '../domain';
+import { modulesList, modulos } from '../domain';
 
 export class PortControllers<
 	TFwReq extends IRequestParams,
@@ -26,24 +27,26 @@ export class PortControllers<
 		this.#modulesInstances = modulesInstances;
 	}
 
-	getAll(services: IServices): TControllers<TFwReq, TFwRes> {
-		/* TODO: obetner las validaciones dinámicamente
-		   TODO: O quitar el novalidations y dejar siempre obligatorio el appvalidations */
-		const appValidations = new AppValidations<TFwReq, TFwRes>(services);
+	// Factory method to create a controller instance for a specific module
+	#createController(module, services: IServices): IController<TFwReq, TFwRes> {
+		// Determine which validation class to use based on module configuration
+		const validations: IAppValidations<TFwReq, TFwRes> = modulos[module]
+			.useValidations
+			? new AppValidations<TFwReq, TFwRes>(services)
+			: new NoValidations<TFwReq, TFwRes>(services);
 
-		const controllers: TControllers<TFwReq, TFwRes> = {};
-		for (const module of modulesList) {
-			const myController = this.#setModuleController(module, appValidations);
-			controllers[module] = myController;
-		}
-
-		return controllers;
-	}
-
-	#setModuleController(module, validations): IController<TFwReq, TFwRes> {
 		return new this.#modulesInstances[module].Controller<TFwReq, TFwRes>(
 			validations,
 			this.#framework
 		);
+	}
+
+	getAll(services: IServices): TControllers<TFwReq, TFwRes> {
+		const controllers: TControllers<TFwReq, TFwRes> = {};
+		for (const module of modulesList) {
+			controllers[module] = this.#createController(module, services);
+		}
+
+		return controllers;
 	}
 }

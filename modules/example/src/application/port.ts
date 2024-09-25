@@ -9,7 +9,7 @@ import {
 } from '@nxms/core/domain';
 import { TestUseCase } from './useCases';
 
-export class ExamplePort implements IPort {
+export class ModuleExamplePort implements IPort {
 	usecaseParams: IUseCaseParams<any>;
 
 	constructor(params: IPortParams) {

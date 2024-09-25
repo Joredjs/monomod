@@ -1,3 +1,3 @@
-export { ExampleController as ModExampleController } from './infra';
-export { ExamplePort as ModExamplePort } from './application';
-export { ExampleRoutes as ModExampleRoutes } from './domain';
+export { ModuleExampleController } from './infra';
+export { ModuleExamplePort } from './application';
+export { ModuleExampleRoutes } from './domain';

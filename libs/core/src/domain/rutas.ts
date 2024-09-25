@@ -96,6 +96,7 @@ export interface IModule<TGTMod> {
 	headers?: { [head: string]: IHeadersStructure };
 	schemas: ISchemaObject;
 	services: TServicesList[];
+	useValidations: boolean;
 	versions: TVersion[];
 }
 

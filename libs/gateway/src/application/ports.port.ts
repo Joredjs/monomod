@@ -16,20 +16,21 @@ export class PortPorts {
 		this.#services = services;
 	}
 
-	getAll(): TPorts {
-		const ports: TPorts = {};
-		for (const module of modulesList) {
-			const myPort = this.#setModulePort(module);
-			ports[module] = myPort;
-		}
-
-		return ports;
-	}
-
-	#setModulePort(module: TDomainGroups) {
+	// Factory method to create a port instance for a specific module
+	#createPort(module: TDomainGroups) {
 		const params: IPortParams = {
 			services: this.#services,
 		};
 		return new this.#modulesInstances[module].Port(params);
+	}
+
+	// Get all ports, dynamically creating them for each module
+	getAll(): TPorts {
+		const ports: TPorts = {};
+		for (const module of modulesList) {
+			ports[module] = this.#createPort(module);
+		}
+
+		return ports;
 	}
 }

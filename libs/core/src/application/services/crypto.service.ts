@@ -4,63 +4,59 @@ import {
 	ICryptoRequest,
 	ICryptoResponse,
 	domainKeys,
+	setError,
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 
 export class ServiceCrypto {
 	#client: ICryptoClient;
 
-	#cryptoOptions: ICryptoOptions = {
-		aad: Buffer.from(process.env.CRYPTO_aad || '', 'hex'),
-		digestType: 'base64',
-		encode: 'utf-8',
-		hashType: 'sha256',
-		key: { hash: 'x', valor: process.env.CRYPTO_key },
-		mode: 'aes-256-ccm',
-		tag: new Int32Array(),
-		texto: Buffer.from('x', 'utf-8'),
-		vector: {
-			hash: 'x',
-			size: 0,
-		},
-	};
+	#cryptoOptions: ICryptoOptions;
 
 	constructor(client: ICryptoClient, options?: ICryptoOptions) {
 		this.#client = client;
 
-		this.#cryptoOptions.tag = new Int32Array(
-			client.random(domainKeys.core.crypto.defaultBytes)
-		);
-
-		if (options) {
-			this.#cryptoOptions = options;
-		}
+		this.#cryptoOptions = {
+			aad: Buffer.from(process.env.CRYPTO_aad || '', 'hex'),
+			digestType: 'base64',
+			encode: 'utf-8',
+			hashType: 'sha256',
+			key: { hash: 'x', valor: process.env.CRYPTO_key },
+			mode: 'aes-256-ccm',
+			tag: new Int32Array(client.random(domainKeys.core.crypto.defaultBytes)),
+			texto: Buffer.from('x', 'utf-8'),
+			vector: {
+				hash: 'x',
+				size: 0,
+			},
+			...options,
+		};
 	}
 
-	#getModeInfo() {
+	#getModeInfo(): void {
 		const mymode = this.#client
 			.getCiphers()
-			.filter((modo) => modo === this.#cryptoOptions.mode)[0] as CipherCCMTypes;
+			.find((modo) => modo === this.#cryptoOptions.mode) as CipherCCMTypes;
 		this.#cryptoOptions.mode = mymode;
 		this.#cryptoOptions.modeInfo = this.#client.getInfo(
 			this.#cryptoOptions.mode
 		);
 	}
 
-	#setSize() {
+	#setSize(): void {
 		if (this.#cryptoOptions.modeInfo) {
 			this.#cryptoOptions.key.size = this.#cryptoOptions.modeInfo.keyLength;
 			this.#cryptoOptions.vector.size = this.#cryptoOptions.modeInfo.ivLength;
 		}
 	}
 
-	#setVector() {
+	#setVector(): void {
 		const vectorsize = this.#cryptoOptions.vector.size || 0;
 		this.#cryptoOptions.vector.valor =
 			this.#cryptoOptions.vector.valor || this.#client.random(vectorsize);
 	}
 
-	#setCryptoCredentials(attr: keyof ICryptoOptions) {
+	#setCryptoCredentials(attr: keyof ICryptoOptions): void {
 		if (attr === 'key' || attr === 'vector') {
 			const hash = this.#client
 				.hash(this.#cryptoOptions.hashType)
@@ -71,13 +67,13 @@ export class ServiceCrypto {
 		}
 	}
 
-	#setHash(attr: keyof ICryptoOptions = 'key', value = '') {
+	#setHash(attr: keyof ICryptoOptions = 'key', value = ''): void {
 		if (attr === 'key' || attr === 'vector') {
 			this.#cryptoOptions[attr].hash = value;
 		}
 	}
 
-	#setupCrypto(decrypt = false, cryptoReq?: ICryptoRequest) {
+	#setupCrypto(decrypt = false, cryptoReq?: ICryptoRequest): void {
 		if (decrypt && cryptoReq) {
 			this.#cryptoOptions.vector.valor = cryptoReq.vector;
 			this.#cryptoOptions.texto = cryptoReq.texto;
@@ -93,11 +89,11 @@ export class ServiceCrypto {
 	}
 
 	encrypt(texto: Buffer): string {
-		if (typeof texto !== 'string') {
-			texto = Buffer.from(JSON.stringify(texto));
-		}
-
 		try {
+			if (typeof texto !== 'string') {
+				texto = Buffer.from(JSON.stringify(texto));
+			}
+
 			this.#cryptoOptions.texto = texto;
 			this.#setupCrypto();
 			const cipher = this.#client.encrypt(
@@ -129,15 +125,22 @@ export class ServiceCrypto {
 
 			return Buffer.from(JSON.stringify(enc), 'utf-8').toString('base64');
 		} catch (err) {
-			const enc: ICryptoResponse = {
-				x0x1: err as string,
-				x0x2: 'error al encriptar',
-				x0x3: 'undefined',
-			};
+			/* Const enc: ICryptoResponse = {
+			   	x0x1: err as string,
+			   	x0x2: 'error al encriptar',
+			   	x0x3: 'undefined',
+			   }; */
+
+			// Console.error('ERROR al encriptar', err);
+
+			// Return Buffer.from(JSON.stringify(enc), 'utf-8').toString('base64');
 
 			console.error('ERROR al encriptar', err);
-
-			return Buffer.from(JSON.stringify(enc), 'utf-8').toString('base64');
+			throw setError({
+				detail: err,
+				errType: 'nocatch',
+				text: 'error al encriptar',
+			});
 		}
 	}
 
@@ -184,7 +187,12 @@ export class ServiceCrypto {
 			return decrypted;
 		} catch (err) {
 			console.error('ERROR al desencriptar', err);
-			return 'error';
+			// Return 'error';
+			throw setError({
+				detail: err,
+				errType: 'nocatch',
+				text: 'error al desencriptar',
+			});
 		}
 	}
 }

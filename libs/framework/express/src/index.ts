@@ -33,7 +33,7 @@ export class ExpressFramework {
 					console.debug('******************');
 					console.debug('DEBUGGING APP CORS');
 					console.debug('microAPP:', microApp.name);
-					console.debug('DOMINIOS:', microApp.domains);
+					console.debug('Domains:', microApp.domains);
 					console.debug('Origin:', origin);
 				}
 
@@ -123,36 +123,38 @@ export class ExpressFramework {
 		routeGroup.paths.forEach((routeInfo) => {
 			const handler = routeGroup.handler || defaultHandler;
 			routeGroup.versions.forEach((version) => {
-				microApp.app.use((req, res, next) => {
-					if (appConfig.removePrefix) {
-						const sUrl = req.url.split('/');
-						if (sUrl[1] === microApp.name) {
-							req.url = req.url.replace(`/${microApp.name}`, '');
+				// Apply middleware and set locals for each route and version
+				microApp.app[routeInfo.method](
+					`${groupName}/${version}/${routeInfo.path}`,
+					(req, res, next) => {
+						if (appConfig.removePrefix) {
+							const sUrl = req.url.split('/');
+							if (sUrl[1] === microApp.name) {
+								req.url = req.url.replace(`/${microApp.name}`, '');
+							}
 						}
-					}
 
-					if (routeGroup.port) {
-						routeInfo = {
-							...routeInfo,
-							globalHeaders: routeGroup.headers,
-							port: routeGroup.port,
-							version,
-						};
-					}
-					res.locals.route = routeInfo;
-					if (appConfig.debug.paths) {
-						console.debug('******************');
-						console.debug('DEBUGGING APP URL');
-						console.debug('microAPP:', microApp.name);
-						console.debug('URL:', req.url);
-						console.debug('INFO:', routeInfo);
-					}
-					next();
-				});
-				microApp.app.use(this.#setAppCors(microApp, appConfig));
-
-				const path = `${groupName}/${version}/${routeInfo.path}`;
-				microApp.app[routeInfo.method](path, handler);
+						if (routeGroup.port) {
+							routeInfo = {
+								...routeInfo,
+								globalHeaders: routeGroup.headers,
+								port: routeGroup.port,
+								version,
+							};
+						}
+						res.locals.route = routeInfo;
+						if (appConfig.debug.paths) {
+							console.debug('******************');
+							console.debug('DEBUGGING APP URL');
+							console.debug('microAPP:', microApp.name);
+							console.debug('URL:', req.url);
+							console.debug('INFO:', routeInfo);
+						}
+						next();
+					},
+					this.#setAppCors(microApp, appConfig),
+					handler
+				);
 			});
 		});
 		microApp = this.#setTestPath(microApp, groupName);
@@ -196,11 +198,12 @@ export class ExpressFramework {
 				name: routeGroup.group,
 				port: routeGroup.puerto,
 			};
-			apps[appName].app.use(express.json({ limit: '5mb' }));
+			apps[appName].app.use(express.json({ limit: this.#appConfig.bodyLimit }));
 			// eslint-disable-next-line max-params
 			apps[appName].app.use((err, req, res, next) => {
 				console.error('ERROR:---------');
 				console.error(err);
+				next(err);
 			});
 			apps[appName] = this.#setPaths(
 				routeGroup,

@@ -15,6 +15,7 @@ export const modulos: TModules = {
 		puerto: puertos.example,
 		schemas,
 		services: [],
+		useValidations: true,
 		versions: [EVersions.alpha],
 	},
 };

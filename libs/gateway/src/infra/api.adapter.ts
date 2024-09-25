@@ -8,9 +8,9 @@ import {
 	TMyModulesInstances,
 } from '@nxms/core/domain';
 import {
-	ModExampleController,
-	ModExamplePort,
-	ModExampleRoutes,
+	ModuleExampleController,
+	ModuleExamplePort,
+	ModuleExampleRoutes,
 } from '@nxms/module-example';
 import {
 	PortControllers,
@@ -55,23 +55,22 @@ export class AdapterApi<
 			ports.getAll()
 		);
 		const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
-		this.#routeList = routes.routeList();
+		this.#routeList = routes.getAll();
 	}
 
 	getRoutes(): IRouteGroup<TFwParams>[] {
-		this.#routeList.map((rgroup) => {
-			rgroup.handler = this.#layersService.getController(rgroup.group).handler;
-			rgroup.port = this.#layersService.getPort(rgroup.group);
-			return rgroup;
-		});
-		return this.#routeList;
+		return this.#routeList.map((rgroup) => ({
+			...rgroup,
+			handler: this.#layersService.getController(rgroup.group).handler,
+			port: this.#layersService.getPort(rgroup.group),
+		}));
 	}
 
 	#setModulesList() {
 		this.#modulesInstances.example = {
-			Controller: ModExampleController,
-			Port: ModExamplePort,
-			Route: ModExampleRoutes,
+			Controller: ModuleExampleController,
+			Port: ModuleExamplePort,
+			Route: ModuleExampleRoutes,
 		};
 	}
 

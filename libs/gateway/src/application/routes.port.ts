@@ -7,41 +7,36 @@ import {
 } from '@nxms/core/domain';
 import { modulesList, modulos } from '../domain';
 
-type TMyModuleRoute<TFwParams> = {
-	[domain in TDomainGroups]?: IModuleRoute<TFwParams>;
-};
 export class PortRoutes<TFwParams> {
-	example: IModuleRoute<TFwParams>;
-
-	#modules: TMyModuleRoute<TFwParams> = {};
-
 	#modulesInstances: TMyModulesInstances;
 
 	constructor(modulesInstances: TMyModulesInstances) {
 		this.#modulesInstances = modulesInstances;
 	}
 
-	#addGlobalCors(ruta: IRouteGroup<TFwParams>) {
-		ruta.cors.concat(domainKeys.core.globalCors);
-		// TODO: Si los dominios no se configuran cada ruta, moverlo a un lugar más general
-		ruta.domains = domainKeys.core.allowedDomains;
-		return ruta;
+	// Apply global CORS configuration to a route group
+	#applyGlobalCors(route: IRouteGroup<TFwParams>): IRouteGroup<TFwParams> {
+		return {
+			...route,
+			cors: route.cors.concat(domainKeys.core.globalCors),
+			// TODO: IF the domains arent configured per route, move it to a generic place
+			domains: domainKeys.core.allowedDomains,
+		};
 	}
 
-	routeList(): IRouteGroup<TFwParams>[] {
-		const rutas: IRouteGroup<TFwParams>[] = [];
+	// Factory method to create a route instance for a specific module
+	#createModuleRoutes(module: TDomainGroups): IModuleRoute<TFwParams> {
+		return new this.#modulesInstances[module].Route(modulos[module]);
+	}
+
+	// Get all route groups, dynamically creating them for each module
+	getAll(): IRouteGroup<TFwParams>[] {
+		const routes: IRouteGroup<TFwParams>[] = [];
 		for (const module of modulesList) {
-			this.#setModulesRoutes(module);
-			const paths = this.#modules[module].getRutas();
-			rutas.push(this.#addGlobalCors(paths));
+			const moduleRoutes = this.#createModuleRoutes(module);
+			routes.push(this.#applyGlobalCors(moduleRoutes.getRutas()));
 		}
 
-		return rutas;
-	}
-
-	#setModulesRoutes(module: TDomainGroups) {
-		this.#modules[module] = new this.#modulesInstances[module].Route(
-			modulos[module]
-		);
+		return routes;
 	}
 }

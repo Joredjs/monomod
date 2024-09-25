@@ -7,7 +7,7 @@ import {
 	TDomainGroups,
 } from '@nxms/core/domain';
 
-export class ExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
+export class ModuleExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
 	#modulo: IModule<TGTMod>;
 
 	constructor(modulo: IModule<TGTMod>) {
