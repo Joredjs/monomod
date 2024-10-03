@@ -110,7 +110,7 @@ export interface IModuleRoute<TFwParams> {
 
 // TODO: dont use any (use class instance)
 export type TMyModulesInstances = {
-	[domain in TDomainGroups]?: {
+	[domain in TDomainGroups]: {
 		Route: any;
 		Port: any;
 		Controller: any;

@@ -17,11 +17,11 @@ export class NoValidations<TFwReq extends IRequestParams, TFwRes>
 	}
 
 	#getTransactionInfo(req: TFrameworkRequest<TFwReq>): ITransactionValid {
-		const useCase = this.#security.emptyUseCase;
+		const handler = this.#security.emptyHandler;
 
 		return {
+			handler,
 			reqHeader: req.headers,
-			useCase,
 		};
 	}
 

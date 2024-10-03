@@ -3,6 +3,7 @@ import {
 	IRequestParams,
 	IResponseParams,
 	IRouteGroup,
+	setError,
 } from '@nxms/core/domain';
 import { AdapterApi } from './infra';
 
@@ -18,9 +19,13 @@ export class ApiCore<
 	}
 
 	getRutas(): IRouteGroup<TFwParams>[] {
-		const apiAdapter = new AdapterApi<TFwParams, TFwReq, TFwRes>(
-			this.#framework
-		);
-		return apiAdapter.getRoutes();
+		try {
+			const apiAdapter = new AdapterApi<TFwParams, TFwReq, TFwRes>(
+				this.#framework
+			);
+			return apiAdapter.getRoutes();
+		} catch (error) {
+			throw setError(error);
+		}
 	}
 }

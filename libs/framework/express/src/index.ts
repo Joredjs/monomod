@@ -10,6 +10,7 @@ import {
 	IRouteGroup,
 	domainKeys,
 	resultErr,
+	setError,
 } from '@nxms/core/domain';
 import { ApiCore } from '@nxms/gateway';
 import { ExpressService } from './service';
@@ -58,8 +59,8 @@ export class ExpressFramework {
 
 		microApp.app.all('*', (req, res) => {
 			const infoError = resultErr({
-				detail: 'No existe el recurso solicitado',
-				errType: 'gone',
+				detail: `No existe el recurso solicitado (${req.url})`,
+				errType: 'noInfo',
 				saveLog: false,
 			}).unwrap();
 			const resInfo = {
@@ -71,41 +72,6 @@ export class ExpressFramework {
 		});
 		return microApp;
 	}
-
-	/* #setAppPath(
-	   	routeGroup: IRouteGroup<IExpressParams>,
-	   	microApp: IExpressMicroApp,
-	   	appConfig: IMicroServiceConfig,
-	   	routeInfo: IRuta,
-	   	version: IRuta['version']
-	   ) {
-	   	return (req, res, next) => {
-	   		if (appConfig.removePrefix) {
-	   			const sUrl = req.url.split('/');
-	   			if (sUrl[1] === microApp.name) {
-	   				req.url = req.url.replace(`/${microApp.name}`, '');
-	   			}
-	   		} */
-
-	/* 		If (routeGroup.port) {
-	   			routeInfo = {
-	   				...routeInfo,
-	   				globalHeaders: routeGroup.headers,
-	   				port: routeGroup.port,
-	   				version,
-	   			};
-	   		}
-	   		res.locals.route = routeInfo;
-	   		if (appConfig.debug.paths) {
-	   			console.debug('******************');
-	   			console.debug('DEBUGGING APP URL');
-	   			console.debug('microAPP:', microApp.name);
-	   			console.debug('URL:', req.url);
-	   			console.debug('INFO:', routeInfo);
-	   		}
-	   		next();
-	   	};
-	   } */
 
 	#setPaths(
 		routeGroup: IRouteGroup<IExpressParams>,
@@ -127,13 +93,6 @@ export class ExpressFramework {
 				microApp.app[routeInfo.method](
 					`${groupName}/${version}/${routeInfo.path}`,
 					(req, res, next) => {
-						if (appConfig.removePrefix) {
-							const sUrl = req.url.split('/');
-							if (sUrl[1] === microApp.name) {
-								req.url = req.url.replace(`/${microApp.name}`, '');
-							}
-						}
-
 						if (routeGroup.port) {
 							routeInfo = {
 								...routeInfo,
@@ -162,11 +121,9 @@ export class ExpressFramework {
 	}
 
 	#debugPaths(apps: IExpressApps) {
-		console.debug('Rutas que se exponen');
 		const rutass = [];
 		for (const app in apps) {
 			if (apps[app]) {
-				console.debug('APP:', apps[app].name);
 				// eslint-disable-next-line no-underscore-dangle
 				apps[app].app._router.stack.forEach((ruta) => {
 					if (ruta.route) {
@@ -177,43 +134,50 @@ export class ExpressFramework {
 				});
 			}
 		}
-		console.debug(rutass);
-		console.debug(rutass.length);
+		console.debug('Rutas que se exponen:', rutass);
+		console.debug('Rutas totales:', rutass.length);
 	}
 
 	getServices(): IExpressApps {
-		const apiCore = new ApiCore<IExpressParams, TExpressReq, TExpressRes>(
-			this.#service
-		);
-
-		const rutas: IRouteGroup<IExpressParams>[] = apiCore.getRutas();
 		const apps: IExpressApps = {};
 
-		rutas.forEach((routeGroup) => {
-			const appName = `${routeGroup.group}App`;
-			apps[appName] = {
-				app: express(),
-				cors: routeGroup.cors,
-				domains: routeGroup.domains,
-				name: routeGroup.group,
-				port: routeGroup.puerto,
-			};
-			apps[appName].app.use(express.json({ limit: this.#appConfig.bodyLimit }));
-			// eslint-disable-next-line max-params
-			apps[appName].app.use((err, req, res, next) => {
-				console.error('ERROR:---------');
-				console.error(err);
-				next(err);
-			});
-			apps[appName] = this.#setPaths(
-				routeGroup,
-				apps[appName],
-				this.#appConfig
+		try {
+			const apiCore = new ApiCore<IExpressParams, TExpressReq, TExpressRes>(
+				this.#service
 			);
-		});
 
-		if (this.#appConfig.debug.routes) {
-			this.#debugPaths(apps);
+			const rutas: IRouteGroup<IExpressParams>[] = apiCore.getRutas();
+
+			rutas.forEach((routeGroup) => {
+				const appName = `${routeGroup.group}App`;
+				apps[appName] = {
+					app: express(),
+					cors: routeGroup.cors,
+					domains: routeGroup.domains,
+					name: routeGroup.group,
+					port: routeGroup.puerto,
+				};
+				apps[appName].app.use(
+					express.json({ limit: this.#appConfig.bodyLimit })
+				);
+				// eslint-disable-next-line max-params
+				apps[appName].app.use((err, req, res, next) => {
+					console.error('ERROR:---------');
+					console.trace(err);
+					next(err);
+				});
+				apps[appName] = this.#setPaths(
+					routeGroup,
+					apps[appName],
+					this.#appConfig
+				);
+			});
+
+			if (this.#appConfig.debug.routes) {
+				this.#debugPaths(apps);
+			}
+		} catch (error) {
+			throw setError(error);
 		}
 
 		return apps;

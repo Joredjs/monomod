@@ -8,6 +8,7 @@ import {
 	IServices,
 	TControllers,
 	TMyModulesInstances,
+	setError,
 } from '@nxms/core/domain';
 import { modulesList, modulos } from '../domain';
 
@@ -44,6 +45,13 @@ export class PortControllers<
 	getAll(services: IServices): TControllers<TFwReq, TFwRes> {
 		const controllers: TControllers<TFwReq, TFwRes> = {};
 		for (const module of modulesList) {
+			if (!this.#modulesInstances[module]) {
+				throw setError({
+					detail: module,
+					errType: 'invalid',
+					text: 'The module instace doesn´t exists.',
+				});
+			}
 			controllers[module] = this.#createController(module, services);
 		}
 

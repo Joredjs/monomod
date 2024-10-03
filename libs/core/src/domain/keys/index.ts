@@ -1,7 +1,6 @@
 import { errores } from './errores';
 import { headersPrefix } from './headers';
 import { httpCodes } from './http';
-import { modulos } from './modules';
 import { patterns } from './patterns';
 
 const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
@@ -31,7 +30,6 @@ export const domainKeys = {
 	errores,
 	headersPrefix,
 	httpCodes,
-	modulos,
 	patterns,
 	storage: {
 		user: 'xrt-q23e',

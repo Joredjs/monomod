@@ -6,6 +6,7 @@ import {
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
+	setError,
 } from '@nxms/core/domain';
 import {
 	ModuleExampleController,
@@ -35,27 +36,36 @@ export class AdapterApi<
 > {
 	#routeList: IRouteGroup<TFwParams>[] = [];
 
-	#modulesInstances: TMyModulesInstances = {};
-
 	#services: IServices = {};
 
 	#layersService;
 
-	constructor(frameworkService: IFrameworkService<TFwRes>) {
-		this.#setModulesList();
-		this.#setServices();
+	#modulesInstances: TMyModulesInstances = {
+		example: {
+			Controller: ModuleExampleController,
+			Port: ModuleExamplePort,
+			Route: ModuleExampleRoutes,
+		},
+	};
 
-		const ports = new PortPorts(this.#services, this.#modulesInstances);
-		const controllers = new PortControllers<TFwReq, TFwRes>(
-			frameworkService,
-			this.#modulesInstances
-		);
-		this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
-			controllers.getAll(this.#services),
-			ports.getAll()
-		);
-		const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
-		this.#routeList = routes.getAll();
+	constructor(frameworkService: IFrameworkService<TFwRes>) {
+		try {
+			this.#setServices();
+
+			const ports = new PortPorts(this.#services, this.#modulesInstances);
+			const controllers = new PortControllers<TFwReq, TFwRes>(
+				frameworkService,
+				this.#modulesInstances
+			);
+			this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
+				controllers.getAll(this.#services),
+				ports.getAll()
+			);
+			const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
+			this.#routeList = routes.getAll();
+		} catch (error) {
+			throw setError(error);
+		}
 	}
 
 	getRoutes(): IRouteGroup<TFwParams>[] {
@@ -64,14 +74,6 @@ export class AdapterApi<
 			handler: this.#layersService.getController(rgroup.group).handler,
 			port: this.#layersService.getPort(rgroup.group),
 		}));
-	}
-
-	#setModulesList() {
-		this.#modulesInstances.example = {
-			Controller: ModuleExampleController,
-			Port: ModuleExamplePort,
-			Route: ModuleExampleRoutes,
-		};
 	}
 
 	#setServices() {

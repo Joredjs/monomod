@@ -13,7 +13,7 @@
 			"defaultConfiguration": "production",
 			"options": {
 				"platform": "node",
-				"outputPath": "dist/{projectRoot}",
+				"outputPath": "dist/{projectName}",
 				"format": ["cjs"],
 				"bundle": false,
 				"main": "{projectRoot}/src/main.ts",

@@ -18,6 +18,8 @@
 [ ] Implement rate limit  https://kinsta.com/knowledgebase/api-rate-limit/
 [ ] Implement Docker
 [ ] Translate everything to English
+[ ] Abstract the transport layer (http,gRPC,etc)
+[ ] Implement asynchronous requests
 - pagination (prev,next,last,first) (?page=1&size=100)
 - Filtering (?xxx=gt:10,lt:20&yyy=match:asd&zzz=eq:algo)
 - Ordering (?sort=xxx:asc,yyy:desc)

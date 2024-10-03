@@ -4,6 +4,7 @@ import {
 	TDomainGroups,
 	TMyModulesInstances,
 	TPorts,
+	setError,
 } from '@nxms/core/domain';
 import { modulesList } from '../domain';
 export class PortPorts {
@@ -28,6 +29,13 @@ export class PortPorts {
 	getAll(): TPorts {
 		const ports: TPorts = {};
 		for (const module of modulesList) {
+			if (!this.#modulesInstances[module]) {
+				throw setError({
+					detail: module,
+					errType: 'invalid',
+					text: 'The module instace doesn´t exists.',
+				});
+			}
 			ports[module] = this.#createPort(module);
 		}
 

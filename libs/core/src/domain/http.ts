@@ -22,7 +22,7 @@ export interface ITransactionParams {
 }
 
 export interface ITransactionValid extends ITransactionParams {
-	useCase: (
+	handler: (
 		info?: ITransactionParams
 	) => Promise<IOKResponse<unknown> | IErrResponse>;
 	usecaseParams?: IUseCaseParams<unknown>;

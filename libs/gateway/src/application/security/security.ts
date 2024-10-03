@@ -5,7 +5,7 @@ import {
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
-	resultOk,
+	resultErr,
 	setError,
 } from '@nxms/core/domain';
 
@@ -46,9 +46,14 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 		return false;
 	}
 
-	public emptyUseCase(): Promise<IOKResponse<string> | IErrResponse> {
+	public emptyHandler(): Promise<IOKResponse<string> | IErrResponse> {
 		return new Promise((resolve) => {
-			resolve(resultOk('Función vacía').unwrap());
+			resolve(
+				resultErr({
+					errType: 'badConfigured',
+					text: "The use case doesn't exists",
+				}).unwrap()
+			);
 		});
 	}
 }

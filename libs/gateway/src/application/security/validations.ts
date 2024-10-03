@@ -10,6 +10,7 @@ import {
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
+	TRutaSchema,
 	setError,
 } from '@nxms/core/domain';
 import { SecurityClass } from './security';
@@ -66,34 +67,49 @@ export class AppValidations<
 		const pathReplace = ruta.path.replace(/\//g, '_').replace(/:/g, '$');
 		const path = `${ruta.method}_${pathReplace}`;
 
-		let useCase = this.#security.emptyUseCase;
+		let handler = this.#security.emptyHandler;
 
 		if (ruta.port && path && ruta.port[path]) {
-			useCase = ruta.port[path];
+			handler = ruta.port[path];
 		}
 
 		return {
 			bodyParams: this.#getBodyParams(ruta, req),
+			handler,
 			reqHeader: req.headers,
 			ruta,
-			useCase,
 			usecaseParams: ruta.port.usecaseParams,
 		};
 	}
 
+	#getSchemaVersion(ruta: IRuta): ISchema {
+		const schema: TRutaSchema = ruta?.schema;
+
+		if (!schema) {
+			throw setError({
+				errType: 'invalid',
+				text: 'No existe schema para esta ruta',
+			});
+		}
+
+		const schemaVersion: ISchema = schema[ruta.version];
+
+		if (!schemaVersion) {
+			throw setError({
+				errType: 'invalid',
+				text: 'No existe schema para esta version',
+			});
+		}
+
+		return schemaVersion;
+	}
+
 	#validateParams(ruta: IRuta, bodyParams: IJSONObject): boolean {
 		try {
-			const schema: ISchema = ruta.schema[ruta.version];
+			const schemaVersion: ISchema = this.#getSchemaVersion(ruta);
 
-			if (!schema) {
-				throw setError({
-					errType: 'invalid',
-					text: 'No existe schema para esta versión',
-				});
-			}
-
-			const schemaKeys = Object.keys(schema).filter(
-				(key) => !schema[key].optional
+			const schemaKeys = Object.keys(schemaVersion).filter(
+				(key) => !schemaVersion[key].optional
 			);
 
 			let vacio = false;
@@ -111,7 +127,11 @@ export class AppValidations<
 				});
 			}
 
-			return this.#schemaValidator.validate(schema, schemaKeys, bodyParams);
+			return this.#schemaValidator.validate(
+				schemaVersion,
+				schemaKeys,
+				bodyParams
+			);
 		} catch (error) {
 			throw setError(error);
 		}

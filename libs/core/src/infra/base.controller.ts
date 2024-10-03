@@ -11,9 +11,7 @@ import {
 	resultErr,
 } from '../domain';
 
-export class BaseController<TFwReq, TFwRes>
-	implements IController<TFwReq, TFwRes>
-{
+export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRes> {
 	validations: IAppValidations<TFwReq, TFwRes>;
 
 	framework: IFrameworkService<TFwRes>;
@@ -32,22 +30,22 @@ export class BaseController<TFwReq, TFwRes>
 	) => {
 		try {
 			const info: ITransactionValid = this.validations.manager(req, res);
-			const useCaseResponse = await this.#executeUseCase(info);
-			this.#returnResponse(res, useCaseResponse.code, useCaseResponse);
+			const handlerResponse = await this.#executeHandler(info);
+			this.#returnResponse(res, handlerResponse.code, handlerResponse);
 		} catch (error) {
 			this.#handleError(res, error);
 		}
 	};
 
-	async #executeUseCase(
+	async #executeHandler(
 		info: ITransactionValid
 	): Promise<IOKResponse<unknown> | IErrResponse> {
 		try {
-			return (await info.useCase(info)) as IOKResponse<unknown>;
+			return (await info.handler(info)) as IOKResponse<unknown>;
 		} catch (err: unknown) {
-			const useCaseErr = err as IErrResponse;
-			useCaseErr.code ??= domainKeys.errores.nocatch.code;
-			throw useCaseErr;
+			const handlerErr = err as IErrResponse;
+			handlerErr.code ??= domainKeys.errores.nocatch.code;
+			throw handlerErr;
 		}
 	}
 

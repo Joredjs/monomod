@@ -7,6 +7,11 @@ export const errores: TErrores = {
 		desc: 'Ya existe esta información',
 		text: 'La acción que intentas realizar no está permitida',
 	},
+	badConfigured: {
+		code: httpCodes[417].code,
+		desc: 'Error en la configuración',
+		text: 'El servidor está mal configurado',
+	},
 	badInfo: {
 		code: httpCodes[412].code,
 		desc: 'La información enviada no es correcta',

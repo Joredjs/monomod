@@ -29,7 +29,6 @@ export interface IFrameworkService<TFwRes> {
 
 export interface IMicroServiceConfig {
 	addGroupName?: boolean;
-	removePrefix?: boolean;
 	bodyLimit: string;
 	debug?: {
 		cors?: boolean;

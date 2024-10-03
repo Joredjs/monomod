@@ -33,6 +33,12 @@ NXMS employs a layered architecture, promoting separation of concerns and mainta
   - **Domain:** Contains domain entities, interfaces, and repositories.
   - **Infra:** Provides concrete implementations for controllers and interactions with external systems.
 
+For further details review the [Project Structure file](./docs/structure.md)
+
+## Example
+
+Let's say you're building an e-commerce application. You could have separate modules for `users`, `products`, `orders`, and `payments`. Each module would handle its own data, logic, and API endpoints. The NXMS Gateway would route incoming requests to the appropriate module based on the path, version, and HTTP method. The framework adapter (e.g., `framework-express`) would then handle the underlying server implementation, creating an Express server instance for each module and exposing the routes.
+
 ## Getting Started
 
 ### Prerequisites
@@ -40,30 +46,69 @@ NXMS employs a layered architecture, promoting separation of concerns and mainta
 - Node.js (version 18.x.x or higher)
 - NX (version 18.x.x or higher)
 
-### Installation
+### Forking the project
 
-1. Install NX globally: `npm install -g nx`
-2. Create a new NX workspace: `npx create-nx-workspace@latest`
-3. Choose a suitable preset (e.g., "empty workspace") and follow the prompts.
+1. Fork the project locally: `git clone --depth=1 https://github.com/Joredjs/nxms.git {{your-project-name}}` the "--depth=1" flag is optional and it is for not get all the project history just the last commit
+2. Go to your project directory: `cd {{your-project-name}}`
+3. Initialize a new Git repository: `rm -rf .git && git init`
+4. Create the fisrt commit: `git add . && git commit -m 'Initial commit forked from NXMS'` 
+5. Set your project name: For thsi replacing "@nxms/" -> "@{{your-project-name}}/"
+6. Install all the dependencies: `npm install`
+7. Test the server local project: `nx serve server-local` this will run the default module 'example'
+8. Commit the changes with the setup project: `git add . && git commit -m 'core: Setting up {{your-project-name}} project'`
 
-### Creating a Module
+### Upgrading the NX version (Optional)
 
-1. Generate a new library for the module: `nx g lib --name my-module --directory libs/modules`
-2. Define your module's routes, controllers, and other logic within this library.
-3. Register your module with the NXMS Gateway by providing its name, port, and routes.
+This is not required, it is up to you if you want to have the last NX version. If you decide to do this, it is at your own responsibility and it could cause some errors that you should fix by yourself.
+
+1. List the version you are using: `nx report`
+2. Migrate to the latest NX version: `nx migrate latest`
+3. Install all the dependencies: `npm install`
+4. Run the migrations: `nx migrate --run-migrations`
+5. Test the server local project: `nx serve server-local` this will run the default module 'example'
+6. Commit the changes with the setup project: `git add . && git commit -m 'core: migrating nx to latest version'`
+
+### Pushing your changes
+
+1. Add the remote repo: `git remote add origin https://github.com/{{your-username}}/{{your-project-name}}`
+2. Push the changes: `git push -u origin main`
+
+## Working in the project
 
 ### Creating a Server
 
-1. Generate a new application for the server: `nx g app --name my-server --directory apps`
-2. Configure the server to use the desired backend framework (e.g., Express) and retrieve the dynamically generated routes from the NXMS Gateway.
+1. Generate a new application for the server: `nx g app --name server-{{your-server-name}} --directory apps/servers/{{your-server-name}}`
+2. Select "none" in the list of backend frameworks
+3. Retrieve the dynamically generated routes from the NXMS Gateway and generate the workaround to serve them proprerly.
 
-### Running the Application
+### Running the Server
 
-1. Start the server: `nx serve my-server`
+1. Start the server: `nx serve server-{{your-server-name}}`
 
-## Example
+### Creating a Module
 
-Let's say you're building an e-commerce application. You could have separate modules for `users`, `products`, `orders`, and `payments`. Each module would handle its own data, logic, and API endpoints. The NXMS Gateway would route incoming requests to the appropriate module based on the path, version, and HTTP method. The framework adapter (e.g., `framework-express`) would then handle the underlying server implementation, creating an Express server instance for each module and exposing the routes.
+1. Generate a new library for the module: `nx g lib --name module-{{yourModuleName}} --directory modules/{{yourModuleName}} --interactive`
+2. **Sugested:** Choose `@nx:js` as your library collection, `jest` as your test runner and `none` as your bundler  
+3. In the **project.json** file add the **lint** task as you have in your other modules.
+4. Go to the module path in the src folder: `cd modules/admin/src`
+5. Delete the example code created `rm -rf *`
+6. Create the folders according to the [Project Structure file](./docs/structure.md): `mkdir application domain infra`
+7. Create the main files according to the [Project Structure file](./docs/structure.md): `touch index.ts application/index.ts application/port.ts domain/index.ts domain/routes.ts infra/index.ts infra/controller.ts`
+8. Add content to infra/controller.ts
+9. Add content to application/port.ts
+10. Add content to domain/routes.ts
+
+### Add a path to your module
+
+1. Add the path(s) in the **routes.ts** file inside the domain layer of your module. If you need an uncreated schema for your path, you need to create it in the domain layer of the core
+2. Add the correspondent handler for your path to the **port.ts** file in the application layer of your module
+3. Add the useCase into the useCase folder of the application layer of your module.
+
+### Register the module to gateway
+
+1. Add the domain group to `TDomainGroups` in `rutas.ts` inside the core (`@nxms/core`)
+2. Add the module in the **modules.ts** file in the domain layer of the gateway (`@nxms/gateway`). Its important to note that you should add a version in the version attribute, if dont the routes inside the module never will be exposed
+3. Add the module instance in the *api.adapter.ts* file in the infra layer of the gateway (`@nxms/gateway`)
 
 ## Documentation and Resources
 
@@ -71,6 +116,10 @@ Let's say you're building an e-commerce application. You could have separate mod
 - [Definitions](./docs/definitions.md): Module definitions and specifications
 - [12 Factors](./docs/12factors.md): Adherence to the 12-Factor App methodology
 - [Code Style](./docs/codeStyle.md): Coding conventions and style guidelines
+
+## Contributors
+
+- Jorge Garay [github.com/joredjs](https://github.com/joredjs)
 
 ## Contributing
 

@@ -17,6 +17,7 @@ export interface IError {
 
 export type TErroresValues =
 	| 'alreadyExists'
+	| 'badConfigured'
 	| 'badInfo'
 	| 'badUser'
 	| 'forbidden'

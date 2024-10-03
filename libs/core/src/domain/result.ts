@@ -4,46 +4,39 @@
 import { IError, TErroresValues } from './values';
 import { domainKeys } from './keys';
 
+class Result<T, E> {
+	#value: T | E;
 
-/** Represents a failed computation.*/
+	#type: 'ok' | 'error';
 
-interface ILeft<T, E> {
-	/** * Returns true if the Result is successful, false otherwise.*/
+	constructor(type: 'ok' | 'error', value: T | E) {
+		this.#type = type;
+		this.#value = value;
+	}
 
-	isOk(this: TResult<T, E>): this is IRight<T, E>;
+	static resOk<T>(value: T): Result<T, any> {
+		return new Result('ok', value);
+	}
 
-	/** * Returns true if the Result is an error, false otherwise.*/
+	static resErr<E>(value: E): Result<any, E> {
+		return new Result('error', value);
+	}
 
-	isErr(this: TResult<T, E>): this is ILeft<T, E>;
-	type: 'error';
+	isOk(): this is Result<T, any> {
+		return this.#type === 'ok';
+	}
 
-	/** * Returns the value of the Result if it is successful, otherwise throws an error.*/
+	isErr(): this is Result<any, E> {
+		return this.#type === 'error';
+	}
 
-	unwrap(): IErrResponse;
-
-	value: IErrResponse;
+	unwrap(): T | E {
+		if (this.#type === 'ok') {
+			return this.#value as T;
+		}
+		return this.#value as E;
+	}
 }
-
-/** Represents a successful computation.*/
-
-interface IRight<T, E> {
-	/** * Returns true if the Result is successful, false otherwise.*/
-
-	isOk(this: TResult<T, E>): this is IRight<T, E>;
-
-	/** * Returns true if the Result is an error, false otherwise.*/
-
-	isErr(this: TResult<T, E>): this is ILeft<T, E>;
-	type: 'ok';
-
-	/** * Returns the value of the Result.*/
-
-	unwrap(): IOKResponse<T>;
-
-	value: IOKResponse<T>;
-}
-
-export type TResult<T, E> = ILeft<T, E> | IRight<T, E>;
 
 export interface IOKResponse<T> {
 	body: T;
@@ -59,56 +52,12 @@ export interface IErrResponse {
 	};
 }
 
-// TODO: reults not dependent on domainKeys
-
-export function resultOk<T>(value?: T): TResult<T, IErrResponse> {
-	const res: IOKResponse<any> = {
-		body: value || 'OK',
-		code: domainKeys.httpCodes[200].code,
-	};
-	return {
-		isErr: () => false,
-		isOk: () => true,
-		type: 'ok',
-		unwrap: () => res,
-		value: res,
-	};
-}
-
 interface IErrorMap {
-	errType: TErroresValues;
-	text?: string;
 	detail?: any;
-	showDetail?: boolean;
+	errType: TErroresValues;
 	saveLog?: boolean;
-}
-
-// TODO: volver clase
-function saveLog(errInfo: IErrorMap) {
-	if (errInfo && errInfo.saveLog) {
-		/*  TODO: manejar LOGS
-       TODO: Guardar info del req y del header */
-
-		console.error('------ERROR:---------');
-		console.trace(errInfo);
-		console.error('----------------------');
-	}
-}
-
-export function setError(errInfo: IErrorMap) {
-	if (!errInfo.errType && !errInfo.detail) {
-		// Si entra acá es porque el error viene sin dormatear cprrectamente
-		const oldErr = errInfo;
-		errInfo = {
-			detail:
-				typeof oldErr === 'string'
-					? oldErr
-					: JSON.stringify(oldErr, Object.getOwnPropertyNames(oldErr)),
-			errType: 'nocatch',
-		};
-	}
-
-	return errInfo;
+	showDetail?: boolean;
+	text?: string;
 }
 
 function setErrorInfo(errInfo: IErrorMap): IErrResponse {
@@ -158,7 +107,17 @@ function setErrorInfo(errInfo: IErrorMap): IErrResponse {
 	return res;
 }
 
-export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
+// TODO: reults not dependent on domainKeys
+
+export function resultOk<T>(value?: T): Result<IOKResponse<T>, IErrResponse> {
+	const res: IOKResponse<any> = {
+		body: value || 'OK',
+		code: domainKeys.httpCodes[200].code,
+	};
+	return Result.resOk(res);
+}
+
+export function resultErr(errInfo: IErrorMap): Result<any, IErrResponse> {
 	errInfo.saveLog =
 		typeof errInfo.saveLog === 'undefined' ? true : errInfo.saveLog;
 	errInfo.showDetail =
@@ -168,11 +127,33 @@ export function resultErr(errInfo: IErrorMap): TResult<any, IErrResponse> {
 
 	saveLog(errInfo);
 
-	return {
-		isErr: () => true,
-		isOk: () => false,
-		type: 'error',
-		unwrap: () => res,
-		value: res,
-	};
+	return Result.resErr(res);
+}
+
+// TODO: volver clase
+function saveLog(errInfo: IErrorMap) {
+	if (errInfo && errInfo.saveLog) {
+		/*  TODO: manejar LOGS
+       TODO: Guardar info del req y del header */
+
+		console.error('------ERROR:---------');
+		console.trace(errInfo);
+		console.error('----------------------');
+	}
+}
+
+export function setError(errInfo: IErrorMap) {
+	if (!errInfo.errType && !errInfo.detail) {
+		// Si entra acá es porque el error viene sin dormatear cprrectamente
+		const oldErr = errInfo;
+		errInfo = {
+			detail:
+				typeof oldErr === 'string'
+					? oldErr
+					: JSON.stringify(oldErr, Object.getOwnPropertyNames(oldErr)),
+			errType: 'nocatch',
+		};
+	}
+
+	return errInfo;
 }
