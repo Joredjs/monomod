@@ -6,7 +6,7 @@ import {
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
-	setError,
+	normalizeError,
 } from '@nxms/core/domain';
 import {
 	ModuleExampleController,
@@ -40,6 +40,7 @@ export class AdapterApi<
 
 	#layersService;
 
+	// TODO: create new instaces here ??
 	#modulesInstances: TMyModulesInstances = {
 		example: {
 			Controller: ModuleExampleController,
@@ -52,11 +53,11 @@ export class AdapterApi<
 		try {
 			this.#setServices();
 
-			const ports = new PortPorts(this.#services, this.#modulesInstances);
 			const controllers = new PortControllers<TFwReq, TFwRes>(
 				frameworkService,
 				this.#modulesInstances
 			);
+			const ports = new PortPorts(this.#services, this.#modulesInstances);
 			this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
 				controllers.getAll(this.#services),
 				ports.getAll()
@@ -64,11 +65,11 @@ export class AdapterApi<
 			const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
 			this.#routeList = routes.getAll();
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
-	getRoutes(): IRouteGroup<TFwParams>[] {
+	getDomainGroup(): IRouteGroup<TFwParams>[] {
 		return this.#routeList.map((rgroup) => ({
 			...rgroup,
 			handler: this.#layersService.getController(rgroup.group).handler,
@@ -77,7 +78,7 @@ export class AdapterApi<
 	}
 
 	#setServices() {
-		const dependencies: IServicesDependencies = this.#setDependencies();
+		const dependencies: IServicesDependencies = this.#getDependencies();
 
 		this.#services.crypto = new ServiceCrypto(dependencies.crypto.client);
 		this.#services.encode = new ServiceEncode();
@@ -87,7 +88,7 @@ export class AdapterApi<
 		this.#services.schema = new ServiceSchema(dependencies.schema.client);
 	}
 
-	#setDependencies() {
+	#getDependencies() {
 		return {
 			crypto: { client: clientCrypto },
 			mail: { client: clientMailer },

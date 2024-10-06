@@ -1,4 +1,9 @@
-import { IMailClient, IMailConfig, IMailOptions, setError } from '../../domain';
+import {
+	IMailClient,
+	IMailConfig,
+	IMailOptions,
+	normalizeError,
+} from '../../domain';
 
 export class ServiceMail {
 	#transporter;
@@ -37,7 +42,7 @@ export class ServiceMail {
 			return true;
 		} catch (error) {
 			console.error('Error al enviar el correo');
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 }

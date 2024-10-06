@@ -1,4 +1,4 @@
-import { setError } from '../../domain';
+import { normalizeError } from '../../domain';
 
 export class ServiceEncode {
 	#codeNum = parseInt(process.env.CODE_NUM || '0') || 0;
@@ -83,7 +83,11 @@ export class ServiceEncode {
 				.replaceAll('"', this.#quote);
 			return this.#reverseString(this.#stringToHex(stringCharList));
 		} catch (error) {
-			throw setError({ detail: error, errType: 'nocatch',text:'Error al codificar' });
+			throw normalizeError({
+				detail: error,
+				errType: 'nocatch',
+				text: 'Error al codificar',
+			});
 		}
 	}
 
@@ -111,7 +115,7 @@ export class ServiceEncode {
 			return Buffer.from(decoded, 'utf-8').toString();
 		} catch (error) {
 			console.error('ERROR al decodificar', error);
-			throw setError({
+			throw normalizeError({
 				detail: error,
 				errType: 'nocatch',
 				text: 'Error al decodificar',

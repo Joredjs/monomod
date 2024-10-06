@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 // Se deshabilita esta regla por la dependencia que se genera al momento de la creación de las interfaces / types
 
-import { IError, TErroresValues } from './values';
+import { IError, TErroresValues, TJSONValue } from './values';
 import { domainKeys } from './keys';
 
 class Result<T, E> {
@@ -44,109 +44,57 @@ export interface IOKResponse<T> {
 }
 
 export interface IErrResponse {
-	body?: any;
+	body?: unknown;
 	code: number;
 	error: {
-		detail: any;
+		detail: TJSONValue;
 		text: string;
 	};
 }
 
-interface IErrorMap {
-	detail?: any;
+interface IErrorMapping {
+	detail: TJSONValue;
 	errType: TErroresValues;
 	saveLog?: boolean;
 	showDetail?: boolean;
 	text?: string;
 }
 
-function setErrorInfo(errInfo: IErrorMap): IErrResponse {
-	let res: IErrResponse = {
-		code: 500,
-		error: {
-			detail: 'Error no mapeado',
-			text: 'Error sin definir',
-		},
-	};
+function isIErrResponse(errInfo: unknown): errInfo is IErrResponse {
+	return (
+		errInfo !== null &&
+		typeof errInfo === 'object' &&
+		'code' in errInfo &&
+		'error' in errInfo &&
+		typeof errInfo.error === 'object' &&
+		'detail' in errInfo.error &&
+		'text' in errInfo.error
+	);
+}
 
-	if ('code' in errInfo && 'error' in errInfo) {
-		// Si entra por acá es pq viene un IErrResponse
-		const myerror = errInfo as any;
-		res = {
-			code: myerror.code as number,
-			error: {
-				detail: myerror.error.detail,
-				text: myerror.error.text,
-			},
-		};
-	} else {
-		errInfo = setError(errInfo);
+function isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping {
+	return (
+		errInfo !== null &&
+		typeof errInfo === 'object' &&
+		'detail' in errInfo &&
+		'errType' in errInfo
+	);
+}
 
-		const msj: IError = domainKeys.errores[errInfo.errType];
-
-		let errDetail = '';
-		if (errInfo.detail) {
-			errDetail = errInfo.detail;
-			if (errInfo.detail.code) {
-				errDetail = errInfo.detail.code;
-			}
+export function normalizeError(
+	errInfo: unknown | IErrorMapping
+): IErrorMapping | IErrResponse {
+	if (errInfo && typeof errInfo === 'object') {
+		if (isIErrResponse(errInfo)) {
+			// It's likely an IErrResponse
+			return errInfo as IErrResponse;
+		} else if (isIErrorMapping(errInfo)) {
+			// It's likely an IErrorMap
+			return errInfo as IErrorMapping;
 		}
-
-		res = {
-			code: msj.code,
-			error: {
-				detail: errInfo.showDetail
-					? errDetail
-					: 'No está permitido ver el detalle del error',
-
-				text: errInfo.text || msj.text,
-			},
-		};
-	}
-
-	return res;
-}
-
-// TODO: reults not dependent on domainKeys
-
-export function resultOk<T>(value?: T): Result<IOKResponse<T>, IErrResponse> {
-	const res: IOKResponse<any> = {
-		body: value || 'OK',
-		code: domainKeys.httpCodes[200].code,
-	};
-	return Result.resOk(res);
-}
-
-export function resultErr(errInfo: IErrorMap): Result<any, IErrResponse> {
-	errInfo.saveLog =
-		typeof errInfo.saveLog === 'undefined' ? true : errInfo.saveLog;
-	errInfo.showDetail =
-		typeof errInfo.showDetail === 'undefined' ? true : errInfo.showDetail;
-
-	const res: IErrResponse = setErrorInfo(errInfo);
-
-	saveLog(errInfo);
-
-	return Result.resErr(res);
-}
-
-// TODO: volver clase
-function saveLog(errInfo: IErrorMap) {
-	if (errInfo && errInfo.saveLog) {
-		/*  TODO: manejar LOGS
-       TODO: Guardar info del req y del header */
-
-		console.error('------ERROR:---------');
-		console.trace(errInfo);
-		console.error('----------------------');
-	}
-}
-
-export function setError(errInfo: IErrorMap) {
-	if (!errInfo.errType && !errInfo.detail) {
-		// Si entra acá es porque el error viene sin dormatear cprrectamente
+		// It's an object but not in the propper format
 		const oldErr = errInfo;
-		errInfo = {
+		return {
 			detail:
 				typeof oldErr === 'string'
 					? oldErr
@@ -155,5 +103,67 @@ export function setError(errInfo: IErrorMap) {
 		};
 	}
 
-	return errInfo;
+	// Fallback for unknown error formats
+	return {
+		detail: typeof errInfo === 'string' ? errInfo : JSON.stringify(errInfo),
+		errType: 'nocatch',
+	};
+}
+
+function createErrorResponse(errInfo: IErrorMapping): IErrResponse {
+	// Uncomment to show details only when it is active
+	errInfo.showDetail = true;
+
+	const msj: IError = domainKeys.errores[errInfo.errType];
+	const detail = errInfo.showDetail
+		? errInfo.detail
+		: 'No está permitido ver el detalle del error';
+
+	return {
+		code: msj.code,
+		error: {
+			detail,
+			text: errInfo.text || msj.text,
+		},
+	};
+}
+
+// TODO: reults not dependent on domainKeys
+
+export function resultOk<T>(value?: T): Result<IOKResponse<T>, IErrResponse> {
+	const res: IOKResponse<T> = {
+		body: value || ('OK' as T),
+		code: domainKeys.httpCodes[200].code,
+	};
+	return Result.resOk(res);
+}
+
+export function resultErr(errInfo: IErrorMapping): Result<any, IErrResponse> {
+	errInfo.showDetail =
+		typeof errInfo.showDetail === 'undefined' ? true : errInfo.showDetail;
+	errInfo.saveLog =
+		typeof errInfo.saveLog === 'undefined' ? true : errInfo.saveLog;
+
+	if (errInfo && errInfo.saveLog) {
+		saveLog(errInfo);
+	}
+
+	const normalizedError = normalizeError(errInfo);
+	if (isIErrResponse(normalizedError)) {
+		const res = normalizedError as IErrResponse;
+		return Result.resErr(res);
+	}
+	const res = createErrorResponse(normalizedError);
+
+	return Result.resErr(res);
+}
+
+// TODO: volver clase
+function saveLog(errInfo: IErrorMapping) {
+	/*  TODO: Use library for saving logs
+       TODO: Obtain the params and headers info in the request */
+
+	console.error('------ERROR:---------');
+	console.trace(errInfo);
+	console.error('----------------------');
 }

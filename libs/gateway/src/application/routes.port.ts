@@ -4,7 +4,7 @@ import {
 	TDomainGroups,
 	TMyModulesInstances,
 	domainKeys,
-	setError,
+	normalizeError,
 } from '@nxms/core/domain';
 import { modulesList, modulos } from '../domain';
 
@@ -35,7 +35,7 @@ export class PortRoutes<TFwParams> {
 		const routes: IRouteGroup<TFwParams>[] = [];
 		for (const module of modulesList) {
 			if (!this.#modulesInstances[module]) {
-				throw setError({
+				throw normalizeError({
 					detail: module,
 					errType: 'invalid',
 					text: 'The module instace doesn´t exists.',

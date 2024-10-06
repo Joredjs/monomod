@@ -5,8 +5,8 @@ import {
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
+	normalizeError,
 	resultErr,
-	setError,
 } from '@nxms/core/domain';
 
 export class SecurityClass<TFwReq extends IRequestParams> {
@@ -21,7 +21,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 	public validateHeaders(request: TFrameworkRequest<TFwReq>): boolean {
 		try {
 			if (!request.headers) {
-				throw setError({ errType: 'headers' });
+				throw normalizeError({ errType: 'headers' });
 			}
 
 			const validMandatoryHeaders = this.#headerService.validateMandatory(
@@ -33,7 +33,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 			}
 			return false;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -50,6 +50,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 		return new Promise((resolve) => {
 			resolve(
 				resultErr({
+					detail: 'Empty handler',
 					errType: 'badConfigured',
 					text: "The use case doesn't exists",
 				}).unwrap()

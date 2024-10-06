@@ -2,15 +2,16 @@ import {
 	EHttpMethods,
 	EPrivacyLevel,
 	IModule,
+	IModuleRoute,
 	IRouteGroup,
 	IRuta,
 	TDomainGroups,
 } from '@nxms/core/domain';
 
-export class ModuleExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
-	#modulo: IModule<TGTMod>;
+export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
+	#modulo: IModule;
 
-	constructor(modulo: IModule<TGTMod>) {
+	constructor(modulo: IModule) {
 		this.#modulo = modulo;
 	}
 
@@ -32,12 +33,20 @@ export class ModuleExampleRoutes<TFwParams, TGTMod extends TDomainGroups> {
 				privacy: [EPrivacyLevel.public],
 				schema: {},
 			},
-			// Test: Ejecuta el usecase
+			// Test: executes the usecase
 			{
 				headers: [],
 				method: EHttpMethods.GET,
 				path: 'test',
-				privacy: [EPrivacyLevel.user],
+				privacy: [EPrivacyLevel.public],
+				schema: this.#modulo.schemas.empty,
+			},
+			// Test: executes the usecase but it require user authetication
+			{
+				headers: [],
+				method: EHttpMethods.GET,
+				path: 'test/admin',
+				privacy: [EPrivacyLevel.admin],
 				schema: this.#modulo.schemas.empty,
 			},
 		];

@@ -26,4 +26,11 @@ export class ModuleExamplePort implements IPort {
 		const useCase = new TestUseCase(this.usecaseParams.services);
 		return useCase.execute(info);
 	}
+
+	get_test_admin(
+		info: ITransactionParams
+	): Promise<IOKResponse<string> | IErrResponse> {
+		const useCase = new TestUseCase(this.usecaseParams.services);
+		return useCase.execute(info);
+	}
 }

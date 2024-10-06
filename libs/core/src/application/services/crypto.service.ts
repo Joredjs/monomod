@@ -4,7 +4,7 @@ import {
 	ICryptoRequest,
 	ICryptoResponse,
 	domainKeys,
-	setError,
+	normalizeError,
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 
@@ -136,7 +136,7 @@ export class ServiceCrypto {
 			// Return Buffer.from(JSON.stringify(enc), 'utf-8').toString('base64');
 
 			console.error('ERROR al encriptar', err);
-			throw setError({
+			throw normalizeError({
 				detail: err,
 				errType: 'nocatch',
 				text: 'error al encriptar',
@@ -188,7 +188,7 @@ export class ServiceCrypto {
 		} catch (err) {
 			console.error('ERROR al desencriptar', err);
 			// Return 'error';
-			throw setError({
+			throw normalizeError({
 				detail: err,
 				errType: 'nocatch',
 				text: 'error al desencriptar',

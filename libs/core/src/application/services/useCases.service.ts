@@ -2,7 +2,7 @@ import {
 	IErrResponse,
 	IExternalUseCaseParams,
 	domainKeys,
-	setError,
+	normalizeError,
 } from '../../domain';
 
 export class ServiceUseCases {
@@ -24,7 +24,7 @@ export class ServiceUseCases {
 				throw resp;
 			}
 
-			throw setError({
+			throw normalizeError({
 				errType: 'invalid',
 				text: params.errorMsg,
 			});

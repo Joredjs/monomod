@@ -90,8 +90,8 @@ export interface IRouteGroup<TFwParams> {
 	// Services: TServicesList[];
 }
 
-export interface IModule<TGTMod> {
-	name: TGTMod;
+export interface IModule {
+	name: TDomainGroups;
 	puerto: number;
 	headers?: { [head: string]: IHeadersStructure };
 	schemas: ISchemaObject;
@@ -101,7 +101,7 @@ export interface IModule<TGTMod> {
 }
 
 export type TModules = {
-	[mod in TDomainGroups]: IModule<mod>;
+	[mod in TDomainGroups]: IModule;
 };
 
 export interface IModuleRoute<TFwParams> {

@@ -1,6 +1,5 @@
 import {
 	IExpressApps,
-	IExpressMicroApp,
 	IExpressParams,
 	TExpressReq,
 	TExpressRes,
@@ -8,117 +7,26 @@ import {
 import {
 	IMicroServiceConfig,
 	IRouteGroup,
-	domainKeys,
-	resultErr,
-	setError,
+	normalizeError,
 } from '@nxms/core/domain';
 import { ApiCore } from '@nxms/gateway';
+import { ExpressFactory } from './factory';
 import { ExpressService } from './service';
-import cors from 'cors';
-import express from 'express';
 
 export class ExpressFramework {
 	#appConfig: IMicroServiceConfig;
 
 	#service: ExpressService;
 
+	#appFactory: ExpressFactory;
+
 	constructor(appConfig: IMicroServiceConfig) {
 		this.#appConfig = appConfig;
 		this.#service = new ExpressService();
+		this.#appFactory = new ExpressFactory(this.#service);
 	}
 
-	#setAppCors(microApp: IExpressMicroApp, appConfig: IMicroServiceConfig) {
-		const corsOptions = {
-			origin(origin, callback) {
-				if (appConfig.debug.cors) {
-					console.debug('******************');
-					console.debug('DEBUGGING APP CORS');
-					console.debug('microAPP:', microApp.name);
-					console.debug('Domains:', microApp.domains);
-					console.debug('Origin:', origin);
-				}
-
-				if (microApp.domains.indexOf(origin) !== -1 || !origin) {
-					callback(null, true);
-				} else {
-					// TODO: Standar framework error
-					callback(new Error('Not allowed by CORS'));
-				}
-			},
-		};
-
-		return cors(corsOptions);
-	}
-
-	#setTestPath(microApp: IExpressMicroApp, groupName: string) {
-		microApp.app.get(`${groupName}/test`, (req, res) => {
-			res
-				.status(domainKeys.httpCodes[200].code)
-				.send(`Servicio de prueba para ${microApp.name}`);
-		});
-
-		microApp.app.all('*', (req, res) => {
-			const infoError = resultErr({
-				detail: `No existe el recurso solicitado (${req.url})`,
-				errType: 'noInfo',
-				saveLog: false,
-			}).unwrap();
-			const resInfo = {
-				resBody: infoError,
-				resInstance: res,
-				status: 404,
-			};
-			this.#service.returnInfo(resInfo);
-		});
-		return microApp;
-	}
-
-	#setPaths(
-		routeGroup: IRouteGroup<IExpressParams>,
-		microApp: IExpressMicroApp,
-		appConfig: IMicroServiceConfig
-	) {
-		const defaultHandler = (req, res) => {
-			res
-				.status(domainKeys.httpCodes[400].code)
-				.send('No existe configuración para esta ruta');
-		};
-
-		const groupName = `${appConfig.addGroupName ? `/${routeGroup.group}` : ''}`;
-
-		routeGroup.paths.forEach((routeInfo) => {
-			const handler = routeGroup.handler || defaultHandler;
-			routeGroup.versions.forEach((version) => {
-				// Apply middleware and set locals for each route and version
-				microApp.app[routeInfo.method](
-					`${groupName}/${version}/${routeInfo.path}`,
-					(req, res, next) => {
-						if (routeGroup.port) {
-							routeInfo = {
-								...routeInfo,
-								globalHeaders: routeGroup.headers,
-								port: routeGroup.port,
-								version,
-							};
-						}
-						res.locals.route = routeInfo;
-						if (appConfig.debug.paths) {
-							console.debug('******************');
-							console.debug('DEBUGGING APP URL');
-							console.debug('microAPP:', microApp.name);
-							console.debug('URL:', req.url);
-							console.debug('INFO:', routeInfo);
-						}
-						next();
-					},
-					this.#setAppCors(microApp, appConfig),
-					handler
-				);
-			});
-		});
-		microApp = this.#setTestPath(microApp, groupName);
-		return microApp;
-	}
+	// TODO: move al debugs to a same file
 
 	#debugPaths(apps: IExpressApps) {
 		const rutass = [];
@@ -146,29 +54,13 @@ export class ExpressFramework {
 				this.#service
 			);
 
-			const rutas: IRouteGroup<IExpressParams>[] = apiCore.getRutas();
+			const microServices: IRouteGroup<IExpressParams>[] =
+				apiCore.getMicroServices();
 
-			rutas.forEach((routeGroup) => {
+			microServices.forEach((routeGroup) => {
 				const appName = `${routeGroup.group}App`;
-				apps[appName] = {
-					app: express(),
-					cors: routeGroup.cors,
-					domains: routeGroup.domains,
-					name: routeGroup.group,
-					port: routeGroup.puerto,
-				};
-				apps[appName].app.use(
-					express.json({ limit: this.#appConfig.bodyLimit })
-				);
-				// eslint-disable-next-line max-params
-				apps[appName].app.use((err, req, res, next) => {
-					console.error('ERROR:---------');
-					console.trace(err);
-					next(err);
-				});
-				apps[appName] = this.#setPaths(
+				apps[appName] = this.#appFactory.createMicroApp(
 					routeGroup,
-					apps[appName],
 					this.#appConfig
 				);
 			});
@@ -177,21 +69,9 @@ export class ExpressFramework {
 				this.#debugPaths(apps);
 			}
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 
 		return apps;
 	}
 }
-
-/* Function AppErrorHandler() {
-   	console.log('ERROR');
-   	return (err, req, res, next) => {
-   		console.log(err);
-   		throw setError({
-   			errType: 'invalid',
-   			text: 'Error interno del servidor',
-   			detail: err,
-   		});
-   	};
-   } */

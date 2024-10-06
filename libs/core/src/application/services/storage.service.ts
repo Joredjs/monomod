@@ -2,7 +2,7 @@ import {
 	IStorageClient,
 	ITypesStorage,
 	domainKeys,
-	setError,
+	normalizeError,
 } from '../../domain';
 import { Readable } from 'stream';
 
@@ -50,12 +50,12 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 				return response.ETag;
 			}
 
-			throw setError({
+			throw normalizeError({
 				errType: 'nocatch',
 				text: 'Error al subir objeto al storage',
 			});
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -88,7 +88,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 
 			return `${tipo},${safeBase64}`;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -124,7 +124,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 			}
 			return result;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -141,7 +141,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 
 			await this.#storage.Client.send(new this.#storage.Remove(params));
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 }

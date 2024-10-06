@@ -8,7 +8,7 @@ import {
 	IServices,
 	ITransactionParams,
 	TIncomingHttpHeaders,
-	setError,
+	normalizeError,
 } from '../../domain';
 
 export class ServiceHeaders {
@@ -82,7 +82,7 @@ export class ServiceHeaders {
 
 			return null;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -93,7 +93,7 @@ export class ServiceHeaders {
 		const mshora = 3600000;
 		const diffHoras = (new Date().getTime() - tokenInfo.valid) / mshora;
 		if (diffHoras > 1) {
-			throw setError({
+			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'session',
 				text: 'Para continuar inicia sesión nuevamente',
@@ -109,7 +109,7 @@ export class ServiceHeaders {
 		}
 
 		if (!permisos) {
-			throw setError({
+			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'session',
 				text: 'No tienes permiso para realizar esta acción',
@@ -126,7 +126,7 @@ export class ServiceHeaders {
 		const decryptInfo = this.#cryptoService.decrypt(token);
 
 		if (decryptInfo === 'error') {
-			throw setError({
+			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'badInfo',
 				text: 'Para continuar debes iniciar sesión correctamente',
@@ -143,7 +143,7 @@ export class ServiceHeaders {
 		try {
 			const headerMsg = this.#validateSpecificHeader('token', info.reqHeader);
 			if (!headerMsg.headersOk) {
-				throw setError({
+				throw normalizeError({
 					detail: info.reqHeader,
 					errType: 'session',
 					text: 'Para continuar inicia sesión',
@@ -154,7 +154,7 @@ export class ServiceHeaders {
 			const tokenValue = info.reqHeader[activeHeader.key] as string;
 			return this.#decryptToken<IToken>(info, tokenValue);
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -163,7 +163,10 @@ export class ServiceHeaders {
 	public validateRutaHeaders(info: ITransactionParams): IHeadersValues {
 		try {
 			if (!info.reqHeader || !info.ruta?.headers || !info.ruta?.globalHeaders) {
-				throw setError({ errType: 'headers', text: 'información incompleta' });
+				throw normalizeError({
+					errType: 'headers',
+					text: 'información incompleta',
+				});
 			}
 
 			const isPublic = info.ruta.privacy.some(
@@ -189,7 +192,7 @@ export class ServiceHeaders {
 
 			return { ...resLocalHeaders, ...resGlobalHeaders };
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -253,7 +256,7 @@ export class ServiceHeaders {
 		if (headerMsg.headersOk) {
 			return true;
 		}
-		throw setError({
+		throw normalizeError({
 			detail: headersReq,
 			errType: 'headers',
 			text: headerMsg.errDetail,
@@ -274,13 +277,13 @@ export class ServiceHeaders {
 			if (headerMsg.headersOk) {
 				return true;
 			}
-			throw setError({
+			throw normalizeError({
 				detail: headersReq,
 				errType: 'headers',
 				text: headerMsg.errDetail,
 			});
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 }

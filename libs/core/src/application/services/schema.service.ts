@@ -5,7 +5,7 @@ import {
 	ISchema,
 	ISchemaClient,
 	ISchemaProperties,
-	setError,
+	normalizeError,
 } from '../../domain';
 
 export class ServiceSchema {
@@ -94,7 +94,7 @@ export class ServiceSchema {
 					return false;
 				});
 
-				throw setError({
+				throw normalizeError({
 					detail: validate.errors,
 					errType: 'params',
 					text: validateError,
@@ -103,7 +103,7 @@ export class ServiceSchema {
 
 			return true;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 }

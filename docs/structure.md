@@ -1,6 +1,19 @@
 # Project Structure
 
-This document outlines the structural organization of the NXMS project. The primary architectural pattern employed across most libraries is the hexagonal architecture, also known as *ports & adapters*. Each library adhering to this pattern should consist of the following folders (layers):
+- [Project Structure](#project-structure)
+  - [Apps](#apps)
+    - [Servers](#servers)
+    - [Front](#front)
+  - [Libs](#libs)
+    - [Framework](#framework)
+    - [Gateway](#gateway)
+    - [Core](#core)
+  - [Modules](#modules)
+  - [Architecture](#architecture)
+    - [Graph](#graph)
+    - [Dependecy cruiser](#dependecy-cruiser)
+
+This document outlines the structural organization of the **nxms** project. The primary architectural pattern employed across most libraries is the hexagonal architecture, also known as *ports & adapters*. Each library adhering to this pattern should consist of the following folders (layers):
 
 - **application:** This layer contains the application logic, orchestrating the interaction between domain entities and infrastructure concerns.
 - **domain:** This layer encapsulates the core business logic, including entities, value objects, and business rules. It remains independent of any framework or infrastructure concerns.
@@ -16,7 +29,7 @@ This layer houses projects capable of being "served" or executed independently. 
 
 This category encompasses the various server configurations, each designed to be decoupled from specific backend frameworks. Examples include:
 
-- `server-local`: A local development server for running and testing NXMS modules independently.
+- `server-local`: A local development server for running and testing **nxms** modules independently.
 
 Other server implementations could include deployments for AWS, Firebase functions, Google Cloud functions, Azure functions, etc.
 
@@ -34,7 +47,7 @@ This layer comprises reusable modules accessible by both apps and individual mod
 
 This category manages the configuration of backend frameworks utilized by the servers.  Examples include:
 
-- `framework-express`:  Handles the configuration and setup of the Express framework within NXMS.
+- `framework-express`:  Handles the configuration and setup of the Express framework within **nxms**.
 
 Other framework implementations could include Fastify, Koa, NestJS, etc.
 
@@ -95,14 +108,20 @@ Each module should adhere to the following structure:
 
 This structure promotes modularity, maintainability, and testability by clearly separating concerns and adhering to the principles of hexagonal architecture.
 
-## Diagrams
+## Architecture
 
-These are the main diagrams about the project structure, ypu can generate it yourself:
+As is mentioned above the used architecture in **nxms** is hexagonal. Here there are some diagrams detailing how the project structure fits in this architecture, you can generate by yourself the nx graph and the dependecy cruiser diagrams.
 
 ```shell
 nx dep
 nx graph
 ```
+
+### Graph
+
+Graph created by nx:
+
+![Graph](./img/graph.png)
 
 ### Dependecy cruiser
 
@@ -114,6 +133,3 @@ nx graph
 
 ![Dependecy Cruiser FULL](./img/all-full.svg)
 
-### Graph
-
-![Graph](./img/graph.png)

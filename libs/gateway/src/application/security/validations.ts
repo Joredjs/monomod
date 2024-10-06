@@ -11,7 +11,7 @@ import {
 	TFrameworkRequest,
 	TFrameworkResponse,
 	TRutaSchema,
-	setError,
+	normalizeError,
 } from '@nxms/core/domain';
 import { SecurityClass } from './security';
 
@@ -86,7 +86,7 @@ export class AppValidations<
 		const schema: TRutaSchema = ruta?.schema;
 
 		if (!schema) {
-			throw setError({
+			throw normalizeError({
 				errType: 'invalid',
 				text: 'No existe schema para esta ruta',
 			});
@@ -95,7 +95,7 @@ export class AppValidations<
 		const schemaVersion: ISchema = schema[ruta.version];
 
 		if (!schemaVersion) {
-			throw setError({
+			throw normalizeError({
 				errType: 'invalid',
 				text: 'No existe schema para esta version',
 			});
@@ -120,7 +120,7 @@ export class AppValidations<
 				}
 			}
 			if (vacio) {
-				throw setError({
+				throw normalizeError({
 					detail: bodyParams,
 					errType: 'params',
 					text: 'Parametro vacio o inexistente',
@@ -133,7 +133,7 @@ export class AppValidations<
 				bodyParams
 			);
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -141,7 +141,7 @@ export class AppValidations<
 		if (res.locals.route) {
 			const ruta: IRuta = res.locals.route;
 			if (!ruta.port) {
-				throw setError({
+				throw normalizeError({
 					detail: ruta,
 					errType: 'gone',
 					text: 'Ruta mal configurada',
@@ -150,7 +150,7 @@ export class AppValidations<
 
 			return true;
 		}
-		throw setError({
+		throw normalizeError({
 			detail: res.locals,
 			errType: 'gone',
 			text: 'Framework mal configurado',
@@ -181,7 +181,7 @@ export class AppValidations<
 
 			return false;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 
@@ -201,7 +201,7 @@ export class AppValidations<
 
 			return null;
 		} catch (error) {
-			throw setError(error);
+			throw normalizeError(error);
 		}
 	}
 }

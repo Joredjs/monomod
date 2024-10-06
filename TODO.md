@@ -20,6 +20,10 @@
 [ ] Translate everything to English
 [ ] Abstract the transport layer (http,gRPC,etc)
 [ ] Implement asynchronous requests
+[ ] Document Error Normalization: How errors from different modules are normalized into a consistent format. Error Logging: How and where errors are logged. Error Responses: How error responses are formatted and returned to clients.
+[ ] Put explicit the gateway steps (authorization, Param validations , ...)
+[ ] Generate scripts to add new modules and register them in the gateway
+[ ] Make this project installable not only forkeable
 - pagination (prev,next,last,first) (?page=1&size=100)
 - Filtering (?xxx=gt:10,lt:20&yyy=match:asd&zzz=eq:algo)
 - Ordering (?sort=xxx:asc,yyy:desc)
