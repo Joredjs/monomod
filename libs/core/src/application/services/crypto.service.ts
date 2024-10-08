@@ -3,10 +3,11 @@ import {
 	ICryptoOptions,
 	ICryptoRequest,
 	ICryptoResponse,
-	domainKeys,
-	normalizeError,
+	domainKeys
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
+import { normalizeError } from '../responses';
+
 
 export class ServiceCrypto {
 	#client: ICryptoClient;

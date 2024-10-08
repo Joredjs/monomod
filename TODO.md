@@ -11,8 +11,8 @@
 [X] Move nx library from libs/core/main to libs/core
 [X] Move nx library from libs/core/gateway to libs/gateway
 [X] Quitar de core/main lo que pueda depender de la creación de modulos
+[X] When the function is not configured at port, response error
 [ ] Verify where should be the headers info
-[ ] When the function is not configured at port, response error
 [ ] Update NX version (19.*)
 [ ] Implement the unit tests (jest)
 [ ] Implement rate limit  https://kinsta.com/knowledgebase/api-rate-limit/
@@ -24,6 +24,7 @@
 [ ] Put explicit the gateway steps (authorization, Param validations , ...)
 [ ] Generate scripts to add new modules and register them in the gateway
 [ ] Make this project installable not only forkeable
+[ ] Release the first version
 - pagination (prev,next,last,first) (?page=1&size=100)
 - Filtering (?xxx=gt:10,lt:20&yyy=match:asd&zzz=eq:algo)
 - Ordering (?sort=xxx:asc,yyy:desc)

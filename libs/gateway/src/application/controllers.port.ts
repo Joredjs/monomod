@@ -8,9 +8,9 @@ import {
 	IServices,
 	TControllers,
 	TMyModulesInstances,
-	normalizeError,
 } from '@nxms/core/domain';
 import { modulesList, modulos } from '../domain';
+import { normalizeError } from '@nxms/core/application';
 
 export class PortControllers<
 	TFwReq extends IRequestParams,

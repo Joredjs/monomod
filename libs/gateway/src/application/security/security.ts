@@ -5,9 +5,8 @@ import {
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
-	normalizeError,
-	resultErr,
 } from '@nxms/core/domain';
+import { normalizeError, resultErr } from '@nxms/core/application';
 
 export class SecurityClass<TFwReq extends IRequestParams> {
 	#headerService: IServices['headers'];

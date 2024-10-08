@@ -1,4 +1,5 @@
-import { normalizeError } from '../../domain';
+import { normalizeError } from "../responses";
+
 
 export class ServiceEncode {
 	#codeNum = parseInt(process.env.CODE_NUM || '0') || 0;

@@ -6,7 +6,6 @@ import {
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
-	normalizeError,
 } from '@nxms/core/domain';
 import {
 	ModuleExampleController,
@@ -26,6 +25,7 @@ import {
 	ServiceMail,
 	ServiceSchema,
 	ServiceUseCases,
+	normalizeError,
 } from '@nxms/core/application';
 import { clientCrypto, clientMailer, clientSchema } from './dependencies';
 

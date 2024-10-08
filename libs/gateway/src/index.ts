@@ -3,9 +3,9 @@ import {
 	IRequestParams,
 	IResponseParams,
 	IRouteGroup,
-	normalizeError,
 } from '@nxms/core/domain';
 import { AdapterApi } from './infra';
+import { normalizeError } from '@nxms/core/application';
 
 export class ApiCore<
 	TFwParams,

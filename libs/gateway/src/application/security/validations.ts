@@ -11,9 +11,9 @@ import {
 	TFrameworkRequest,
 	TFrameworkResponse,
 	TRutaSchema,
-	normalizeError,
 } from '@nxms/core/domain';
 import { SecurityClass } from './security';
+import { normalizeError } from '@nxms/core/application';
 
 export class AppValidations<
 	TFwReq extends IRequestParams,

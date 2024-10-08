@@ -4,9 +4,9 @@ import {
 	TDomainGroups,
 	TMyModulesInstances,
 	TPorts,
-	normalizeError,
 } from '@nxms/core/domain';
 import { modulesList } from '../domain';
+import { normalizeError } from '@nxms/core/application';
 export class PortPorts {
 	#services: IServices = {};
 

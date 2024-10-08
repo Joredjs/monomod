@@ -7,11 +7,11 @@ import {
 import {
 	IMicroServiceConfig,
 	IRouteGroup,
-	normalizeError,
 } from '@nxms/core/domain';
 import { ApiCore } from '@nxms/gateway';
 import { ExpressFactory } from './factory';
 import { ExpressService } from './service';
+import { normalizeError } from '@nxms/core/application';
 
 export class ExpressFramework {
 	#appConfig: IMicroServiceConfig;

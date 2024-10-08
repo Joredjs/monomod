@@ -2,8 +2,8 @@ import {
 	IErrResponse,
 	IExternalUseCaseParams,
 	domainKeys,
-	normalizeError,
 } from '../../domain';
+import { normalizeError } from '../responses';
 
 export class ServiceUseCases {
 	async requestExternal<TGReturn>(

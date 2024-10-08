@@ -4,10 +4,10 @@ import {
 	TExpressReq,
 	TExpressRes,
 } from './interface';
-import { IMicroServiceConfig, resultErr } from '@nxms/core/domain';
 import { ExpressService } from './service';
-
+import { IMicroServiceConfig } from '@nxms/core/domain';
 import cors from 'cors';
+import { resultErr } from '@nxms/core/application';
 
 export class ExpressMiddleware {
 	notFound(service: ExpressService) {

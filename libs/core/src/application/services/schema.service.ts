@@ -5,8 +5,8 @@ import {
 	ISchema,
 	ISchemaClient,
 	ISchemaProperties,
-	normalizeError,
 } from '../../domain';
+import { normalizeError } from '../responses';
 
 export class ServiceSchema {
 	#schemaClient: ISchemaClient;

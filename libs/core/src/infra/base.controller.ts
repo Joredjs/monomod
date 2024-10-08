@@ -8,8 +8,8 @@ import {
 	TFrameworkRequest,
 	TFrameworkResponse,
 	domainKeys,
-	resultErr,
 } from '../domain';
+import { resultErr } from '../application';
 
 export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRes> {
 	validations: IAppValidations<TFwReq, TFwRes>;

@@ -4,9 +4,8 @@ import {
 	IServices,
 	ITransactionParams,
 	IUseCase,
-	resultErr,
-	resultOk,
 } from '@nxms/core/domain';
+import { resultErr, resultOk } from '@nxms/core/application';
 
 export class TestUseCase implements IUseCase {
 	#appServices: IServices;

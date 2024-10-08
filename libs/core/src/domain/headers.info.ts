@@ -1,6 +1,7 @@
-import { IHeadersInfo, IHeadersStructure } from './validations';
+import { IHeadersInfo } from './validations';
 import { domainKeys } from './keys';
 
+// Global project headers
 export class DataHeaders {
 	headers: IHeadersInfo = {
 		crdata: {

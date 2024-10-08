@@ -2,9 +2,9 @@ import {
 	IStorageClient,
 	ITypesStorage,
 	domainKeys,
-	normalizeError,
 } from '../../domain';
 import { Readable } from 'stream';
+import { normalizeError } from '../responses';
 
 export class ServiceStorage<TGTStorage extends ITypesStorage> {
 	#storage: IStorageClient;

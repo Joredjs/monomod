@@ -4,9 +4,9 @@ import {
 	TDomainGroups,
 	TMyModulesInstances,
 	domainKeys,
-	normalizeError,
 } from '@nxms/core/domain';
 import { modulesList, modulos } from '../domain';
+import { normalizeError } from '@nxms/core/application';
 
 export class PortRoutes<TFwParams> {
 	#modulesInstances: TMyModulesInstances;
