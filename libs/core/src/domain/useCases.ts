@@ -1,7 +1,7 @@
 import { IErrResponse, IOKResponse } from './result';
 import { IPortParams } from './layers';
 import { ITransactionParams } from './http';
-import { TDomainGroups } from './rutas';
+import { TDomainGroups } from './route';
 
 export interface IUseCase {
 	execute(

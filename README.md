@@ -131,7 +131,7 @@ This is not required, it is up to you if you want to have the last NX version. I
 
 ### Register the module to gateway
 
-1. Add the domain group to `TDomainGroups` in `rutas.ts` inside the core (`@nxms/core`)
+1. Add the domain group to `TDomainGroups` in `route.ts` inside the core (`@nxms/core`)
 2. Add the module in the **modules.ts** file in the domain layer of the gateway (`@nxms/gateway`). Its important to note that you should add a version in the version attribute, if dont the routes inside the module never will be exposed
 3. Add the module instance in the *api.adapter.ts* file in the infra layer of the gateway (`@nxms/gateway`)
 

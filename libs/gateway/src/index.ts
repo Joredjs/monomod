@@ -1,8 +1,8 @@
 import {
+	IDomainGroup,
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
-	IRouteGroup,
 } from '@nxms/core/domain';
 import { AdapterApi } from './infra';
 import { normalizeError } from '@nxms/core/application';
@@ -18,12 +18,12 @@ export class ApiCore<
 		this.#framework = frameworkService;
 	}
 
-	getMicroServices(): IRouteGroup<TFwParams>[] {
+	getDomains(): IDomainGroup<TFwParams>[] {
 		try {
 			const apiAdapter = new AdapterApi<TFwParams, TFwReq, TFwRes>(
 				this.#framework
 			);
-			return apiAdapter.getDomainGroup();
+			return apiAdapter.getDomainGroups();
 		} catch (error) {
 			throw normalizeError(error);
 		}

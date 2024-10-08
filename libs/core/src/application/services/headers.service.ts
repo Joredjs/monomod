@@ -96,12 +96,12 @@ export class ServiceHeaders {
 			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'session',
-				text: 'Para continuar inicia sesión nuevamente',
+				text: 'login again, please',
 			});
 		}
 
 		let permisos = false;
-		for (const priv of info.ruta.privacy) {
+		for (const priv of info.route.privacy) {
 			if (priv === tokenInfo.privacy) {
 				permisos = true;
 				break;
@@ -112,7 +112,7 @@ export class ServiceHeaders {
 			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'session',
-				text: 'No tienes permiso para realizar esta acción',
+				text: 'You don´t have permissions to access this route',
 			});
 		}
 
@@ -129,7 +129,7 @@ export class ServiceHeaders {
 			throw normalizeError({
 				detail: info.reqHeader,
 				errType: 'badInfo',
-				text: 'Para continuar debes iniciar sesión correctamente',
+				text: 'Yo must login in a propper way',
 			});
 		}
 
@@ -146,7 +146,7 @@ export class ServiceHeaders {
 				throw normalizeError({
 					detail: info.reqHeader,
 					errType: 'session',
-					text: 'Para continuar inicia sesión',
+					text: 'Before you must login',
 				});
 			}
 
@@ -158,18 +158,22 @@ export class ServiceHeaders {
 		}
 	}
 
-	// Valida headers después de obtener la info
+	// Check headers after info obtains
 
-	public validateRutaHeaders(info: ITransactionParams): IHeadersValues {
+	public validateRouteHeaders(info: ITransactionParams): IHeadersValues {
 		try {
-			if (!info.reqHeader || !info.ruta?.headers || !info.ruta?.globalHeaders) {
+			if (
+				!info.reqHeader ||
+				!info.route?.headers ||
+				!info.route?.globalHeaders
+			) {
 				throw normalizeError({
 					errType: 'headers',
-					text: 'información incompleta',
+					text: 'infomation missing',
 				});
 			}
 
-			const isPublic = info.ruta.privacy.some(
+			const isPublic = info.route.privacy.some(
 				(priv) => priv === EPrivacyLevel.public
 			);
 
@@ -179,16 +183,13 @@ export class ServiceHeaders {
 
 			const resGlobalHeaders = this.#validateListHeaders(
 				info.reqHeader,
-				info.ruta.globalHeaders
+				info.route.globalHeaders
 			);
 
 			const resLocalHeaders = this.#validateListHeaders(
 				info.reqHeader,
-				info.ruta.headers
+				info.route.headers
 			);
-
-			/* Console.log('GLOBAL', resGlobalHeaders);
-			   console.log('LOCAL', resLocalHeaders); */
 
 			return { ...resLocalHeaders, ...resGlobalHeaders };
 		} catch (error) {
@@ -222,7 +223,7 @@ export class ServiceHeaders {
 		const keyHeader = activeHeader.key;
 		const keyExist = Boolean(headersReq[keyHeader]);
 		if (!keyExist) {
-			headerMsg = this.#setHeaderError('Verifica las cabeceras.');
+			headerMsg = this.#setHeaderError('Check the headers.');
 		}
 		if (headerMsg.headersOk) {
 			headerMsg.headersOk = this.#validateHeaderValue(
@@ -231,7 +232,7 @@ export class ServiceHeaders {
 			);
 
 			if (!headerMsg.headersOk) {
-				headerMsg = this.#setHeaderError('Verifica bien las cabeceras.');
+				headerMsg = this.#setHeaderError('Send propper headers.');
 			}
 		}
 
@@ -242,13 +243,13 @@ export class ServiceHeaders {
 		let headerMsg = { errDetail: '', headersOk: true };
 		for (const head of this.#mandatoryHeaders) {
 			if (!headersReq[head.key]) {
-				headerMsg = this.#setHeaderError('Verifica las cabeceras');
+				headerMsg = this.#setHeaderError('Check the headers');
 				break;
 			}
 
 			const reqValue = headersReq[head.key] as string;
 			if (!this.#validateHeaderValue(reqValue, head.values)) {
-				headerMsg = this.#setHeaderError('Verifica bien las cabeceras');
+				headerMsg = this.#setHeaderError('Send propper headers');
 				break;
 			}
 		}

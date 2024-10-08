@@ -39,7 +39,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 	// Valida headers después de obtener la info
 
 	public validateRoute(info: ITransactionValid): boolean {
-		if (this.#headerService.validateRutaHeaders(info)) {
+		if (this.#headerService.validateRouteHeaders(info)) {
 			return true;
 		}
 		return false;

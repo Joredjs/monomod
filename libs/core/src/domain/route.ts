@@ -52,12 +52,12 @@ export interface ISchema {
 	[key: string]: ISchemaProperties;
 }
 
-export type TRutaSchema = {
+export type TRouteSchema = {
 	[index in EVersions]?: ISchema;
 };
 
 export interface ISchemaObject {
-	[key: string]: TRutaSchema;
+	[key: string]: TRouteSchema;
 }
 
 export interface ISchemaClient {
@@ -66,33 +66,33 @@ export interface ISchemaClient {
 	Validator: any;
 }
 
-export interface IRuta {
+export interface IRoute {
 	globalHeaders?: string[];
 	headers: string[];
 	method: THttpMethods;
 	path: string;
-	port?: IPort;
+	businessPort?: IPort;
 	privacy: EPrivacyLevel[];
-	schema: TRutaSchema;
+	schema: TRouteSchema;
 	version?: TVersion;
 }
 
-export interface IRouteGroup<TFwParams> {
+export interface IDomainGroup<TFwParams> {
 	cors: RegExp[];
-	domains?: string[];
-	group: TDomainGroups;
+	dnsDomains?: string[];
+	name: TDomainGroups;
 	handler?: TFrameworkParams<TFwParams>;
 	headers: string[];
-	paths: IRuta[];
-	puerto: number;
-	port?: IPort;
+	paths: IRoute[];
+	httpPort: number;
+	businessPort?: IPort;
 	versions: TVersion[];
 	// Services: TServicesList[];
 }
 
 export interface IModule {
 	name: TDomainGroups;
-	puerto: number;
+	httpPort: number;
 	headers?: { [head: string]: IHeadersStructure };
 	schemas: ISchemaObject;
 	services: TServicesList[];
@@ -105,7 +105,7 @@ export type TModules = {
 };
 
 export interface IModuleRoute<TFwParams> {
-	getRutas(): IRouteGroup<TFwParams>;
+	getRoutes(): IDomainGroup<TFwParams>;
 }
 
 // TODO: dont use any (use class instance)

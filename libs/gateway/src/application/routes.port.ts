@@ -1,6 +1,6 @@
 import {
+	IDomainGroup,
 	IModuleRoute,
-	IRouteGroup,
 	TDomainGroups,
 	TMyModulesInstances,
 	domainKeys,
@@ -16,12 +16,12 @@ export class PortRoutes<TFwParams> {
 	}
 
 	// Apply global CORS configuration to a route group
-	#applyGlobalCors(route: IRouteGroup<TFwParams>): IRouteGroup<TFwParams> {
+	#applyGlobalCors(route: IDomainGroup<TFwParams>): IDomainGroup<TFwParams> {
 		return {
 			...route,
 			cors: route.cors.concat(domainKeys.core.globalCors),
 			// TODO: IF the domains arent configured per route, move it to a generic place
-			domains: domainKeys.core.allowedDomains,
+			dnsDomains: domainKeys.core.allowedDomains,
 		};
 	}
 
@@ -31,8 +31,8 @@ export class PortRoutes<TFwParams> {
 	}
 
 	// Get all route groups, dynamically creating them for each module
-	getAll(): IRouteGroup<TFwParams>[] {
-		const routes: IRouteGroup<TFwParams>[] = [];
+	getAll(): IDomainGroup<TFwParams>[] {
+		const routes: IDomainGroup<TFwParams>[] = [];
 		for (const module of modulesList) {
 			if (!this.#modulesInstances[module]) {
 				throw normalizeError({
@@ -43,7 +43,7 @@ export class PortRoutes<TFwParams> {
 			}
 
 			const moduleRoutes = this.#createModuleRoutes(module);
-			routes.push(this.#applyGlobalCors(moduleRoutes.getRutas()));
+			routes.push(this.#applyGlobalCors(moduleRoutes.getRoutes()));
 		}
 
 		return routes;

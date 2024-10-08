@@ -27,8 +27,8 @@ export interface IFrameworkService<TFwRes> {
 	returnInfo(responseInfo: IFrameworkResponseInfo<TFwRes>): void;
 }
 
-export interface IMicroServiceConfig {
-	addGroupName?: boolean;
+export interface IMicroAppConfig {
+	addDomainName?: boolean;
 	bodyLimit: string;
 	debug?: {
 		cors?: boolean;

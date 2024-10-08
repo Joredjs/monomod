@@ -7,7 +7,7 @@ export * from './keys';
 export * from './layers';
 export * from './mail';
 export * from './result';
-export * from './rutas';
+export * from './route';
 export * from './storage';
 export * from './useCases';
 export * from './validations';

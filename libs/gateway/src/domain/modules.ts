@@ -11,8 +11,8 @@ export const modulesList: TDomainGroups[] = ['example'];
 
 export const modulos: TModules = {
 	example: {
+		httpPort: puertos.example,
 		name: 'example',
-		puerto: puertos.example,
 		schemas,
 		services: [],
 		useValidations: true,

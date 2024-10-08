@@ -18,7 +18,9 @@
 			"@nxms/core/application": ["libs/core/src/application/index.ts"],
 			"@nxms/core/domain": ["libs/core/src/domain/index.ts"],
 			"@nxms/core/infra": ["libs/core/src/infra/index.ts"],
-			"@nxms/framework-express": ["libs/framework/express/src/index.ts"],
+			"@nxms/framework-express/infra": [
+				"libs/framework/express/src/infra/index.ts"
+			],
 			"@nxms/gateway": ["libs/gateway/src/index.ts"],
 			"@nxms/module-example": ["modules/example/src/index.ts"]
 			// "@nxms/module-example/application": [

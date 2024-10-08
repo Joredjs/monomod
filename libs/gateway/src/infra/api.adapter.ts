@@ -1,8 +1,8 @@
 import {
+	IDomainGroup,
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
-	IRouteGroup,
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
@@ -34,7 +34,7 @@ export class AdapterApi<
 	TFwReq extends IRequestParams,
 	TFwRes extends IResponseParams
 > {
-	#routeList: IRouteGroup<TFwParams>[] = [];
+	#domainList: IDomainGroup<TFwParams>[] = [];
 
 	#services: IServices = {};
 
@@ -63,17 +63,17 @@ export class AdapterApi<
 				ports.getAll()
 			);
 			const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
-			this.#routeList = routes.getAll();
+			this.#domainList = routes.getAll();
 		} catch (error) {
 			throw normalizeError(error);
 		}
 	}
 
-	getDomainGroup(): IRouteGroup<TFwParams>[] {
-		return this.#routeList.map((rgroup) => ({
-			...rgroup,
-			handler: this.#layersService.getController(rgroup.group).handler,
-			port: this.#layersService.getPort(rgroup.group),
+	getDomainGroups(): IDomainGroup<TFwParams>[] {
+		return this.#domainList.map((domGroup) => ({
+			...domGroup,
+			businessPort: this.#layersService.getPort(domGroup.name),
+			handler: this.#layersService.getController(domGroup.name).handler,
 		}));
 	}
 

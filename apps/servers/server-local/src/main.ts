@@ -1,33 +1,33 @@
-import { ExpressFramework } from '@nxms/framework-express';
+import { ExpressFramework } from '@nxms/framework-express/infra';
 
 try {
 	// Create an instance of the ExpressFramework
 
 	const framework = new ExpressFramework({
-		addGroupName: true,
+		addDomainName: true,
 		bodyLimit: '5mb',
-		debug: { paths: true, routes: true },
+		debug: { cors: true, paths: true, routes: true },
 	});
 
-	// Retrieve the configured microservices
-	const microServices = framework.getServices();
+	// Retrieve the configured microapps
+	const microApps = framework.getApps();
 
-	// Iterate through the microservices and start each server
-	Object.values(microServices).forEach((service) => {
-		if (service) {
-			const { port, app } = service;
-			const server = app.listen(port, () => {
+	// Iterate through the microapps and start each server
+	Object.values(microApps).forEach((microApp) => {
+		if (microApp) {
+			const { app, httpPort } = microApp;
+			const server = app.listen(httpPort, () => {
 				console.debug(
-					`Microservice '${service.name}' listening at http://localhost:${port}`
+					`MicroApp '${microApp.name}' listening at http://localhost:${httpPort}`
 				);
 			});
 
 			// Handle server errors
 			server.on('error', (err) => {
-				console.error(`Error starting microservice '${service.name}':`, err);
+				console.error(`Error starting microapp '${microApp.name}':`, err);
 			});
 		}
 	});
 } catch (error) {
-	console.error(`Error creating the microservices:`, error);
+	console.error(`Error creating the microapps:`, error);
 }

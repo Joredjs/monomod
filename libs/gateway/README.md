@@ -47,7 +47,7 @@ These services ar created in the **nxms core** (`@nxms/core`) and are registered
 
 ## Module definition
 
-The defination of every module should be in the `modules.ts` based in the `IModule` interface, The "puertos" variable is the port which the project will be serve when it used locally, normally by the `@nxms/server-local` server. The name must exist in the `TDomainGroups` type in `rutas.ts` file inside the **nxms core** (`@nxms/core`).
+The defination of every module should be in the `modules.ts` based in the `IModule` interface, The "puertos" variable is the port which the project will be serve when it used locally, normally by the `@nxms/server-local` server. The name must exist in the `TDomainGroups` type in `route.ts` file inside the **nxms core** (`@nxms/core`).
 
 Its important to note that you should add a valid version in the version attribute, if dont the routes inside the module never will be exposed.
 

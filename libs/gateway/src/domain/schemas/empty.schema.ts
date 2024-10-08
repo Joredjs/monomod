@@ -1,5 +1,5 @@
-import { EVersions, TRutaSchema } from '@nxms/core/domain';
+import { EVersions, TRouteSchema } from '@nxms/core/domain';
 
-export const emptySchema: TRutaSchema = {
+export const emptySchema: TRouteSchema = {
 	[EVersions.alpha]: {},
 };

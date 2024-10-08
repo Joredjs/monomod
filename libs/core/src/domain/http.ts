@@ -1,6 +1,6 @@
 import { IErrResponse, IOKResponse } from './result';
 import { IJSONObject } from './values';
-import { IRuta } from './rutas';
+import { IRoute } from './route';
 import { IUseCaseParams } from './useCases';
 import { IncomingHttpHeaders } from 'http2';
 
@@ -18,7 +18,7 @@ export enum EHttpMethods {
 export interface ITransactionParams {
 	bodyParams?: IJSONObject;
 	reqHeader?: IncomingHttpHeaders;
-	ruta?: IRuta;
+	route?: IRoute;
 }
 
 export interface ITransactionValid extends ITransactionParams {

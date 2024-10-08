@@ -4,7 +4,7 @@ import {
 	IUseCaseParams,
 	TExternalUseCases,
 } from './useCases';
-import { IDefaultToken, ISchema, ISchemaClient, TDomainGroups } from './rutas';
+import { IDefaultToken, ISchema, ISchemaClient, TDomainGroups } from './route';
 import { ITransactionParams, TIncomingHttpHeaders } from './http';
 import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
 import { ICryptoClient } from './crypto';
@@ -29,7 +29,7 @@ export interface IServiceHeader {
 	validateToken<IToken extends IDefaultToken>(info: ITransactionParams): IToken;
 	validateMandatory(headersReq: TIncomingHttpHeaders): boolean;
 	validate(headersReq: TIncomingHttpHeaders, key?: string): boolean;
-	validateRutaHeaders(info: ITransactionParams): IHeadersValues;
+	validateRouteHeaders(info: ITransactionParams): IHeadersValues;
 }
 
 export type TServicesList =

@@ -1,11 +1,10 @@
 import {
 	EHttpMethods,
 	EPrivacyLevel,
+	IDomainGroup,
 	IModule,
 	IModuleRoute,
-	IRouteGroup,
-	IRuta,
-	TDomainGroups,
+	IRoute,
 } from '@nxms/core/domain';
 
 export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
@@ -15,23 +14,31 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 		this.#modulo = modulo;
 	}
 
-	#getPaths(): IRuta[] {
+	#getPaths(): IRoute[] {
 		return [
-			// Vacía: no se ha creado el metodo en el port
+			// Empty: Does not exists the handler in the businessPort
 			{
 				headers: [],
 				method: EHttpMethods.GET,
-				path: 'vacia',
+				path: 'empty',
 				privacy: [EPrivacyLevel.public],
-				schema: this.#modulo.schemas.empty,
+				schema: {},
 			},
-			// Noschema: No existe schema para la version
+			// Noschema: Does not exists schema for the version
 			{
 				headers: [],
 				method: EHttpMethods.GET,
 				path: 'noschema',
 				privacy: [EPrivacyLevel.public],
 				schema: {},
+			},
+			// Badschema: use an unexisting schema
+			{
+				headers: [],
+				method: EHttpMethods.GET,
+				path: 'badschema',
+				privacy: [EPrivacyLevel.public],
+				schema: this.#modulo.schemas.undefined,
 			},
 			// Test: executes the usecase
 			{
@@ -52,14 +59,13 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 		];
 	}
 
-	getRutas(): IRouteGroup<TFwParams> {
+	getRoutes(): IDomainGroup<TFwParams> {
 		return {
 			cors: [],
-			group: this.#modulo.name,
 			headers: [],
+			httpPort: this.#modulo.httpPort,
+			name: this.#modulo.name,
 			paths: this.#getPaths(),
-			puerto: this.#modulo.puerto,
-			// Services: this.#modulo.services,
 			versions: this.#modulo.versions,
 		};
 	}

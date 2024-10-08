@@ -4,13 +4,13 @@ import {
 	IJSONObject,
 	IRequestParams,
 	IResponseParams,
-	IRuta,
+	IRoute,
 	ISchema,
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
-	TRutaSchema,
+	TRouteSchema,
 } from '@nxms/core/domain';
 import { SecurityClass } from './security';
 import { normalizeError } from '@nxms/core/application';
@@ -29,13 +29,13 @@ export class AppValidations<
 		this.#schemaValidator = services.schema;
 	}
 
-	#getBodyParams(ruta: IRuta, req: TFrameworkRequest<TFwReq>): IJSONObject {
+	#getBodyParams(route: IRoute, req: TFrameworkRequest<TFwReq>): IJSONObject {
 		let params = req.body;
 		if (Object.keys(req.params).length > 0) {
 			params = { ...params, ...req.params };
 		}
 
-		if (ruta.method === EHttpMethods.GET) {
+		if (route.method === EHttpMethods.GET) {
 			if (Object.keys(req.params).length > 0) {
 				({ params } = req);
 			} else {
@@ -62,51 +62,53 @@ export class AppValidations<
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
 	): ITransactionValid {
-		const ruta: IRuta = res.locals.route;
+		const {route} = res.locals;
 
-		const pathReplace = ruta.path.replace(/\//g, '_').replace(/:/g, '$');
-		const path = `${ruta.method}_${pathReplace}`;
+		const pathReplace = route.path.replace(/\//g, '_').replace(/:/g, '$');
+		const path = `${route.method}_${pathReplace}`;
 
 		let handler = this.#security.emptyHandler;
 
-		if (ruta.port && path && ruta.port[path]) {
-			handler = ruta.port[path];
+		if (route.businessPort && path && route.businessPort[path]) {
+			handler = route.businessPort[path];
 		}
 
 		return {
-			bodyParams: this.#getBodyParams(ruta, req),
+			bodyParams: this.#getBodyParams(route, req),
 			handler,
 			reqHeader: req.headers,
-			ruta,
-			usecaseParams: ruta.port.usecaseParams,
+			route,
+			usecaseParams: route.businessPort.usecaseParams,
 		};
 	}
 
-	#getSchemaVersion(ruta: IRuta): ISchema {
-		const schema: TRutaSchema = ruta?.schema;
+	#getSchemaVersion(route: IRoute): ISchema {
+		const schema: TRouteSchema = route?.schema;
 
 		if (!schema) {
 			throw normalizeError({
+				detail: route.schema,
 				errType: 'invalid',
-				text: 'No existe schema para esta ruta',
+				text: 'Check the schema for this route',
 			});
 		}
 
-		const schemaVersion: ISchema = schema[ruta.version];
+		const schemaVersion: ISchema = schema[route.version];
 
 		if (!schemaVersion) {
 			throw normalizeError({
+				detail: route.version,
 				errType: 'invalid',
-				text: 'No existe schema para esta version',
+				text: 'There is not schema for this version',
 			});
 		}
 
 		return schemaVersion;
 	}
 
-	#validateParams(ruta: IRuta, bodyParams: IJSONObject): boolean {
+	#validateParams(route: IRoute, bodyParams: IJSONObject): boolean {
 		try {
-			const schemaVersion: ISchema = this.#getSchemaVersion(ruta);
+			const schemaVersion: ISchema = this.#getSchemaVersion(route);
 
 			const schemaKeys = Object.keys(schemaVersion).filter(
 				(key) => !schemaVersion[key].optional
@@ -123,7 +125,7 @@ export class AppValidations<
 				throw normalizeError({
 					detail: bodyParams,
 					errType: 'params',
-					text: 'Parametro vacio o inexistente',
+					text: 'Empty or null parameters',
 				});
 			}
 
@@ -139,12 +141,12 @@ export class AppValidations<
 
 	#validateLocals(res: TFrameworkResponse<TFwRes>): boolean {
 		if (res.locals.route) {
-			const ruta: IRuta = res.locals.route;
-			if (!ruta.port) {
+			const {route} = res.locals;
+			if (!route.businessPort) {
 				throw normalizeError({
-					detail: ruta,
+					detail: route,
 					errType: 'gone',
-					text: 'Ruta mal configurada',
+					text: 'The route is misconfigured',
 				});
 			}
 
@@ -153,7 +155,7 @@ export class AppValidations<
 		throw normalizeError({
 			detail: res.locals,
 			errType: 'gone',
-			text: 'Framework mal configurado',
+			text: 'The framework is misconfigured',
 		});
 	}
 
@@ -174,9 +176,9 @@ export class AppValidations<
 			// Valida los parametros
 
 			if (sec && locals) {
-				const ruta: IRuta = res.locals.route;
-				const bodyParams = this.#getBodyParams(ruta, req);
-				return this.#validateParams(ruta, bodyParams);
+				const {route} = res.locals;
+				const bodyParams = this.#getBodyParams(route, req);
+				return this.#validateParams(route, bodyParams);
 			}
 
 			return false;
