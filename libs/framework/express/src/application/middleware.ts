@@ -1,17 +1,40 @@
 import {
+	IDomainGroup,
+	IMicroAppConfig,
+	IRoute,
+	TVersion,
+} from '@nxms/core/domain';
+import {
+	IExpressDebug,
 	IExpressMicroApp,
+	IExpressService,
 	TExpressNext,
 	TExpressReq,
 	TExpressRes,
-} from './interface';
-import { ExpressService } from './service';
-import { IMicroServiceConfig } from '@nxms/core/domain';
+} from '../domain/interface';
 import cors from 'cors';
 import { resultErr } from '@nxms/core/application';
 
-export class ExpressMiddleware {
-	notFound(service: ExpressService) {
-		return (req: TExpressReq, res: TExpressRes) => {
+// TODO: recieve the service in constructor
+export class ExpressMiddleware<IExpressParams> {
+	#service: IExpressService;
+
+	#debug: IExpressDebug;
+
+	#appConfig: IMicroAppConfig;
+
+	constructor(
+		appConfig: IMicroAppConfig,
+		debug: IExpressDebug,
+		service: IExpressService
+	) {
+		this.#service = service;
+		this.#appConfig = appConfig;
+		this.#debug = debug;
+	}
+
+	notFound() {
+		return (req: TExpressReq, res: TExpressRes, next: TExpressNext) => {
 			const infoError = resultErr({
 				detail: `No existe el recurso solicitado (${req.url})`,
 				errType: 'noInfo',
@@ -22,44 +45,42 @@ export class ExpressMiddleware {
 				resInstance: res,
 				status: 404,
 			};
-			service.returnInfo(resInfo);
+			this.#service.returnInfo(resInfo);
 		};
 	}
 
-	setRouteInfo({ appConfig, microApp, routeGroup, routeInfo, version }) {
+	// eslint-disable-next-line max-params
+	setDomainInfo(
+		domainGroup: IDomainGroup<IExpressParams>,
+		microApp: IExpressMicroApp,
+		domainInfo: IRoute,
+		version: TVersion
+	) {
 		return (req, res, next) => {
-			if (routeGroup.port) {
-				routeInfo = {
-					...routeInfo,
-					globalHeaders: routeGroup.headers,
-					port: routeGroup.port,
+			if (domainGroup.businessPort) {
+				domainInfo = {
+					...domainInfo,
+					businessPort: domainGroup.businessPort,
+					globalHeaders: domainGroup.headers,
 					version,
 				};
 			}
-			res.locals.route = routeInfo;
-			if (appConfig.debug.paths) {
-				console.debug('******************');
-				console.debug('DEBUGGING APP URL');
-				console.debug('microAPP:', microApp.name);
-				console.debug('URL:', req.url);
-				console.debug('INFO:', routeInfo);
+			res.locals.route = domainInfo;
+			if (this.#appConfig.debug.paths) {
+				this.#debug.paths(microApp, req, domainInfo);
 			}
 			next();
 		};
 	}
 
-	setCors(microApp: IExpressMicroApp, appConfig: IMicroServiceConfig) {
+	setCors(microApp: IExpressMicroApp) {
 		const corsOptions = {
 			origin(origin, callback) {
-				if (appConfig.debug.cors) {
-					console.debug('******************');
-					console.debug('DEBUGGING APP CORS');
-					console.debug('microAPP:', microApp.name);
-					console.debug('Domains:', microApp.domains);
-					console.debug('Origin:', origin);
+				if (this.#appConfig.debug.cors) {
+					this.#debug.cors(microApp, origin);
 				}
 
-				if (microApp.domains.indexOf(origin) !== -1 || !origin) {
+				if (microApp.dnsDomains.indexOf(origin) !== -1 || !origin) {
 					callback(null, true);
 				} else {
 					callback(new Error('Not allowed by CORS'));
@@ -70,7 +91,7 @@ export class ExpressMiddleware {
 		return cors(corsOptions);
 	}
 
-	errorHandler(service: ExpressService) {
+	errorHandler() {
 		/* eslint-disable max-params */
 		return (
 			err: Error,
@@ -99,7 +120,7 @@ export class ExpressMiddleware {
 				resInstance: res,
 				status: 500,
 			};
-			service.returnInfo(resInfo);
+			this.#service.returnInfo(resInfo);
 		};
 		/* eslint-disable max-params */
 	}

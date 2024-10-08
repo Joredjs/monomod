@@ -1,4 +1,4 @@
-import { IExpressResponse, TExpressRes } from './interface';
+import { IExpressResponse, TExpressRes } from '../domain/interface';
 import { IFrameworkService } from '@nxms/core/domain';
 
 export class ExpressService implements IFrameworkService<TExpressRes> {
