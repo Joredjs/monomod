@@ -4,7 +4,18 @@
 	"projectType": "application",
 	"implicitDependencies": ["server-local"],
 	"targets": {
-		"lint": {},
+		"lint": {
+			"dependsOn": ["^lint", "lint"],
+			"cache": true,
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/src/**/*.ts"],
+				"fix": true,
+				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
+				"format": "html"
+			}
+		},
 		"e2e": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],

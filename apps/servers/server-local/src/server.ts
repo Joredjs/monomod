@@ -1,4 +1,5 @@
 import { IExpressMicroApp } from '@nxms/framework-express/domain';
+import { addListener } from 'node:process';
 
 export class LocalServer {
 	start(microApp: IExpressMicroApp) {
@@ -19,7 +20,7 @@ export class LocalServer {
 			// Graceful shutdown
 			process.on('SIGINT', () => {
 				server.close(() => {
-					console.debug(`MicroApp '${microApp.name}' stopped`);
+					console.debug(`MicroApp '${microApp.name}' stopped 1`);
 					process.exit(0);
 				});
 			});

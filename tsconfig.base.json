@@ -26,11 +26,6 @@
 			],
 			"@nxms/gateway": ["libs/gateway/src/index.ts"],
 			"@nxms/module-example": ["modules/example/src/index.ts"]
-			// "@nxms/module-example/application": [
-			// 	"modules/example/src/application/index.ts"
-			// ],
-			// "@nxms/module-example/domain": ["modules/example/src/domain/index.ts"],
-			// "@nxms/module-example/infra": ["modules/example/src/infra/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

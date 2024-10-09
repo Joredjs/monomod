@@ -3,13 +3,6 @@
 	"ignorePatterns": ["**/*"],
 	"plugins": ["@nx"],
 	"rules": {
-		/*
-		"id-match": [
-			"error",
-			"(^(?:[a-z]+([A-Z][a-z]{0,})*)$)|(^AccountId$|^LineOfBusiness$|^UserProfileID$)|^(([A-Z][a-z]*)*(Adapter$|Port$|Model$|Key$|UseCase$|Data$|^Mock\\w*))|^(([A-Z]*_)*(NUMBER$))",
-			{ "onlyDeclarations": true }
-		],
-		*/
 		"no-magic-numbers": [
 			"error",
 			{
@@ -19,22 +12,50 @@
 				"ignore": [-1, 0, 1, 2, 3]
 			}
 		],
-		"no-console": ["error", { "allow": ["error", "debug", "trace"] }],
+		"no-console": [
+			"error",
+			{
+				"allow": ["error", "debug", "trace"]
+			}
+		],
 		"one-var": [
 			"error",
-			{ "var": "always", "let": "always", "const": "never" }
+			{
+				"var": "always",
+				"let": "always",
+				"const": "never"
+			}
 		],
-		"id-length": ["error", { "min": 3, "max": 30, "properties": "never" }],
+		"id-length": [
+			"error",
+			{
+				"min": 3,
+				"max": 30,
+				"properties": "never"
+			}
+		],
 		"eqeqeq": "error",
-		"no-use-before-define": ["error", { "classes": false }],
+		"no-use-before-define": [
+			"error",
+			{
+				"classes": false
+			}
+		],
 		"camelcase": [
 			"error",
-			{ "allow": ["(get|post|put|delete)([_$]+[a-zA-Z0-9]+)*$"] }
+			{
+				"allow": ["(get|post|put|delete)([_$]+[a-zA-Z0-9]+)*$"]
+			}
 		],
 		"init-declarations": "error",
 		"consistent-return": "error",
 		"default-case": "error",
-		"max-depth": ["error", { "max": 3 }],
+		"max-depth": [
+			"error",
+			{
+				"max": 3
+			}
+		],
 		"guard-for-in": "error",
 		"require-await": "error",
 		"no-eq-null": "error",
@@ -67,20 +88,39 @@
 		"dot-notation": "error",
 		"func-name-matching": "error",
 		"func-names": ["error", "as-needed"],
-		"func-style": ["error", "declaration", { "allowArrowFunctions": true }],
-		"max-lines": ["error", { "skipBlankLines": true, "skipComments": true }],
+		"func-style": [
+			"error",
+			"declaration",
+			{
+				"allowArrowFunctions": true
+			}
+		],
+		"max-lines": [
+			"error",
+			{
+				"skipBlankLines": true,
+				"skipComments": true
+			}
+		],
 		"max-nested-callbacks": ["error", 3],
 		"max-params": "error",
 		"multiline-comment-style": ["error", "bare-block"],
 		"new-cap": [
 			"error",
-			{ "capIsNewExceptions": ["Page", "App", "Component"] }
+			{
+				"capIsNewExceptions": []
+			}
 		],
 		"no-alert": "error",
 		"no-array-constructor": "error",
 		"no-bitwise": "error",
 		"no-caller": "error",
-		"no-confusing-arrow": ["error", { "allowParens": false }],
+		"no-confusing-arrow": [
+			"error",
+			{
+				"allowParens": false
+			}
+		],
 		"no-continue": "error",
 		"no-div-regex": "error",
 		"no-else-return": "error",
@@ -115,13 +155,18 @@
 		"no-return-assign": "error",
 		"no-script-url": "error",
 		"no-sequences": "error",
-		"no-shadow": "off", // Don't use it generates enum errors
+		"no-shadow": "off",// Don't use it generates enum errors
 		"@typescript-eslint/no-shadow": "error",
 		"no-undef-init": "error",
 		"no-undefined": "error",
 		"no-underscore-dangle": "error",
 		"no-unneeded-ternary": "error",
-		"no-unused-expressions": ["error", { "allowTernary": true }],
+		"no-unused-expressions": [
+			"error",
+			{
+				"allowTernary": true
+			}
+		],
 		"no-useless-call": "error",
 		"no-useless-computed-key": "error",
 		"no-useless-concat": "error",
@@ -176,7 +221,10 @@
 		"max-statements-per-line": "error",
 		"max-lines-per-function": [
 			"error",
-			{ "skipBlankLines": true, "skipComments": true }
+			{
+				"skipBlankLines": true,
+				"skipComments": true
+			}
 		],
 		"quotes": ["error", "double"]
 	},
@@ -207,12 +255,18 @@
 		{
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nx/typescript"],
-			"rules": {}
+			"rules": {
+				"@typescript-eslint/no-extra-semi": "error",
+				"no-extra-semi": "off"
+			}
 		},
 		{
 			"files": ["*.js", "*.jsx"],
 			"extends": ["plugin:@nx/javascript"],
-			"rules": {}
+			"rules": {
+				"@typescript-eslint/no-extra-semi": "error",
+				"no-extra-semi": "off"
+			}
 		},
 		{
 			"files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],

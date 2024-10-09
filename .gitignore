@@ -41,5 +41,5 @@ testem.log
 Thumbs.db
 *.log
 
-.nx/cache
+.nx
 .env

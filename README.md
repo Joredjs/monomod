@@ -69,7 +69,7 @@ In this projectby default you will find an example module called `example` with 
 ### Prerequisites
 
 - Node.js (version 18.x.x or higher)
-- NX (version 18.x.x or higher)
+- NX (version 20.x.x or higher)
 
 ### Basic Setup
 

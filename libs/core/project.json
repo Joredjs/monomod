@@ -5,6 +5,17 @@
 	"projectType": "library",
 	"tags": [],
 	"targets": {
-		"lint": {}
+		"lint": {
+			"dependsOn": ["^lint", "lint"],
+			"cache": true,
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["{projectRoot}/src/**/*.ts"],
+				"fix": true,
+				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
+				"format": "html"
+			}
+		}
 	}
 }
