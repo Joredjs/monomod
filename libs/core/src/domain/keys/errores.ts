@@ -52,6 +52,11 @@ export const errores: TErrores = {
 		desc: 'Error indefinido, posiblemente aparece en los catch',
 		text: 'No ha sido posible obtener la información.',
 	},
+	nodetail: {
+		code: httpCodes[400].code,
+		desc: 'No es posible ver el detalle del error',
+		text: 'No está permitido ver el detalle del error',
+	},
 	params: {
 		code: httpCodes[412].code,
 		desc: 'No se envían los parámetros necesarios',

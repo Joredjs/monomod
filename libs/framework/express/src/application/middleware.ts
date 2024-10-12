@@ -12,8 +12,8 @@ import {
 	TExpressReq,
 	TExpressRes,
 } from '../domain/interface';
+import { ResponseResult } from '@nxms/core/application';
 import cors from 'cors';
-import { resultErr } from '@nxms/core/application';
 
 // TODO: recieve the service in constructor
 export class ExpressMiddleware<IExpressParams> {
@@ -22,6 +22,8 @@ export class ExpressMiddleware<IExpressParams> {
 	#debug: IExpressDebug;
 
 	#appConfig: IMicroAppConfig;
+
+	#response = new ResponseResult();
 
 	constructor(
 		appConfig: IMicroAppConfig,
@@ -33,13 +35,17 @@ export class ExpressMiddleware<IExpressParams> {
 		this.#debug = debug;
 	}
 
+	// TODO: is it correct this to use here (resultErr)
+
 	notFound() {
 		return (req: TExpressReq, res: TExpressRes, next: TExpressNext) => {
-			const infoError = resultErr({
-				detail: `No existe el recurso solicitado (${req.url})`,
-				errType: 'noInfo',
-				saveLog: false,
-			}).unwrap();
+			const infoError = this.#response
+				.resultErr({
+					detail: `No existe el recurso solicitado (${req.url})`,
+					errType: 'noInfo',
+					saveLog: false,
+				})
+				.unwrap();
 			const resInfo = {
 				resBody: infoError,
 				resInstance: res,
@@ -91,6 +97,7 @@ export class ExpressMiddleware<IExpressParams> {
 		return cors(corsOptions);
 	}
 
+	// TODO: is it correct this to use here (resultErr)
 	errorHandler() {
 		/* eslint-disable max-params */
 		return (
@@ -109,7 +116,7 @@ export class ExpressMiddleware<IExpressParams> {
 				detail = String(err);
 			}
 
-			const infoError = resultErr({
+			const infoError = this.#response.resultErr({
 				detail,
 				errType: 'invalid',
 				saveLog: false,

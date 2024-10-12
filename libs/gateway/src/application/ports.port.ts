@@ -1,5 +1,6 @@
 import {
 	IPortParams,
+	IResponseResult,
 	IServices,
 	TDomainGroups,
 	TMyModulesInstances,
@@ -12,14 +13,22 @@ export class PortPorts {
 
 	#modulesInstances: TMyModulesInstances;
 
-	constructor(services: IServices, modulesInstances: TMyModulesInstances) {
+	#response: IResponseResult;
+
+	constructor(
+		services: IServices,
+		modulesInstances: TMyModulesInstances,
+		response: IResponseResult
+	) {
 		this.#modulesInstances = modulesInstances;
 		this.#services = services;
+		this.#response = response;
 	}
 
 	// Factory method to create a port instance for a specific module
 	#createPort(module: TDomainGroups) {
 		const params: IPortParams = {
+			response: this.#response,
 			services: this.#services,
 		};
 		return new this.#modulesInstances[module].Port(params);

@@ -6,7 +6,7 @@ import {
 	domainKeys
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
-import { normalizeError } from '../responses';
+import { normalizeError } from '../errors';
 
 
 export class ServiceCrypto {
@@ -179,7 +179,6 @@ export class ServiceCrypto {
 
 			let decrypted = decipher.update(
 				this.#cryptoOptions.texto,
-				// eslint-disable-next-line no-undefined
 				undefined,
 				this.#cryptoOptions.encode
 			);

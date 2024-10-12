@@ -28,4 +28,5 @@ export const httpCodes = {
 	428: { code: 428, desc: ' Precondition Required' },
 	429: { code: 429, desc: ' Too Many Requests' },
 	431: { code: 431, desc: ' Request Header Fields Too Large' },
+	500: { code: 500, desc: 'Internal server error' },
 };

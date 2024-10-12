@@ -12,6 +12,7 @@ import { IDatabase } from './database';
 import { IHeadersValues } from './validations';
 import { IJSONObject } from './values';
 import { IMailClient } from './mail';
+import { IResponseResult } from './result';
 
 export interface IController<TFwReq, TFwRes> {
 	handler(
@@ -96,4 +97,5 @@ export type TPorts = {
 export interface IPortParams {
 	services?: IServices;
 	externalUseCases?: TExternalUseCases;
+	response?: IResponseResult;
 }

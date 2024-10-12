@@ -4,9 +4,7 @@ import { ITransactionParams } from './http';
 import { TDomainGroups } from './route';
 
 export interface IUseCase {
-	execute(
-		info?: ITransactionParams
-	): Promise<IOKResponse<unknown> | IErrResponse>;
+	execute(info?: ITransactionParams): Promise<IErrResponse | IOKResponse<any>>;
 }
 
 export interface IAllUseCases {

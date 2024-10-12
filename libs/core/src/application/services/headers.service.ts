@@ -9,7 +9,7 @@ import {
 	ITransactionParams,
 	TIncomingHttpHeaders,
 } from '../../domain';
-import { normalizeError } from '../responses';
+import { normalizeError } from '../errors';
 
 export class ServiceHeaders {
 	#headersInfo: IHeadersInfo = {};
