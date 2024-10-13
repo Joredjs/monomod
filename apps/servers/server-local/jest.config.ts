@@ -7,5 +7,19 @@ export default {
 		'^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
 	},
 	moduleFileExtensions: ['ts', 'js', 'html'],
-	coverageDirectory: '../../../coverage/apps/servers/server-local',
+	coverageDirectory: '../../../results/server-local/coverage/',
+	reporters: [
+		'default',
+		[
+			'jest-stare',
+			{
+				resultDir: 'results/server-local/tests',
+				reportTitle: 'tests result',
+				additionalResultsProcessors: ['jest-junit'],
+				coverageLink: '../coverage/index.html',
+				jestStareConfigJson: 'jest-stare.json',
+				jestGlobalConfigJson: 'globalStuff.json',
+			},
+		],
+	],
 };

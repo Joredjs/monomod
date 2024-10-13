@@ -4,7 +4,7 @@ import {
 	domainKeys,
 } from '../../domain';
 import { Readable } from 'stream';
-import { normalizeError } from '../responses';
+import { normalizeError } from '../errors';
 
 export class ServiceStorage<TGTStorage extends ITypesStorage> {
 	#storage: IStorageClient;

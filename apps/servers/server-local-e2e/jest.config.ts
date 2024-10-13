@@ -13,5 +13,5 @@ export default {
 		],
 	},
 	moduleFileExtensions: ['ts', 'js', 'html'],
-	coverageDirectory: '../../..//coverage/server-local-e2e',
+	coverageDirectory: '../../../results/server-local-e2e/coverage/',
 };

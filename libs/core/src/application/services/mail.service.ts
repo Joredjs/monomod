@@ -3,7 +3,7 @@ import {
 	IMailConfig,
 	IMailOptions,
 } from '../../domain';
-import { normalizeError } from '../responses';
+import { normalizeError } from '../errors';
 
 export class ServiceMail {
 	#transporter;

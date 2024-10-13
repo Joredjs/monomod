@@ -26,6 +26,7 @@ export type TErroresValues =
 	| 'invalid'
 	| 'noInfo'
 	| 'nocatch'
+	| 'nodetail'
 	| 'params'
 	| 'session'
 	| 'uncompleted';

@@ -4,24 +4,28 @@ import {
 	IErrResponse,
 	IFrameworkService,
 	IOKResponse,
+	IResponseResult,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
 	domainKeys,
 } from '../domain';
-import { resultErr } from '../application';
 
 export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRes> {
 	validations: IAppValidations<TFwReq, TFwRes>;
 
 	framework: IFrameworkService<TFwRes>;
 
+	response: IResponseResult;
+
 	constructor(
 		Validations: IAppValidations<TFwReq, TFwRes>,
-		frameworkService: IFrameworkService<TFwRes>
+		frameworkService: IFrameworkService<TFwRes>,
+		response: IResponseResult
 	) {
 		this.validations = Validations;
 		this.framework = frameworkService;
+		this.response = response;
 	}
 
 	public handler = async (
@@ -63,7 +67,7 @@ export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRe
 	}
 
 	#handleError(res: TFrameworkResponse<TFwRes>, error): void {
-		const errorInfo = resultErr(error).unwrap();
+		const errorInfo = this.response.resultErr(error).unwrap();
 		this.#returnResponse(res, errorInfo.code, errorInfo);
 	}
 }

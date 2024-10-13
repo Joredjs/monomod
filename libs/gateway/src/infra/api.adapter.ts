@@ -3,6 +3,7 @@ import {
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
+	IResponseResult,
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
@@ -19,6 +20,7 @@ import {
 	ServiceLayers,
 } from '../application';
 import {
+	ResponseResult,
 	ServiceCrypto,
 	ServiceEncode,
 	ServiceHeaders,
@@ -38,6 +40,8 @@ export class AdapterApi<
 
 	#services: IServices = {};
 
+	#response: IResponseResult = new ResponseResult();
+
 	#layersService;
 
 	// TODO: create new instaces here ??
@@ -55,9 +59,14 @@ export class AdapterApi<
 
 			const controllers = new PortControllers<TFwReq, TFwRes>(
 				frameworkService,
-				this.#modulesInstances
+				this.#modulesInstances,
+				this.#response
 			);
-			const ports = new PortPorts(this.#services, this.#modulesInstances);
+			const ports = new PortPorts(
+				this.#services,
+				this.#modulesInstances,
+				this.#response
+			);
 			this.#layersService = new ServiceLayers<TFwReq, TFwRes>(
 				controllers.getAll(this.#services),
 				ports.getAll()

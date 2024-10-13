@@ -81,7 +81,11 @@
 		"accessor-pairs": "error",
 		"arrow-body-style": "error",
 		"block-scoped-var": "error",
-		"capitalized-comments": "error",
+		"capitalized-comments": [
+			"error",
+			"always",
+			{ "ignoreConsecutiveComments": true }
+		],
 		"complexity": "error",
 		"consistent-this": "error",
 		"curly": "error",
@@ -155,10 +159,10 @@
 		"no-return-assign": "error",
 		"no-script-url": "error",
 		"no-sequences": "error",
-		"no-shadow": "off",// Don't use it generates enum errors
+		"no-shadow": "off", // Don't use it generates enum errors
 		"@typescript-eslint/no-shadow": "error",
 		"no-undef-init": "error",
-		"no-undefined": "error",
+		"no-undefined": "off",
 		"no-underscore-dangle": "error",
 		"no-unneeded-ternary": "error",
 		"no-unused-expressions": [
@@ -273,7 +277,16 @@
 			"env": {
 				"jest": true
 			},
-			"rules": {}
+			"rules": {
+				"max-lines-per-function": [
+					"error",
+					{
+						"skipBlankLines": true,
+						"skipComments": true,
+						"max": 60
+					}
+				]
+			}
 		}
 	]
 }

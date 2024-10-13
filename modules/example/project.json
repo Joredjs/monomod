@@ -7,16 +7,27 @@
 	"// targets": "to see all targets run: nx show project module-example --web",
 	"targets": {
 		"lint": {
-			"dependsOn": ["^lint", "lint"],
+			"dependsOn": ["^lint"],
 			"cache": true,
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["{projectRoot}/src/**/*.ts"],
 				"fix": true,
-				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
+				"outputFile": "{workspaceRoot}/results/{projectName}/lint.html",
 				"format": "html"
 			}
 		},
+		"test": {
+			"dependsOn": ["lint", "^test"],
+			"cache": true,
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/results/{projectName}/coverage"],
+			"options": {
+				"codeCoverage": true,
+				"jestConfig": "{projectRoot}/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
 	}
 }

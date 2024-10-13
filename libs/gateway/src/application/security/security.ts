@@ -6,10 +6,12 @@ import {
 	ITransactionValid,
 	TFrameworkRequest,
 } from '@nxms/core/domain';
-import { normalizeError, resultErr } from '@nxms/core/application';
+import { ResponseResult, normalizeError } from '@nxms/core/application';
 
 export class SecurityClass<TFwReq extends IRequestParams> {
 	#headerService: IServices['headers'];
+
+	#response = new ResponseResult();
 
 	constructor(headerService: IServices['headers']) {
 		this.#headerService = headerService;
@@ -45,14 +47,17 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 		return false;
 	}
 
+	// TODO: Is it correct this to be here?
 	public emptyHandler(): Promise<IOKResponse<string> | IErrResponse> {
 		return new Promise((resolve) => {
 			resolve(
-				resultErr({
-					detail: 'Empty handler',
-					errType: 'badConfigured',
-					text: "The use case doesn't exists",
-				}).unwrap()
+				this.#response
+					.resultErr({
+						detail: 'Empty handler',
+						errType: 'badConfigured',
+						text: "The use case doesn't exists",
+					})
+					.unwrap()
 			);
 		});
 	}

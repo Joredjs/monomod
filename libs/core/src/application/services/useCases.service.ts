@@ -3,7 +3,7 @@ import {
 	IExternalUseCaseParams,
 	domainKeys,
 } from '../../domain';
-import { normalizeError } from '../responses';
+import { normalizeError } from '../errors';
 
 export class ServiceUseCases {
 	async requestExternal<TGReturn>(

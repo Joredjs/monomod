@@ -1,2 +1,3 @@
 export * from './services';
-export * from './responses';
+export * from './errors';
+export * from './response';

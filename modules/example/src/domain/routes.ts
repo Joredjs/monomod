@@ -40,20 +40,28 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 				privacy: [EPrivacyLevel.public],
 				schema: this.#modulo.schemas.undefined,
 			},
-			// Test: executes the usecase
+			// Test: executes the success usecase
 			{
 				headers: [],
 				method: EHttpMethods.GET,
-				path: 'test',
+				path: 'testok',
 				privacy: [EPrivacyLevel.public],
 				schema: this.#modulo.schemas.empty,
 			},
-			// Test: executes the usecase but it require user authetication
+			// Test: executes the success usecase but it require user authetication
 			{
 				headers: [],
 				method: EHttpMethods.GET,
-				path: 'test/admin',
+				path: 'testok/admin',
 				privacy: [EPrivacyLevel.admin],
+				schema: this.#modulo.schemas.empty,
+			},
+			// Error: executes the failure error usecase
+			{
+				headers: [],
+				method: EHttpMethods.GET,
+				path: 'testerror',
+				privacy: [EPrivacyLevel.public],
 				schema: this.#modulo.schemas.empty,
 			},
 		];

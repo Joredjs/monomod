@@ -1,3 +1,1 @@
-nx affected -t lint --verbose
-# cp -r dist/* build/
-# rm -rf build/apps/*
+nx affected -t test

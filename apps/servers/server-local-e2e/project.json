@@ -5,20 +5,40 @@
 	"implicitDependencies": ["server-local"],
 	"targets": {
 		"lint": {
-			"dependsOn": ["^lint", "lint"],
+			"dependsOn": ["^lint"],
 			"cache": true,
 			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["{projectRoot}/src/**/*.ts"],
 				"fix": true,
-				"outputFile": "{workspaceRoot}/results/lint/{projectName}.html",
+				"outputFile": "{workspaceRoot}/results/{projectName}/lint.html",
 				"format": "html"
 			}
 		},
+		"//test": {
+			"dependsOn": ["lint", "^test"],
+			"cache": true,
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/results/coverage/{projectName}"],
+			"options": {
+				"codeCoverage": true,
+				"jestConfig": "{projectRoot}/jest.config.ts",
+				"passWithNoTests": true
+			}
+		},
+		"test": {
+			"dependsOn": ["lint", "^test"],
+			"executor": "nx:noop",
+			"cache": true,
+			"inputs": ["default", "^production"],
+			"outputs": ["{workspaceRoot}/results/coverage/{projectName}"],
+			"options": {},
+			"configurations": {}
+		},
 		"e2e": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+			"outputs": ["{workspaceRoot}/results/{e2eProjectRoot}/coverage"],
 			"options": {
 				"jestConfig": "apps/servers/server-local-e2e/jest.config.ts",
 				"passWithNoTests": true
