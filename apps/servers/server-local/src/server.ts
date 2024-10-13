@@ -1,5 +1,5 @@
 import { IExpressMicroApp } from '@nxms/framework-express/domain';
-import { addListener } from 'node:process';
+import { getLanguageTexts } from '@nxms/core/domain';
 
 export class LocalServer {
 	start(microApp: IExpressMicroApp) {
@@ -8,19 +8,24 @@ export class LocalServer {
 			const { app, httpPort } = microApp;
 			const server = app.listen(httpPort, () => {
 				console.debug(
-					`MicroApp '${microApp.name}' listening at http://localhost:${httpPort}`
+					getLanguageTexts('appsServerMsgListening', [microApp.name, httpPort])
 				);
 			});
 
 			// Handle server errors
 			server.on('error', (err) => {
-				console.error(`Error starting microapp '${microApp.name}':`, err);
+				console.error(
+					getLanguageTexts('appsServerErrStarting', [microApp.name]),
+					err
+				);
 			});
 
 			// Graceful shutdown
 			process.on('SIGINT', () => {
 				server.close(() => {
-					console.debug(`MicroApp '${microApp.name}' stopped 1`);
+					console.debug(
+						getLanguageTexts('appsServerErrStoping', [microApp.name])
+					);
 					process.exit(0);
 				});
 			});

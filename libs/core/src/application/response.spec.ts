@@ -1,7 +1,6 @@
+import { domainKeys, mocks } from '../domain';
 import { ResponseResult } from './response';
 import { ServiceLogs } from './services';
-import { domainKeys } from '../domain';
-import { mocks } from '../mocks';
 
 function assertResultOk(responseResult: ResponseResult, value, expected) {
 	const result = responseResult.resultOk(value);

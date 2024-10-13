@@ -1,4 +1,4 @@
-import { IErrResponse, IErrorMapping } from './domain';
+import { IErrResponse, IErrorMapping } from './result';
 
 const errIErrResponse: IErrResponse = {
 	code: 500,

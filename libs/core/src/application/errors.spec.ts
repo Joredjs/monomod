@@ -1,5 +1,6 @@
 import { isIErrResponse, isIErrorMapping, normalizeError } from './errors';
-import { mocks } from '../mocks';
+import { mocks } from '../domain';
+
 
 // #region helpers
 
