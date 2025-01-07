@@ -1,4 +1,4 @@
-/* Import { IDBPagination, IDatabases } from '@nxms/core/domain';
+/* Import { IDBPagination, IDatabases } from '@monomod/core/domain';
    import { ExampleRepository } from '../domain'; */
 
 /* Export class XXTECHNOLOGYExampleRepository implements ExampleRepository {

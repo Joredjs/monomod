@@ -8,13 +8,13 @@ import {
 	IServices,
 	TControllers,
 	TMyModulesInstances,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { modulesList, modulos } from '../domain';
-import { normalizeError } from '@nxms/core/application';
+import { normalizeError } from '@monomod/core/application';
 import { PortControllers } from './controllers.port';
 
 jest.mock('./security');
-jest.mock('@nxms/core/application', () => ({
+jest.mock('@monomod/core/application', () => ({
 	normalizeError: jest.fn((error) => error),
 }));
 describe('PortControllers', () => {

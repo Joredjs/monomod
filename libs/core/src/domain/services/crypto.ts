@@ -52,3 +52,8 @@ export interface ITypesCrypto {
 	CCMDecipher: any;
 	CCMTypes: any;
 }
+
+export interface IServiceCrypto {
+	encrypt(texto: any): string;
+	decrypt(encrypted: string): string;
+}

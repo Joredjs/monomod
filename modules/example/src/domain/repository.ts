@@ -1,4 +1,4 @@
-import { IDBPagination } from '@nxms/core/domain';
+import { IDBPagination } from '@monomod/core/domain';
 
 export interface ExampleRepository {
 	search(pagination: IDBPagination): Promise<any[]>;

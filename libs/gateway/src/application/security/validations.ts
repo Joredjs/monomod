@@ -11,9 +11,10 @@ import {
 	TFrameworkRequest,
 	TFrameworkResponse,
 	TRouteSchema,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { SecurityClass } from './security';
-import { normalizeError } from '@nxms/core/application';
+import { normalizeError } from '@monomod/core/application';
+import { schemas } from '../../domain/schemas';
 
 export class AppValidations<
 	TFwReq extends IRequestParams,
@@ -62,7 +63,7 @@ export class AppValidations<
 		req: TFrameworkRequest<TFwReq>,
 		res: TFrameworkResponse<TFwRes>
 	): ITransactionValid {
-		const {route} = res.locals;
+		const { route } = res.locals;
 
 		const pathReplace = route.path.replace(/\//g, '_').replace(/:/g, '$');
 		const path = `${route.method}_${pathReplace}`;
@@ -83,7 +84,13 @@ export class AppValidations<
 	}
 
 	#getSchemaVersion(route: IRoute): ISchema {
-		const schema: TRouteSchema = route?.schema;
+		let schema: TRouteSchema = route?.schema;
+
+		if (route.method === EHttpMethods.GET) {
+			if (!schema) {
+				schema = schemas['pagination'];
+			}
+		}
 
 		if (!schema) {
 			throw normalizeError({
@@ -116,7 +123,7 @@ export class AppValidations<
 
 			let vacio = false;
 			for (const param of schemaKeys) {
-				if (bodyParams[param as string] === '') {
+				if (!bodyParams || bodyParams[param as string] === '') {
 					vacio = true;
 					break;
 				}
@@ -141,7 +148,7 @@ export class AppValidations<
 
 	#validateLocals(res: TFrameworkResponse<TFwRes>): boolean {
 		if (res.locals.route) {
-			const {route} = res.locals;
+			const { route } = res.locals;
 			if (!route.businessPort) {
 				throw normalizeError({
 					detail: route,
@@ -176,7 +183,7 @@ export class AppValidations<
 			// Valida los parametros
 
 			if (sec && locals) {
-				const {route} = res.locals;
+				const { route } = res.locals;
 				const bodyParams = this.#getBodyParams(route, req);
 				return this.#validateParams(route, bodyParams);
 			}

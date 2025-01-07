@@ -101,10 +101,19 @@ export class ServiceHeaders {
 		}
 
 		let permisos = false;
-		for (const priv of info.route.privacy) {
-			if (priv === tokenInfo.privacy) {
-				permisos = true;
-				break;
+
+		const isPublic = info.route.privacy.some(
+			(priv) => priv === EPrivacyLevel.public
+		);
+
+		if (isPublic) {
+			permisos = true;
+		} else {
+			for (const priv of info.route.privacy) {
+				if (priv === tokenInfo.privacy) {
+					permisos = true;
+					break;
+				}
 			}
 		}
 
@@ -168,6 +177,7 @@ export class ServiceHeaders {
 				!info.route?.globalHeaders
 			) {
 				throw normalizeError({
+					detail: info.route,
 					errType: 'headers',
 					text: 'infomation missing',
 				});

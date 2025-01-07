@@ -24,9 +24,7 @@ export function isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping {
 	);
 }
 
-export function normalizeError(
-	errInfo: unknown | IErrorMapping
-): IErrorMapping | IErrResponse {
+export function normalizeError(errInfo: IErrorMapping): IErrorMapping | IErrResponse {
 	if (errInfo && typeof errInfo === 'object') {
 		if (isIErrResponse(errInfo)) {
 			// It's likely an IErrResponse

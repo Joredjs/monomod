@@ -1,14 +1,20 @@
-import {
-	IErrResponse,
-	IExternalUseCaseParams,
-	domainKeys,
-} from '../../domain';
+import { IErrResponse, IExternalUseCaseParams, domainKeys } from '../../domain';
 import { normalizeError } from '../errors';
 
 export class ServiceUseCases {
 	async requestExternal<TGReturn>(
 		params: IExternalUseCaseParams
 	): Promise<TGReturn> {
+		const useCaseExists = Boolean(params.useCasesGroup[params.useCase]);
+
+		if (!useCaseExists) {
+			throw normalizeError({
+				detail: `No existe el caso de uso '${params.useCase}'`,
+				errType: 'invalid',
+				text: params.errorMsg,
+			});
+		}
+
 		const resultConsulta = await params.useCasesGroup[params.useCase].execute(
 			params.info
 		);
@@ -25,6 +31,7 @@ export class ServiceUseCases {
 			}
 
 			throw normalizeError({
+				detail: resp,
 				errType: 'invalid',
 				text: params.errorMsg,
 			});

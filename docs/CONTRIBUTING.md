@@ -1,17 +1,17 @@
-# Contributing to NXMS
+# Contributing to monomod
 
-We welcome contributions to NXMS! Whether you're fixing a bug, adding a new feature, or improving documentation, your contributions are valuable.
+We welcome contributions to monomod! Whether you're fixing a bug, adding a new feature, or improving documentation, your contributions are valuable.
 
 ## Getting Started
 
-1. Fork the repository: Click the "Fork" button at the top right corner of the NXMS repository page.
-2. Clone your fork: ```git clone <https://github.com/Joredjs/nxms.git>```
+1. Fork the repository: Click the "Fork" button at the top right corner of the monomod repository page.
+2. Clone your fork: ```git clone <https://github.com/Joredjs/monomod.git>```
 3. Create a branch: ```git checkout -b contributing/{{branch-name}}``` Choose a descriptive branch name related to your contribution
 4. Install dependencies: ```npm install```
 
 ## Making Changes
 
-- Follow the code style: NXMS adheres to a consistent code style. Please ensure your code follows the [existing conventions](./codeStyle.md).
+- Follow the code style: monomod adheres to a consistent code style. Please ensure your code follows the [existing conventions](./codeStyle.md).
 - Write tests: Provide comprehensive unit tests for any new features or bug fixes.
 - Update documentation: If your changes affect the API or functionality, update the relevant documentation accordingly.
 
@@ -19,7 +19,7 @@ We welcome contributions to NXMS! Whether you're fixing a bug, adding a new feat
 
 1. Commit your changes: ```git commit -m "{{commit-message}}"``` Following the [Conventional commit guidelines](https://www.conventionalcommits.org/]
 2. Push your branch: ```git push origin contributing/{{branch-name}}```
-3. Open a pull request: Go to the original NXMS repository and click "New pull request". Select your forked repository and branch. Provide a detailed description of your changes.
+3. Open a pull request: Go to the original monomod repository and click "New pull request". Select your forked repository and branch. Provide a detailed description of your changes.
 
 ## Code of Conduct
 

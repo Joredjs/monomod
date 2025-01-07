@@ -1,6 +1,6 @@
-# NXMS Code Style Guide
+# monomod Code Style Guide
 
-This guide outlines the coding conventions and style guidelines for the NXMS project. Adhering to these standards ensures code consistency, readability, and maintainability.
+This guide outlines the coding conventions and style guidelines for the monomod project. Adhering to these standards ensures code consistency, readability, and maintainability.
 
 ## General Principles
 
@@ -33,4 +33,4 @@ Automated Checks: Integrate linting and formatting checks into the CI/CD pipelin
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [ESLint](https://eslint.org/)
 
-By following these guidelines, we can maintain a clean, consistent, and maintainable codebase for the NXMS project.
+By following these guidelines, we can maintain a clean, consistent, and maintainable codebase for the monomod project.

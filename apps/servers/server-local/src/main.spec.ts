@@ -1,10 +1,10 @@
-/* Import { ExpressFramework } from '@nxms/framework-express/infra';
-   import { IExpressApps } from '@nxms/framework-express/domain';
+/* Import { ExpressFramework } from '@monomod/framework-express/infra';
+   import { IExpressApps } from '@monomod/framework-express/domain';
    import { LocalServer } from './server';
    import { appConfig } from './config';
    import express from 'express'; */
 
-/* Jest.mock('@nxms/framework-express/infra');
+/* Jest.mock('@monomod/framework-express/infra');
    jest.mock('./server'); */
 
 /* Describe('Main', () => {
@@ -51,9 +51,8 @@
    	}, 10000);
    }); */
 
-
-	 describe('Main', () => {
-			it('should do nothing', () => {
-				// This test intentionally does nothing
-			});
-		});
+describe('Main', () => {
+	it('should do nothing', () => {
+		// This test intentionally does nothing
+	});
+});

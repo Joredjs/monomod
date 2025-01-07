@@ -22,6 +22,11 @@ export interface IDBListPagination<TGItems> {
 }
 
 export interface IDatabase {
+	login<TGItems>(
+		correo: string,
+		pass: string,
+		table: string
+	): Promise<TItemsResult<TGItems>>;
 	getById<TGItems>(table: string, uuid: string): Promise<TItemsResult<TGItems>>;
 	getAll<TGItems>(
 		table: string,
@@ -30,11 +35,11 @@ export interface IDatabase {
 	getByQuery<TGItems>(
 		table: string,
 		query: IQueryFilters,
-		isSubTable?: boolean,
 		pagination?: IDBPagination
 	): Promise<TItemsResult<TGItems>[]>;
 	add(table: string, data: any): Promise<string>;
 	update(table: string, uuid: string, data: any): Promise<string>;
+	delete(table: string, uuid: string);
 }
 
 export interface IDatabaseAdapter {
@@ -44,6 +49,7 @@ export interface IDatabaseAdapter {
 export interface IDatabaseClient {
 	Add: any;
 	Client: any;
+	Delete: any;
 	Select: any;
 	Update: any;
 }

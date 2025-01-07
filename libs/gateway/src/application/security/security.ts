@@ -5,13 +5,11 @@ import {
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
-} from '@nxms/core/domain';
-import { ResponseResult, normalizeError } from '@nxms/core/application';
+} from '@monomod/core/domain';
+import { ResponseResult, normalizeError } from '@monomod/core/application';
 
 export class SecurityClass<TFwReq extends IRequestParams> {
 	#headerService: IServices['headers'];
-
-	#response = new ResponseResult();
 
 	constructor(headerService: IServices['headers']) {
 		this.#headerService = headerService;
@@ -22,7 +20,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 	public validateHeaders(request: TFrameworkRequest<TFwReq>): boolean {
 		try {
 			if (!request.headers) {
-				throw normalizeError({ errType: 'headers' });
+				throw normalizeError({ detail: request.headers, errType: 'headers' });
 			}
 
 			const validMandatoryHeaders = this.#headerService.validateMandatory(
@@ -48,14 +46,16 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 	}
 
 	// TODO: Is it correct this to be here?
-	public emptyHandler(): Promise<IOKResponse<string> | IErrResponse> {
+	public emptyHandler(
+		info: ITransactionValid
+	): Promise<IOKResponse<string> | IErrResponse> {
 		return new Promise((resolve) => {
 			resolve(
-				this.#response
+				info.usecaseParams.response
 					.resultErr({
 						detail: 'Empty handler',
 						errType: 'badConfigured',
-						text: "The use case doesn't exists",
+						text: "The handler doesn't exists",
 					})
 					.unwrap()
 			);

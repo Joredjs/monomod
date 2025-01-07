@@ -1,18 +1,15 @@
-import {
-	IAllUseCases,
-	IExternalUseCaseParams,
-	IUseCaseParams,
-	TExternalUseCases,
-} from './useCases';
-import { IDefaultToken, ISchema, ISchemaClient, TDomainGroups } from './route';
-import { ITransactionParams, TIncomingHttpHeaders } from './http';
 import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
-import { ICryptoClient } from './crypto';
-import { IDatabase } from './database';
-import { IHeadersValues } from './validations';
-import { IJSONObject } from './values';
-import { IMailClient } from './mail';
+import {
+	crypto,
+	database,
+	headers,
+	mail,
+	schema,
+	storage,
+	useCases,
+} from './services/';
 import { IResponseResult } from './result';
+import { TDomainGroups } from './modules';
 
 export interface IController<TFwReq, TFwRes> {
 	handler(
@@ -26,68 +23,41 @@ export type TControllers<TFwReq, TFwRes> = {
 	[index in TDomainGroups]?: IController<TFwReq, TFwRes>;
 };
 
-export interface IServiceHeader {
-	validateToken<IToken extends IDefaultToken>(info: ITransactionParams): IToken;
-	validateMandatory(headersReq: TIncomingHttpHeaders): boolean;
-	validate(headersReq: TIncomingHttpHeaders, key?: string): boolean;
-	validateRouteHeaders(info: ITransactionParams): IHeadersValues;
-}
-
-export type TServicesList =
-	| 'crypto'
-	| 'db'
-	| 'encode'
-	| 'headers'
-	| 'mail'
-	| 'schema'
-	| 'storage'
-	| 'useCases';
-
 export interface IServices {
-	crypto?: {
-		encrypt(texto: any): string;
-		decrypt(encrypted: string): string;
-	};
-	db?: { [db: string]: IDatabase };
+	crypto?: crypto.IServiceCrypto;
+	db?: database.IDatabaseAdapter;
 	encode?: {
 		encode(texto: string): string;
 		decode(texto: string): string;
 	};
-	headers?: IServiceHeader;
-	mail?: {
-		send(para: string, asunto: string, cuerpo: string): Promise<boolean>;
-	};
-	schema?: {
-		validate(schema: ISchema, keys: string[], params: IJSONObject): boolean;
-	};
-	storage?: {
-		upload(key: string, data: string, section?: string): Promise<string>;
-		read(key: string, section?: string): Promise<string>;
-		list(section?: string): Promise<any[]>;
-		remove(key: string, section?: string): void;
-	};
-	useCases?: {
-		requestExternal<TGReturn>(
-			params: IExternalUseCaseParams
-		): Promise<TGReturn>;
-	};
+	headers?: headers.IServiceHeader;
+	mail?: mail.IServiceMail;
+	schema?: schema.IServiceSchema;
+	storage?: storage.IServiceStorage;
+	useCases?: useCases.IServiceUseCase;
 }
 
 export interface IServicesDependencies {
+	db?: {
+		yourdbclientname: database.IDatabaseClient;
+	};
 	crypto?: {
-		client: ICryptoClient;
+		client: crypto.ICryptoClient;
 	};
 	mail?: {
-		client: IMailClient;
+		client: mail.IMailClient;
 	};
 	schema?: {
-		client: ISchemaClient;
+		client: schema.ISchemaClient;
+	};
+	storage?: {
+		client: storage.IStorageClient;
 	};
 }
 
 export interface IPort {
-	usecaseParams: IUseCaseParams<unknown>;
-	getPublicUseCases(): IAllUseCases;
+	usecaseParams: useCases.IUseCaseParams<unknown>;
+	getPublicUseCases(): useCases.IAllUseCases;
 }
 
 export type TPorts = {
@@ -95,7 +65,7 @@ export type TPorts = {
 };
 
 export interface IPortParams {
-	services?: IServices;
-	externalUseCases?: TExternalUseCases;
-	response?: IResponseResult;
+	externalUseCases: useCases.TExternalUseCases;
+	response: IResponseResult;
+	services: IServices;
 }

@@ -3,12 +3,12 @@
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import {
 	ModuleExampleController,
 	ModuleExamplePort,
 	ModuleExampleRoutes,
-} from '@nxms/module-example';
+} from '@monomod/module-example';
 import { AdapterApi } from './api.adapter';
 import {
 	PortControllers,
@@ -16,7 +16,7 @@ import {
 	PortRoutes,
 	ServiceLayers,
 } from '../application';
-jest.mock('@nxms/core/application');
+jest.mock('@monomod/core/application');
 jest.mock('../application');
 jest.mock('./dependencies', () => ({
 	clientCrypto: { encrypt: jest.fn(), decrypt: jest.fn() },

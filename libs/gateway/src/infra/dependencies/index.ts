@@ -1,3 +1,3 @@
+export * from './ajv.dependency';
 export * from './crypto.dependency';
-export * from './mail.dependency';
-export * from './schema.dependency';
+export * from './nodemailer.dependency';

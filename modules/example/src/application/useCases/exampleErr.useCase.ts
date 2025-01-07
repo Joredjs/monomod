@@ -6,9 +6,9 @@ import {
 	ITransactionParams,
 	IUseCase,
 	IUseCaseParams,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 
-export class UseCaseExampleErr<TRepository> implements IUseCase {
+export class UseCaseExampleErr<TRepository> implements IUseCase<string> {
 	#appServices: IServices;
 
 	#response: IResponseResult;
@@ -18,11 +18,9 @@ export class UseCaseExampleErr<TRepository> implements IUseCase {
 		this.#response = useCaseParams.response;
 	}
 
-	async execute(
-		info: ITransactionParams
-	): Promise<IOKResponse<string> | IErrResponse> {
+	async execute(): Promise<IOKResponse<string> | IErrResponse> {
 		const test = await this.#appServices.crypto.encrypt('test');
-		console.debug(test);
+		console.debug('debugging', test);
 		throw this.#response.resultErr('Example error').unwrap();
 	}
 }

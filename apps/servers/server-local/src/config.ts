@@ -1,4 +1,4 @@
-import { IMicroAppConfig } from '@nxms/core/domain';
+import { IMicroAppConfig } from '@monomod/core/domain';
 
 export const appConfig: IMicroAppConfig = {
 	addDomainName: true,

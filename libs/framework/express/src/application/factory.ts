@@ -1,15 +1,19 @@
-import { IDomainGroup, IMicroAppConfig, domainKeys } from '@nxms/core/domain';
+import {
+	IDomainGroup,
+	IMicroAppConfig,
+	domainKeys,
+} from '@monomod/core/domain';
 import {
 	IExpressDebug,
+	IExpressFactory,
 	IExpressMicroApp,
 	IExpressMiddleware,
-	IExpressParams,
 	IExpressService,
 } from '../domain/interface';
 import { ExpressMiddleware } from './middleware';
 import express from 'express';
 
-export class ExpressFactory {
+export class ExpressFactory implements IExpressFactory {
 	#middleware: IExpressMiddleware;
 
 	#appConfig: IMicroAppConfig;
@@ -19,11 +23,7 @@ export class ExpressFactory {
 		debug: IExpressDebug,
 		service: IExpressService
 	) {
-		this.#middleware = new ExpressMiddleware<IExpressParams>(
-			appConfig,
-			debug,
-			service
-		);
+		this.#middleware = new ExpressMiddleware(appConfig, debug, service);
 		this.#appConfig = appConfig;
 	}
 
@@ -38,7 +38,7 @@ export class ExpressFactory {
 		});
 
 		microApp.app.get(`${groupName}/error`, (req, res) => {
-			throw new Error('Error de prueba');
+			throw new Error(`Error de prueba para ${microApp.name}`);
 		});
 
 		microApp.app.all('*', this.#middleware.notFound());
@@ -46,7 +46,7 @@ export class ExpressFactory {
 	}
 
 	#setPaths(
-		domainGroup: IDomainGroup<IExpressParams>,
+		domainGroup: IDomainGroup,
 		microApp: IExpressMicroApp,
 		groupName: string
 	): IExpressMicroApp {
@@ -75,13 +75,12 @@ export class ExpressFactory {
 		return microApp;
 	}
 
-	createMicroApp(domainGroup: IDomainGroup<IExpressParams>) {
+	createMicroApp(domainGroup: IDomainGroup) {
 		const app = express();
 
 		let myApp: IExpressMicroApp = {
 			app,
 			cors: domainGroup.cors,
-			dnsDomains: domainGroup.dnsDomains,
 			httpPort: domainGroup.httpPort,
 			name: domainGroup.name,
 		};
@@ -90,16 +89,11 @@ export class ExpressFactory {
 			this.#appConfig.addDomainName ? `/${domainGroup.name}` : ''
 		}`;
 
+		myApp.app.use(express.json({ limit: this.#appConfig.bodyLimit }));
+		myApp.app.use(this.#middleware.setCors(myApp));
 		myApp = this.#setPaths(domainGroup, myApp, groupName);
 		myApp = this.#setTestPath(myApp, groupName);
-		myApp = this.#setMiddlewares(myApp);
-		return myApp;
-	}
-
-	#setMiddlewares(myApp: IExpressMicroApp): IExpressMicroApp {
-		myApp.app.use(express.json({ limit: this.#appConfig.bodyLimit }));
 		myApp.app.use(this.#middleware.errorHandler());
-		myApp.app.use(this.#middleware.setCors(myApp));
 		return myApp;
 	}
 }

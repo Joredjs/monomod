@@ -4,35 +4,25 @@ import {
 	TDomainGroups,
 	TMyModulesInstances,
 	domainKeys,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { modulesList, modulos } from '../domain';
-import { normalizeError } from '@nxms/core/application';
+import { normalizeError } from '@monomod/core/application';
 
-export class PortRoutes<TFwParams> {
+export class PortRoutes {
 	#modulesInstances: TMyModulesInstances;
 
 	constructor(modulesInstances: TMyModulesInstances) {
 		this.#modulesInstances = modulesInstances;
 	}
 
-	// Apply global CORS configuration to a route group
-	#applyGlobalCors(route: IDomainGroup<TFwParams>): IDomainGroup<TFwParams> {
-		return {
-			...route,
-			cors: route.cors.concat(domainKeys.core.globalCors),
-			// TODO: IF the domains arent configured per route, move it to a generic place
-			dnsDomains: domainKeys.core.allowedDomains,
-		};
-	}
-
 	// Factory method to create a route instance for a specific module
-	#createModuleRoutes(module: TDomainGroups): IModuleRoute<TFwParams> {
+	#createModuleRoutes(module: TDomainGroups): IModuleRoute {
 		return new this.#modulesInstances[module].Route(modulos[module]);
 	}
 
 	// Get all route groups, dynamically creating them for each module
-	getAll(): IDomainGroup<TFwParams>[] {
-		const routes: IDomainGroup<TFwParams>[] = [];
+	getAll(): IDomainGroup[] {
+		const routes: IDomainGroup[] = [];
 		for (const module of modulesList) {
 			if (!this.#modulesInstances[module]) {
 				throw normalizeError({
@@ -43,7 +33,7 @@ export class PortRoutes<TFwParams> {
 			}
 
 			const moduleRoutes = this.#createModuleRoutes(module);
-			routes.push(this.#applyGlobalCors(moduleRoutes.getRoutes()));
+			routes.push(moduleRoutes.getRoutes());
 		}
 
 		return routes;

@@ -1,14 +1,14 @@
-# @nxms/gateway: The nxms API Gateway
+# @monomod/gateway: The monomod API Gateway
 
-The `@nxms/gateway` module serves as the central API gateway for the **nxms** project, responsible for managing routes, handling authentication, authorization, module injection, and providing a unified interface for accessing the various modules within your application.
+The `@monomod/gateway` module serves as the central API gateway for the **monomod** project, responsible for managing routes, handling authentication, authorization, module injection, and providing a unified interface for accessing the various modules within your application.
 
-This module is designed to be framework-agnostic. You can integrate it with your preferred backend framework using the gateway adapter from the selected framework  for instance the  `@nxms/framework-express` module to  integrate this gateway with an Express.js application.
+This module is designed to be framework-agnostic. You can integrate it with your preferred backend framework using the gateway adapter from the selected framework  for instance the  `@monomod/framework-express` module to  integrate this gateway with an Express.js application.
 
 ## Description
 
-The `gateway` library acts as the entry point for all incoming requests to your NXMS application. It performs several crucial functions:
+The `gateway` library acts as the entry point for all incoming requests to your monomod application. It performs several crucial functions:
 
-- **Module Initialization:**  Loading and initializing individual **nxms** modules.
+- **Module Initialization:**  Loading and initializing individual **monomod** modules.
 - **Service Discovery:** Maintains a registry of available modules (or microservices) within your application, along with their respective ports and other relevant metadata. This allows for dynamic routing and service discovery.
 - **Dynamic Routing:**  Processes incoming requests and routes them to the appropriate module based on the request path, version, and other criteria. It dynamically generates routes based on the configurations provided by each module, ensuring a flexible and scalable routing mechanism.
 - **Parameter Validation:**  Validates incoming request parameters, headers, and body content against predefined schemas and rules. This ensures data integrity and security by preventing invalid or malicious requests from reaching your modules.
@@ -20,7 +20,7 @@ The `gateway` library acts as the entry point for all incoming requests to your 
 ## Key Components
 
 - **`ApiCore`:** The core class responsible for managing the gateway's functionality. It exposes a method to obtain the registered modules, the defined routes and the correspondetly handlers for every path request.
-- **`AdapterApi`:** This class acts as the bridge between the **nxms modules** and your chosen backend framework (e.g., Express). It:
+- **`AdapterApi`:** This class acts as the bridge between the **monomod modules** and your chosen backend framework (e.g., Express). It:
   - Retrieves route definitions from modules.
   - Initializes services required by the application.
   - Creates instances of controllers and ports for each module.
@@ -43,11 +43,11 @@ The gateway's behavior can be customized through various configuration options. 
 
 There are some utilities which could be used for one or more modules  (e.g., database connections, external API clients, cryptography, notifications, etc), these are knowed as global project services.
 
-These services ar created in the **nxms core** (`@nxms/core`) and are registered in the `AdapterApi` class. Take note that the services are created without know the external dependencies, so the dependencie import is made by the infra layer of this apigateway (`@nxms/gateway`)
+These services ar created in the **monomod core** (`@monomod/core`) and are registered in the `AdapterApi` class. Take note that the services are created without know the external dependencies, so the dependencie import is made by the infra layer of this apigateway (`@monomod/gateway`)
 
 ## Module definition
 
-The defination of every module should be in the `modules.ts` based in the `IModule` interface, The "puertos" variable is the port which the project will be serve when it used locally, normally by the `@nxms/server-local` server. The name must exist in the `TDomainGroups` type in `route.ts` file inside the **nxms core** (`@nxms/core`).
+The defination of every module should be in the `modules.ts` based in the `IModule` interface, The "puertos" variable is the port which the project will be serve when it used locally, normally by the `@monomod/server-local` server. The name must exist in the `TDomainGroups` type in `route.ts` file inside the **monomod core** (`@monomod/core`).
 
 Its important to note that you should add a valid version in the version attribute, if dont the routes inside the module never will be exposed.
 

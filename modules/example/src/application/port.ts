@@ -7,7 +7,7 @@ import {
 	ITransactionParams,
 	IUseCase,
 	IUseCaseParams,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { UseCaseExampleErr, UseCaseExampleOk } from './useCases';
 
 export class ModuleExamplePort implements IPort {
@@ -24,21 +24,21 @@ export class ModuleExamplePort implements IPort {
 	get_testok(
 		info: ITransactionParams
 	): Promise<IOKResponse<string> | IErrResponse> {
-		const useCase: IUseCase = new UseCaseExampleOk(this.usecaseParams);
+		const useCase: IUseCase<string> = new UseCaseExampleOk(this.usecaseParams);
 		return useCase.execute(info);
 	}
 
 	get_testok_admin(
 		info: ITransactionParams
 	): Promise<IOKResponse<string> | IErrResponse> {
-		const useCase: IUseCase = new UseCaseExampleOk(this.usecaseParams);
+		const useCase: IUseCase<string> = new UseCaseExampleOk(this.usecaseParams);
 		return useCase.execute(info);
 	}
 
 	get_testerror(
 		info: ITransactionParams
 	): Promise<IOKResponse<string> | IErrResponse> {
-		const useCase: IUseCase = new UseCaseExampleErr(this.usecaseParams);
+		const useCase: IUseCase<string> = new UseCaseExampleErr(this.usecaseParams);
 		return useCase.execute(info);
 	}
 }

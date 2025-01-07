@@ -1,4 +1,4 @@
-import { TControllers, TDomainGroups, TPorts } from '@nxms/core/domain';
+import { TControllers, TDomainGroups, TPorts } from '@monomod/core/domain';
 
 export class ServiceLayers<TFwReq, TFwRes> {
 	#controllers: TControllers<TFwReq, TFwRes>;

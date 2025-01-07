@@ -7,12 +7,12 @@ import {
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import {
 	ModuleExampleController,
 	ModuleExamplePort,
 	ModuleExampleRoutes,
-} from '@nxms/module-example';
+} from '@monomod/module-example';
 import {
 	PortControllers,
 	PortPorts,
@@ -28,15 +28,14 @@ import {
 	ServiceSchema,
 	ServiceUseCases,
 	normalizeError,
-} from '@nxms/core/application';
-import { clientCrypto, clientMailer, clientSchema } from './dependencies';
+} from '@monomod/core/application';
+import { clientAjv, clientCrypto, clientNodemailer } from './dependencies';
 
 export class AdapterApi<
-	TFwParams,
 	TFwReq extends IRequestParams,
 	TFwRes extends IResponseParams
 > {
-	#domainList: IDomainGroup<TFwParams>[] = [];
+	#domainList: IDomainGroup[] = [];
 
 	#services: IServices = {};
 
@@ -71,14 +70,14 @@ export class AdapterApi<
 				controllers.getAll(this.#services),
 				ports.getAll()
 			);
-			const routes = new PortRoutes<TFwParams>(this.#modulesInstances);
-			this.#domainList = routes.getAll();
+			const routes = new PortRoutes(this.#modulesInstances);
+			this.#domainList.push(...routes.getAll());
 		} catch (error) {
 			throw normalizeError(error);
 		}
 	}
 
-	getDomainGroups(): IDomainGroup<TFwParams>[] {
+	getDomainGroups(): IDomainGroup[] {
 		return this.#domainList.map((domGroup) => ({
 			...domGroup,
 			businessPort: this.#layersService.getPort(domGroup.name),
@@ -97,11 +96,11 @@ export class AdapterApi<
 		this.#services.schema = new ServiceSchema(dependencies.schema.client);
 	}
 
-	#getDependencies() {
+	#getDependencies(): IServicesDependencies {
 		return {
 			crypto: { client: clientCrypto },
-			mail: { client: clientMailer },
-			schema: { client: clientSchema },
+			mail: { client: clientNodemailer },
+			schema: { client: clientAjv },
 		};
 	}
 }

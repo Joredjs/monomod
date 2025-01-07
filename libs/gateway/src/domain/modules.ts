@@ -1,20 +1,23 @@
-import { EVersions, TDomainGroups, TModules } from '@nxms/core/domain';
+import { EVersions, TDomainGroups, TModules } from '@monomod/core/domain';
 import { schemas } from './schemas';
 
 export const puertos: { [domain in TDomainGroups]: number } = {
 	example: 11001,
 };
 
-// Listado de modulos a exponer
+// Module's list to be exposed
 
 export const modulesList: TDomainGroups[] = ['example'];
 
 export const modulos: TModules = {
 	example: {
+		cors: {
+			dnsDomains: ['https://mysubdomain.mydomain.com'],
+			localhostAllowed: true,
+		},
 		httpPort: puertos.example,
 		name: 'example',
 		schemas,
-		services: [],
 		useValidations: true,
 		versions: [EVersions.alpha],
 	},

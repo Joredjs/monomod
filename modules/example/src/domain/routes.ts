@@ -5,9 +5,9 @@ import {
 	IModule,
 	IModuleRoute,
 	IRoute,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 
-export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
+export class ModuleExampleRoutes implements IModuleRoute {
 	#modulo: IModule;
 
 	constructor(modulo: IModule) {
@@ -18,15 +18,13 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 		return [
 			// Empty: Does not exists the handler in the businessPort
 			{
-				headers: [],
 				method: EHttpMethods.GET,
 				path: 'empty',
 				privacy: [EPrivacyLevel.public],
-				schema: {},
+				schema: this.#modulo.schemas.empty,
 			},
 			// Noschema: Does not exists schema for the version
 			{
-				headers: [],
 				method: EHttpMethods.GET,
 				path: 'noschema',
 				privacy: [EPrivacyLevel.public],
@@ -34,15 +32,13 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 			},
 			// Badschema: use an unexisting schema
 			{
-				headers: [],
-				method: EHttpMethods.GET,
+				method: EHttpMethods.POST,
 				path: 'badschema',
 				privacy: [EPrivacyLevel.public],
 				schema: this.#modulo.schemas.undefined,
 			},
 			// Test: executes the success usecase
 			{
-				headers: [],
 				method: EHttpMethods.GET,
 				path: 'testok',
 				privacy: [EPrivacyLevel.public],
@@ -50,7 +46,6 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 			},
 			// Test: executes the success usecase but it require user authetication
 			{
-				headers: [],
 				method: EHttpMethods.GET,
 				path: 'testok/admin',
 				privacy: [EPrivacyLevel.admin],
@@ -58,7 +53,6 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 			},
 			// Error: executes the failure error usecase
 			{
-				headers: [],
 				method: EHttpMethods.GET,
 				path: 'testerror',
 				privacy: [EPrivacyLevel.public],
@@ -67,9 +61,9 @@ export class ModuleExampleRoutes<TFwParams> implements IModuleRoute<TFwParams> {
 		];
 	}
 
-	getRoutes(): IDomainGroup<TFwParams> {
+	getRoutes(): IDomainGroup {
 		return {
-			cors: [],
+			cors: this.#modulo.cors,
 			headers: [],
 			httpPort: this.#modulo.httpPort,
 			name: this.#modulo.name,

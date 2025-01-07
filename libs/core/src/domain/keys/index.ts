@@ -3,22 +3,23 @@ import { headersPrefix } from './headers';
 import { httpCodes } from './http';
 import { patterns } from './patterns';
 
-const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
+// Const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
 
-const allowedDomains: string[] = ['https://mysubdomain.mydomain.com'];
+// const allowedDomains: string[] = ['https://mysubdomain.mydomain.com'];
 
 export const domainKeys = {
 	core: {
-		allowedDomains,
+		cors: {
+			origin: 'mydomain.com',
+		},
 		crypto: {
 			defaultAuthTagLength: 16,
 			defaultBytes: 8,
 			key: '',
 		},
-		globalCors,
 		pagination: {
 			limit: 100,
-			start: 0,
+			start: '',
 		},
 		token: {
 			userinfo: {

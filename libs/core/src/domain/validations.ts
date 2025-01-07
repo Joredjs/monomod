@@ -1,6 +1,6 @@
 import { TFrameworkRequest, TFrameworkResponse } from './frameworks';
 import { ITransactionValid } from './http';
-import { TVersion as THeadersVersion } from './route';
+import { TVersion as THeadersVersion } from './modules';
 
 export interface IAppValidations<TFwReq, TFwRes> {
 	manager(

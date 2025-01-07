@@ -1,12 +1,13 @@
 import { Express, NextFunction, Request, Response } from 'express';
 import {
+	ICorsInfo,
 	IDomainGroup,
 	IErrResponse,
 	IOKResponse,
 	IRoute,
 	TDomainGroups,
 	TVersion,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 
 export type TExpressReq = Request;
 export type TExpressRes = Response;
@@ -37,10 +38,9 @@ export interface IExpressResponse {
 
 export interface IExpressMicroApp {
 	app: Express;
+	cors: ICorsInfo;
 	httpPort: number;
 	name: TDomainGroups;
-	cors: RegExp[];
-	dnsDomains: string[];
 }
 
 export interface IExpressApps {
@@ -50,7 +50,7 @@ export interface IExpressApps {
 export interface IExpressDebug {
 	routes(apps: IExpressApps): void;
 	paths(microApp: IExpressMicroApp, req: any, domainInfo: IRoute): void;
-	cors(microApp: IExpressMicroApp, origin: any): void;
+	cors(microApp: IExpressMicroApp, origin: any, info: any): void;
 }
 
 export interface IExpressService {
@@ -60,11 +60,15 @@ export interface IExpressService {
 export interface IExpressMiddleware {
 	notFound(): IExpressParams;
 	setDomainInfo(
-		domainGroup: IDomainGroup<IExpressParams>,
+		domainGroup: IDomainGroup,
 		microApp: IExpressMicroApp,
 		domainInfo: IRoute,
 		version: TVersion
 	): IExpressParams;
 	setCors(microApp: IExpressMicroApp): IExpressParams;
 	errorHandler(): IExpressParamsErr;
+}
+
+export interface IExpressFactory {
+	createMicroApp(domainGroup: IDomainGroup): IExpressMicroApp;
 }

@@ -3,12 +3,11 @@ import {
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { AdapterApi } from './infra';
-import { normalizeError } from '@nxms/core/application';
+import { normalizeError } from '@monomod/core/application';
 
 export class ApiCore<
-	TFwParams,
 	TFwReq extends IRequestParams,
 	TFwRes extends IResponseParams
 > {
@@ -18,9 +17,9 @@ export class ApiCore<
 		this.#framework = frameworkService;
 	}
 
-	getDomains(): IDomainGroup<TFwParams>[] {
+	getDomains(): IDomainGroup[] {
 		try {
-			const apiAdapter = new AdapterApi<TFwParams, TFwReq, TFwRes>(
+			const apiAdapter = new AdapterApi<TFwReq, TFwRes>(
 				this.#framework
 			);
 			return apiAdapter.getDomainGroups();

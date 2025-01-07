@@ -48,7 +48,7 @@ export const errores: TErrores = {
 		text: 'La información no se encuentra disponible',
 	},
 	nocatch: {
-		code: httpCodes[400].code,
+		code: httpCodes[500].code,
 		desc: 'Error indefinido, posiblemente aparece en los catch',
 		text: 'No ha sido posible obtener la información.',
 	},

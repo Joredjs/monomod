@@ -1,13 +1,15 @@
 import {
+	IPort,
 	IPortParams,
 	IResponseResult,
 	IServices,
 	TDomainGroups,
+	TExternalUseCases,
 	TMyModulesInstances,
 	TPorts,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { modulesList } from '../domain';
-import { normalizeError } from '@nxms/core/application';
+import { normalizeError } from '@monomod/core/application';
 export class PortPorts {
 	#services: IServices = {};
 
@@ -15,23 +17,30 @@ export class PortPorts {
 
 	#response: IResponseResult;
 
+	#externalUseCasesList: TExternalUseCases = {};
+
 	constructor(
 		services: IServices,
 		modulesInstances: TMyModulesInstances,
 		response: IResponseResult
 	) {
 		this.#modulesInstances = modulesInstances;
-		this.#services = services;
 		this.#response = response;
+		this.#services = services;
 	}
 
 	// Factory method to create a port instance for a specific module
-	#createPort(module: TDomainGroups) {
+	#createPort(module: TDomainGroups): IPort {
 		const params: IPortParams = {
+			externalUseCases: this.#externalUseCasesList,
 			response: this.#response,
 			services: this.#services,
 		};
 		return new this.#modulesInstances[module].Port(params);
+	}
+
+	#setExternalUseCases(module: TDomainGroups, businessPort: IPort) {
+		this.#externalUseCasesList[module] = businessPort.getPublicUseCases();
 	}
 
 	// Get all ports, dynamically creating them for each module
@@ -46,6 +55,7 @@ export class PortPorts {
 				});
 			}
 			ports[module] = this.#createPort(module);
+			this.#setExternalUseCases(module, ports[module]);
 		}
 
 		return ports;

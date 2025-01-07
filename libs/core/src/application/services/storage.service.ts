@@ -12,19 +12,19 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 	// TODO: recibir bucketname
 	#bucketName = 'aws-bucket-betplay-multimedia';
 
-	#pngtype = 'data:image/{{extension}};base64';
+	#b64template = 'data:image/{{extension}};base64';
 
 	constructor(storage: IStorageClient) {
 		this.#storage = storage;
 		this.#storage.Client = new storage.Client({ region: 'us-east-1' });
 	}
 
-	async upload(key: string, data: string, section?: string): Promise<string> {
+	async upload(name: string, data: string, path?: string): Promise<string> {
 		try {
 			const matches = data.match(domainKeys.patterns.imagenb64);
 
 			const [base64Data, extension] = matches;
-			key = `${key}.${extension}`;
+			name = `${name}.${extension}`;
 
 			const [, base64] = base64Data.split(',');
 
@@ -33,11 +33,11 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 			const params: TGTStorage['addInput'] = {
 				Body: buffer,
 				Bucket: this.#bucketName,
-				Key: key,
+				Key: name,
 			};
 
-			if (section) {
-				params.Key = `${section}/${key}`;
+			if (path) {
+				params.Key = `${path}/${name}`;
 			}
 
 			const response: TGTStorage['addOutput'] = await this.#storage.Client.send(
@@ -51,6 +51,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 			}
 
 			throw normalizeError({
+				detail: response,
 				errType: 'nocatch',
 				text: 'Error al subir objeto al storage',
 			});
@@ -59,15 +60,15 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 		}
 	}
 
-	async read(key: string, section?: string): Promise<string> {
+	async read(name: string, path?: string): Promise<string> {
 		try {
 			const params: TGTStorage['getInput'] = {
 				Bucket: this.#bucketName,
-				Key: key,
+				Key: name,
 			};
 
-			if (section && params.Key.indexOf(`${section}/`) === -1) {
-				params.Key = `${section}/${key}`;
+			if (path && params.Key.indexOf(`${path}/`) === -1) {
+				params.Key = `${path}/${name}`;
 			}
 
 			const response: TGTStorage['getOutput'] = await this.#storage.Client.send(
@@ -83,8 +84,8 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 
 			const safeBase64 = buffer.toString('base64');
 
-			const extension = key.split('.')[1] || '';
-			const tipo = this.#pngtype.replace('{{extension}}', extension);
+			const extension = name.split('.')[1] || '';
+			const tipo = this.#b64template.replace('{{extension}}', extension);
 
 			return `${tipo},${safeBase64}`;
 		} catch (error) {
@@ -92,14 +93,14 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 		}
 	}
 
-	async list(section?: string) {
+	async list(path?: string) {
 		try {
 			const params: TGTStorage['listInput'] = {
 				Bucket: this.#bucketName,
 			};
 
-			if (section) {
-				params.Prefix = `${section}/`;
+			if (path) {
+				params.Prefix = `${path}/`;
 			}
 
 			const response: TGTStorage['listOutput'] =
@@ -112,7 +113,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 				const objectKeys = response.Contents?.map((object) => object.Key);
 
 				for (const objectKey of objectKeys) {
-					promises.push(this.read(objectKey, section));
+					promises.push(this.read(objectKey, path));
 				}
 
 				result = await Promise.all(promises);
@@ -128,15 +129,15 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 		}
 	}
 
-	async remove(key: string, section?: string) {
+	async remove(name: string, path?: string) {
 		try {
 			const params: TGTStorage['removeInput'] = {
 				Bucket: this.#bucketName,
-				Key: key,
+				Key: name,
 			};
 
-			if (section) {
-				params.Key = `${section}/${key}`;
+			if (path) {
+				params.Key = `${path}/${name}`;
 			}
 
 			await this.#storage.Client.send(new this.#storage.Remove(params));

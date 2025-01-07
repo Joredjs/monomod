@@ -1,7 +1,7 @@
-import { IExpressMicroApp } from '@nxms/framework-express/domain';
-import { getLanguageTexts } from '@nxms/core/domain';
+import { IExpressMicroApp } from '@monomod/framework-express/domain';
+import { getLanguageTexts } from '@monomod/core/domain';
 
-export class LocalServer {
+export class ServerLocal {
 	start(microApp: IExpressMicroApp) {
 		// Start a server per each microapp
 		if (microApp) {

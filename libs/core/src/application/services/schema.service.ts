@@ -24,7 +24,7 @@ export class ServiceSchema {
 	#setSchema(schema: ISchema) {
 		const errMessages = {};
 		const ifs = [];
-		const cloneSchema = JSON.parse(JSON.stringify(schema));
+		const cloneSchema = schema;
 		for (const prop in cloneSchema) {
 			if (cloneSchema[prop]) {
 				if (cloneSchema[prop].errorMessage) {

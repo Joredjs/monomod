@@ -18,7 +18,7 @@ export interface IErrResponse {
 }
 
 export interface IErrorMapping {
-	detail: TJSONValue;
+	detail: any;
 	errType: TErroresValues;
 	saveLog?: boolean;
 	showDetail?: boolean;

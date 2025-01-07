@@ -44,7 +44,7 @@
 		"camelcase": [
 			"error",
 			{
-				"allow": ["(get|post|put|delete)([_$]+[a-zA-Z0-9]+)*$"]
+				"allow": ["(get|post|put|delete|patch)([_$]+[a-zA-Z0-9]+)*$"]
 			}
 		],
 		"init-declarations": "error",
@@ -89,7 +89,7 @@
 		"complexity": "error",
 		"consistent-this": "error",
 		"curly": "error",
-		"dot-notation": "error",
+		"dot-notation": "off",
 		"func-name-matching": "error",
 		"func-names": ["error", "as-needed"],
 		"func-style": [

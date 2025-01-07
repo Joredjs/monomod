@@ -4,7 +4,7 @@ import {
 	IServices,
 	ITransactionValid,
 	TFrameworkRequest,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { SecurityClass } from './security';
 
 export class NoValidations<TFwReq extends IRequestParams, TFwRes>

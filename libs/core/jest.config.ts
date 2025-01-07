@@ -1,6 +1,7 @@
 import type { Config } from 'jest';
 
 const config: Config = {
+	verbose: true,
 	displayName: 'core',
 	preset: '../../jest.preset.js',
 	testEnvironment: 'node',

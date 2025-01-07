@@ -3,7 +3,8 @@ import {
 	IMicroAppConfig,
 	IRoute,
 	TVersion,
-} from '@nxms/core/domain';
+	domainKeys,
+} from '@monomod/core/domain';
 import {
 	IExpressDebug,
 	IExpressMicroApp,
@@ -12,11 +13,11 @@ import {
 	TExpressReq,
 	TExpressRes,
 } from '../domain/interface';
-import { ResponseResult } from '@nxms/core/application';
+import { ResponseResult } from '@monomod/core/application';
 import cors from 'cors';
 
 // TODO: recieve the service in constructor
-export class ExpressMiddleware<IExpressParams> {
+export class ExpressMiddleware {
 	#service: IExpressService;
 
 	#debug: IExpressDebug;
@@ -38,7 +39,7 @@ export class ExpressMiddleware<IExpressParams> {
 	// TODO: is it correct this to use here (resultErr)
 
 	notFound() {
-		return (req: TExpressReq, res: TExpressRes, next: TExpressNext) => {
+		return (req: TExpressReq, res: TExpressRes) => {
 			const infoError = this.#response
 				.resultErr({
 					detail: `No existe el recurso solicitado (${req.url})`,
@@ -57,7 +58,7 @@ export class ExpressMiddleware<IExpressParams> {
 
 	// eslint-disable-next-line max-params
 	setDomainInfo(
-		domainGroup: IDomainGroup<IExpressParams>,
+		domainGroup: IDomainGroup,
 		microApp: IExpressMicroApp,
 		domainInfo: IRoute,
 		version: TVersion
@@ -71,6 +72,9 @@ export class ExpressMiddleware<IExpressParams> {
 					version,
 				};
 			}
+
+			domainInfo.headers = domainInfo.headers ?? [];
+
 			res.locals.route = domainInfo;
 			if (this.#appConfig.debug.paths) {
 				this.#debug.paths(microApp, req, domainInfo);
@@ -80,13 +84,29 @@ export class ExpressMiddleware<IExpressParams> {
 	}
 
 	setCors(microApp: IExpressMicroApp) {
+		const appConfig = this.#appConfig;
+		const debug = this.#debug;
+
 		const corsOptions = {
-			origin(origin, callback) {
-				if (this.#appConfig.debug.cors) {
-					this.#debug.cors(microApp, origin);
+			origin(originCors, callback) {
+				originCors = originCors ?? false;
+
+				const isMyOrigin = originCors === domainKeys.core.cors.origin;
+				const isDomainAllowed = microApp.cors.dnsDomains.indexOf(originCors) !== -1;
+				const isLocalhostAllowed =
+					microApp.cors.localhostAllowed &&
+					originCors &&
+					originCors.includes('http://localhost:');
+
+				if (appConfig.debug.cors) {
+					debug.cors(microApp, originCors, {
+						isDomainAllowed,
+						isLocalhostAllowed,
+						isMyOrigin,
+					});
 				}
 
-				if (microApp.dnsDomains.indexOf(origin) !== -1 || !origin) {
+				if (isMyOrigin || isDomainAllowed || isLocalhostAllowed) {
 					callback(null, true);
 				} else {
 					callback(new Error('Not allowed by CORS'));
@@ -116,16 +136,18 @@ export class ExpressMiddleware<IExpressParams> {
 				detail = String(err);
 			}
 
-			const infoError = this.#response.resultErr({
-				detail,
-				errType: 'invalid',
-				saveLog: false,
-				text: 'Error interno del servidor',
-			}).unwrap();
+			const infoError = this.#response
+				.resultErr({
+					detail,
+					errType: 'nocatch',
+					saveLog: false,
+					text: 'Error interno del servidor',
+				})
+				.unwrap();
 			const resInfo = {
 				resBody: infoError,
 				resInstance: res,
-				status: 500,
+				status: infoError.code,
 			};
 			this.#service.returnInfo(resInfo);
 		};

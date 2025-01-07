@@ -2,7 +2,7 @@
 	IFrameworkService,
 	IRequestParams,
 	IResponseParams,
-} from '@nxms/core/domain';
+} from '@monomod/core/domain';
 import { ApiCore } from './index';
 import { AdapterApi } from './infra';
 

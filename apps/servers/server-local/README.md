@@ -1,6 +1,6 @@
-# @nxms/server-local: The nxms local server
+# @monomod/server-local: The monomod local server
 
-This server is responsible for launching and managing local development servers for nxms microapps. It dynamically retrieves routes from the **nxms gateway** (`@nxms/gateway`), creates server instances for each microapp, and starts them on designated HTTP ports, enabling you to run and test your modules in isolation.
+This server is responsible for launching and managing local development servers for monomod microapps. It dynamically retrieves routes from the **monomod gateway** (`@monomod/gateway`), creates server instances for each microapp, and starts them on designated HTTP ports, enabling you to run and test your modules in isolation.
 
 
 
@@ -9,13 +9,13 @@ This server is responsible for launching and managing local development servers 
 The `server-local` application acts as an orchestrator for your local development environment. It performs the following key tasks:
 
 1. **Framework Selection:** It identifies the configured backend framework (e.g., Express) based on the provided configuration or conventions.
-2. **Route Retrieval:** Through the framework, it communicates with the **nxms gateway** (specifically, the `ApiCore` class) to retrieve the dynamically generated routes and their associated metadata.
+2. **Route Retrieval:** Through the framework, it communicates with the **monomod gateway** (specifically, the `ApiCore` class) to retrieve the dynamically generated routes and their associated metadata.
 3. **Server Instantiation:** For each microapp defined in the gateway, `server-local` leverages the chosen framework library to create and configure an instance of a server (e.g., an Express app).
 4. **Server Startup:** It starts each server instance, making the microservices accessible on their designated ports.
 
 ## Dependencies
 
-- **`libs/framework/*`**: This application relies on a framework-specific library, such as `libs/framework/express`, to handle the actual server instantiation and configuration. These framework libraries, in turn, depend on the `@nxms/gateway` library to retrieve dynamically generated microapp's routes and other configurations.
+- **`libs/framework/*`**: This application relies on a framework-specific library, such as `libs/framework/express`, to handle the actual server instantiation and configuration. These framework libraries, in turn, depend on the `@monomod/gateway` library to retrieve dynamically generated microapp's routes and other configurations.
 
 ## Running the Application
 
@@ -42,7 +42,7 @@ The console will typically display messages indicating the service name and the 
 ## Key Points
 
 - This application is specifically designed for local development and testing.
-- It relies heavily on the **nxms gateway** for route management and other configurations.
+- It relies heavily on the **monomod gateway** for route management and other configurations.
 - The actual server implementation details are abstracted away by the framework-specific libraries.
 
 ## Code Walkthrough (src/main.ts)
@@ -51,7 +51,7 @@ The `src/main.ts` file is the heart of the `server-local` application. Here's a 
 
 1. **Import Dependencies:**
    - `Config` from `config.ts`: Contains the application's configuration settings.
-   - `ApiCore` from `@nxms/gateway`: Used to interact with the gateway and retrieve microapp routes.
+   - `ApiCore` from `@monomod/gateway`: Used to interact with the gateway and retrieve microapp routes.
    - `Framework` from `libs/framework/*`: The framework-specific library for server instantiation and configuration.
 
 2. **Initialize Framework:**
@@ -71,4 +71,4 @@ The `src/main.ts` file is the heart of the `server-local` application. Here's a 
 
 ## Conclusion
 
-The `server-local` application provides a streamlined and efficient way to manage local development servers for nxms microapps. Its dynamic route retrieval, framework abstraction, and easy configuration make it a valuable tool for developers working on nxms project.
+The `server-local` application provides a streamlined and efficient way to manage local development servers for monomod microapps. Its dynamic route retrieval, framework abstraction, and easy configuration make it a valuable tool for developers working on monomod project.

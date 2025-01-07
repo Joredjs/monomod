@@ -3,7 +3,7 @@ import {
 	IExpressDebug,
 	IExpressMicroApp,
 } from '../domain/interface';
-import { IRoute } from '@nxms/core/domain';
+import { IRoute } from '@monomod/core/domain';
 
 export class ExpressDebug implements IExpressDebug {
 	routes(apps: IExpressApps) {
@@ -32,11 +32,12 @@ export class ExpressDebug implements IExpressDebug {
 		console.debug('INFO:', domainInfo);
 	}
 
-	cors(microApp: IExpressMicroApp, origin: any) {
+	cors(microApp: IExpressMicroApp, origin: any, info: any) {
 		console.debug('******************');
 		console.debug('DEBUGGING APP CORS');
 		console.debug('microAPP:', microApp.name);
-		console.debug('Domains:', microApp.dnsDomains);
+		console.debug('Cors config:', microApp.cors);
 		console.debug('Origin:', origin);
+		console.debug('Info:', info);
 	}
 }
