@@ -1,5 +1,5 @@
 import { IHeadersInfo } from './validations';
-import { domainKeys } from './keys';
+import { domainKeys } from './const';
 
 // Global project headers
 export class DataHeaders {

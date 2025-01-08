@@ -3,13 +3,14 @@ import {
 	ICryptoOptions,
 	ICryptoRequest,
 	ICryptoResponse,
+	IServiceCrypto,
 	domainKeys
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 import { normalizeError } from '../errors';
 
 
-export class ServiceCrypto {
+export class ServiceCrypto implements IServiceCrypto {
 	#client: ICryptoClient;
 
 	#cryptoOptions: ICryptoOptions;

@@ -1,19 +1,16 @@
-import { AdapterExpress } from '@monomod/framework-express/infra';
-import { IExpressApps } from '@monomod/framework-express/domain';
-import { ServerLocal } from './server';
+import { Container } from '@monomod/core/application';
+import { ServerController } from './controller';
 import { appConfig } from './config';
-import { getLanguageTexts } from '@monomod/core/domain';
+import { domainKeys } from '@monomod/core/domain';
 
-try {
-	const server = new ServerLocal();
-	const framework = new AdapterExpress(appConfig);
+async function bootstrap() {
+	const container = Container.getInstance();
 
-	// Retrieve the configured microapps
-	const microApps: IExpressApps = framework.getApps();
-	// Iterate through the microapps and start each server
-	Object.values(microApps).forEach((microApp) => {
-		server.start(microApp);
-	});
-} catch (error) {
-	console.error(`${getLanguageTexts('appsServerErrCreating')}:`, error);
+	container
+		.bind(domainKeys.core.container.frameworkconfig)
+		.toConstantValue(appConfig);
+	const serverManager = container.resolve(ServerController);
+	await serverManager.deploy();
 }
+
+bootstrap().catch(console.error);

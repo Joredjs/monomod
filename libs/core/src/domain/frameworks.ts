@@ -17,6 +17,10 @@ export type TFrameworkResponse<TFwRes> = TFwRes;
 
 export type TFrameworkParams<TFwParams> = TFwParams;
 
+export interface IFrameworkAdapter {
+	getApps(): any;
+}
+
 export interface IFrameworkResponseInfo<TFwRes> {
 	status: number;
 	resBody: IOKResponse<any> | IErrResponse;

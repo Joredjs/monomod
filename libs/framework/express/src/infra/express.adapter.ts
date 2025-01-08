@@ -1,5 +1,10 @@
 import { ExpressDebug, ExpressFactory, ExpressService } from '../application';
-import { IDomainGroup, IMicroAppConfig } from '@monomod/core/domain';
+import {
+	IDomainGroup,
+	IFrameworkAdapter,
+	IMicroAppConfig,
+	domainKeys,
+} from '@monomod/core/domain';
 import {
 	IExpressApps,
 	IExpressDebug,
@@ -8,10 +13,11 @@ import {
 	TExpressReq,
 	TExpressRes,
 } from '../domain/interface';
+import { Inject, Injectable, normalizeError } from '@monomod/core/application';
 import { ApiCore } from '@monomod/gateway';
-import { normalizeError } from '@monomod/core/application';
 
-export class AdapterExpress {
+@Injectable()
+export class AdapterExpress implements IFrameworkAdapter {
 	#appConfig: IMicroAppConfig;
 
 	#service: IExpressService;
@@ -20,8 +26,11 @@ export class AdapterExpress {
 
 	#appFactory: IExpressFactory;
 
-	constructor(appConfig: IMicroAppConfig) {
-		this.#appConfig = appConfig;
+	constructor(
+		@Inject(domainKeys.core.container.frameworkconfig)
+		private appConfig: IMicroAppConfig
+	) {
+		this.#appConfig = this.appConfig;
 		this.#service = new ExpressService();
 		this.#debug = new ExpressDebug();
 		this.#appFactory = new ExpressFactory(

@@ -2,6 +2,7 @@ import { errores } from './errores';
 import { headersPrefix } from './headers';
 import { httpCodes } from './http';
 import { patterns } from './patterns';
+import { translations } from './translations';
 
 // Const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
 
@@ -9,6 +10,9 @@ import { patterns } from './patterns';
 
 export const domainKeys = {
 	core: {
+		container: {
+			frameworkconfig: Symbol('frameworkconfig'),
+		},
 		cors: {
 			origin: 'mydomain.com',
 		},
@@ -31,6 +35,11 @@ export const domainKeys = {
 	errores,
 	headersPrefix,
 	httpCodes,
+	i18n: {
+		allowedLanguages: ['en', 'es', 'it'],
+		defaultLanguage: 'en',
+		translations,
+	},
 	patterns,
 	storage: {
 		user: 'xrt-q23e',
