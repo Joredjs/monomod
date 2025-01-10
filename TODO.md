@@ -12,6 +12,7 @@
 [X] Move nx library from libs/core/gateway to libs/gateway
 [X] Quitar de core/main lo que pueda depender de la creación de modulos
 [X] When the function is not configured at port, response error
+[ ] Remove all the express dependencies from the servers
 [ ] Verify where should be the headers info
 [ ] Update NX version (19.*)
 [ ] Implement the unit tests (jest)

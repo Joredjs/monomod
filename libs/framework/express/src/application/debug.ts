@@ -5,6 +5,7 @@ import {
 } from '../domain/interface';
 import { IRoute } from '@monomod/core/domain';
 
+
 export class ExpressDebug implements IExpressDebug {
 	routes(apps: IExpressApps) {
 		const routes = [];

@@ -1,10 +1,12 @@
 export type TLanguage = 'es' | 'en';
 
+export type TTextType = 'info' | 'errors';
+
 export interface ITextInfo {
 	group: string;
 	key: string;
 	params?: (string | number)[];
-	type: 'info' | 'error';
+	type: TTextType;
 }
 
 export interface IServiceI18n {
@@ -15,7 +17,7 @@ export interface IServiceI18n {
 
 export interface ITranslations {
 	[group: string]: {
-		[type in 'info' | 'errors']: {
+		[type in TTextType]: {
 			[key: string]: {
 				[lang in TLanguage]: string;
 			};

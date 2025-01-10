@@ -17,21 +17,21 @@ export const translations: ITranslations = {
 	},
 	server: {
 		errors: {
-			creating: {
-				en: 'Error creating the microapps',
-				es: 'Error creando las microapps',
+			create: {
+				en: 'Error creating the microapps: $0',
+				es: 'Error creando las microapps: $0',
 			},
-			starting: {
+			start: {
 				en: 'Error starting the microapp $0',
 				es: 'Error iniciando la microapp $0',
 			},
-			stopping: {
+			stop: {
 				en: 'MicroApp $0 has been stopped',
 				es: 'La microapp $0 se ha detenido',
 			},
 		},
 		info: {
-			listening: {
+			listen: {
 				en: 'MicroApp $0 listening at http://localhost:$1',
 				es: 'Escuchando la microapp $0 en http://localhost:$1',
 			},

@@ -10,9 +10,6 @@ import { translations } from './translations';
 
 export const domainKeys = {
 	core: {
-		container: {
-			frameworkconfig: Symbol('frameworkconfig'),
-		},
 		cors: {
 			origin: 'mydomain.com',
 		},

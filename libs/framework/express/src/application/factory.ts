@@ -1,6 +1,7 @@
 import {
 	IDomainGroup,
 	IMicroAppConfig,
+	TOKENS,
 	domainKeys,
 } from '@monomod/core/domain';
 import {
@@ -11,20 +12,18 @@ import {
 	IExpressService,
 } from '../domain/interface';
 import { ExpressMiddleware } from './middleware';
+import { Inject } from '@monomod/core/application';
 import express from 'express';
 
 export class ExpressFactory implements IExpressFactory {
 	#middleware: IExpressMiddleware;
 
-	#appConfig: IMicroAppConfig;
-
 	constructor(
-		appConfig: IMicroAppConfig,
-		debug: IExpressDebug,
-		service: IExpressService
+		@Inject(TOKENS.server.config) private appConfig: IMicroAppConfig,
+		@Inject(TOKENS.framework.IExpressDebug) private debug: IExpressDebug,
+		@Inject(TOKENS.framework.IExpressService) private service: IExpressService
 	) {
 		this.#middleware = new ExpressMiddleware(appConfig, debug, service);
-		this.#appConfig = appConfig;
 	}
 
 	#setTestPath(
@@ -86,14 +85,26 @@ export class ExpressFactory implements IExpressFactory {
 		};
 
 		const groupName = `${
-			this.#appConfig.addDomainName ? `/${domainGroup.name}` : ''
+			this.appConfig.addDomainName ? `/${domainGroup.name}` : ''
 		}`;
 
-		myApp.app.use(express.json({ limit: this.#appConfig.bodyLimit }));
+		myApp.app.use(express.json({ limit: this.appConfig.bodyLimit }));
 		myApp.app.use(this.#middleware.setCors(myApp));
 		myApp = this.#setPaths(domainGroup, myApp, groupName);
 		myApp = this.#setTestPath(myApp, groupName);
 		myApp.app.use(this.#middleware.errorHandler());
 		return myApp;
+	}
+
+	getService(): IExpressService {
+		return this.service;
+	}
+
+	getDebug(): IExpressDebug {
+		return this.debug;
+	}
+
+	getConfig(): IMicroAppConfig {
+		return this.appConfig;
 	}
 }

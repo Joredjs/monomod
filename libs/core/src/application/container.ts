@@ -1,51 +1,86 @@
 import 'reflect-metadata';
 
 // Container.ts
-export class Container {
+export class DIContainer {
 	static #instance;
 
-	#dependencies: Map<string, any> = new Map();
+	#dependencies: Map<symbol, any> = new Map();
 
 	#instances: Map<string, any> = new Map();
 
 	#constants: Map<symbol, any> = new Map();
 
 	static getInstance() {
-		if (!Container.#instance) {
-			Container.#instance = new Container();
+		if (!DIContainer.#instance) {
+			DIContainer.#instance = new DIContainer();
 		}
-		return Container.#instance;
+		return DIContainer.#instance;
 	}
 
-	register(key: string, isntance: any) {
-		this.#dependencies.set(key, isntance);
-	}
-
-	resolve<T>(InstanceKey: any): T {
-		if (this.#constants.has(InstanceKey)) {
-			return this.#constants.get(InstanceKey);
+	register(token: symbol, isntance: any, isConstant = false) {
+		if (isConstant) {
+			this.#constants.set(token, isntance);
+			return;
 		}
 
-		if (this.#instances.has(InstanceKey)) {
-			return this.#instances.get(InstanceKey);
+		const existing = this.#dependencies.get(token);
+
+		if (existing && existing !== isntance) {
+			throw new Error(
+				`Token ${token.toString()} already has a different implementation registered`
+			);
 		}
 
-		console.debug('resolving', InstanceKey);
-		const paramTypes =
-			Reflect.getMetadata('design:paramtypes', InstanceKey) || [];
-		const resolvedDeps = paramTypes.map((token: any) =>
-			this.resolve<any>(token)
-		);
-		const instance = new InstanceKey(...resolvedDeps);
-		this.#instances.set(InstanceKey, instance);
-		return instance;
+		if (existing) {
+			throw new Error(`Already registered ${token.toString()}`);
+		} else {
+			this.#dependencies.set(token, isntance);
+			// Console.debug('registering', token);
+		}
 	}
 
-	public bind(token: symbol) {
-		return {
-			toConstantValue: (value: any) => {
-				this.#constants.set(token, value);
-			},
-		};
+	#createInstance(Target: symbol | any) {
+		const Implementation = this.#dependencies.get(Target);
+
+		if (!Implementation) {
+			return null;
+		}
+
+		// Si la implementación es una clase, la instanciamos
+		if (typeof Implementation === 'function') {
+			// Console.debug('Implementation is a class', Implementation);
+			const params =
+				Reflect.getMetadata('design:paramtypes', Implementation) || [];
+			const injections = params.map((param: any) => this.resolve(param));
+			const instance = new Implementation(...injections);
+			return instance;
+		}
+
+		// Si no es una clase, retornamos la implementación directamente
+		return Implementation;
+	}
+
+	resolve<T>(Target: symbol | any): T {
+		if (this.#instances.has(Target)) {
+			return this.#instances.get(Target);
+		}
+
+		if (this.#constants.has(Target)) {
+			// Console.debug('constant', Target);
+			return this.#constants.get(Target);
+		}
+
+		// Si encontramos una implementación registrada para el token (Symbol)
+		if (this.#dependencies.has(Target)) {
+			const instance = this.#createInstance(Target);
+			this.#instances.set(Target, instance);
+			return instance;
+		}
+
+		throw new Error(`No provider found for ${String(Target)}`);
+	}
+
+	hasRegistration(token: symbol): boolean {
+		return this.#dependencies.has(token) || this.#constants.has(token);
 	}
 }

@@ -3,6 +3,7 @@ import {
 	ICorsInfo,
 	IDomainGroup,
 	IErrResponse,
+	IMicroAppConfig,
 	IOKResponse,
 	IRoute,
 	TDomainGroups,
@@ -71,4 +72,7 @@ export interface IExpressMiddleware {
 
 export interface IExpressFactory {
 	createMicroApp(domainGroup: IDomainGroup): IExpressMicroApp;
+	getService(): IExpressService;
+	getDebug(): IExpressDebug;
+	getConfig(): IMicroAppConfig;
 }

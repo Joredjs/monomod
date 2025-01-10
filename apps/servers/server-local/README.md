@@ -2,9 +2,27 @@
 
 This server is responsible for launching and managing local development servers for monomod microapps. It dynamically retrieves routes from the **monomod gateway** (`@monomod/gateway`), creates server instances for each microapp, and starts them on designated HTTP ports, enabling you to run and test your modules in isolation.
 
+## Architecture Overview
 
+The `server-local` application follows a modular architecture with dependency injection:
 
-## Overview
+1. **Module System:**
+   - Uses a modular system with three main modules:
+     - `ModuleCore`: Core services and utilities
+     - `ModuleExpress`: Express framework implementation
+     - `ModuleServer`: Server-specific components
+
+2. **Dependency Injection:**
+   - Utilizes a custom DI container for managing dependencies
+   - Components are registered through modules
+   - Uses decorators (`@Injectable`, `@Inject`) for dependency management
+
+3. **Key Components:**
+   - `ServerController`: Orchestrates server deployment and microapp management
+   - `ServerPort`: Handles server lifecycle (start, stop, error handling)
+   - `ServerMessagesService`: Manages localized messages and logging
+
+## Tasks
 
 The `server-local` application acts as an orchestrator for your local development environment. It performs the following key tasks:
 
@@ -15,19 +33,72 @@ The `server-local` application acts as an orchestrator for your local developmen
 
 ## Dependencies
 
-- **`libs/framework/*`**: This application relies on a framework-specific library, such as `libs/framework/express`, to handle the actual server instantiation and configuration. These framework libraries, in turn, depend on the `@monomod/gateway` library to retrieve dynamically generated microapp's routes and other configurations.
-
-## Running the Application
-
-1. **Start the server:** `nx serve server-local`
+- **`@monomod/core`**: Core functionality and DI container
+- **`@monomod/framework-express`**: Express framework implementation
+- **`@monomod/gateway`**: Route management and API configuration
 
 ## Configuration
 
-The server's behavior can be customized through various configuration options, typically located in the `config.ts` file within this directory. These options might include:
+The server's behavior is customized through `server.config.ts`:
 
-- `bodyLimit`: The maximum allowed size for request bodies (e.g., '5mb').
-- `debug`: Enables debugging features like CORS, path logging, and route logging.
-- `addDomainName`: Whether to add a domain name to the server's URL.
+```typescript
+{
+  addDomainName: boolean; // Add domain name to server URL
+  bodyLimit: string; // Request body size limit (e.g., '5mb')
+  debug: {
+    cors: boolean; // Enable CORS debugging
+    paths: boolean; // Enable path logging
+    routes: boolean; // Enable route logging
+  }
+}
+```
+
+## Running the Application
+
+1. Start the server:
+
+```bash
+nx serve server-local
+```
+
+## Module Structure
+
+### 1. Server Module (`ModuleServer`)
+
+- Registers server-specific components:
+  - `ServerController`: Main controller for server operations
+  - `ServerPort`: Server lifecycle management
+  - `ServerMessagesService`: Localized messaging
+  - Configuration constants
+
+### 2. Express Module (`ModuleExpress`)
+
+- Provides Express-specific implementations:
+  - `ExpressAdapter`: Framework adapter
+  - `ExpressFactory`: Server instance creation
+  - `ExpressMiddleware`: Request/response handling
+
+### 3. Core Module (`ModuleCore`)
+
+- Provides core services:
+  - Internationalization (i18n)
+  - Error handling
+  - Base utilities
+
+## Error Handling
+
+The server implements comprehensive error handling:
+
+- Graceful shutdown on SIGINT
+- Server startup error handling
+- Request error handling through middleware
+- Localized error messages
+
+## Logging
+
+- Uses a structured message system through `ServerMessagesService`
+- Debug logging for development environments
+- Error logging with proper context
 
 ## Example
 
@@ -44,13 +115,27 @@ The console will typically display messages indicating the service name and the 
 - This application is specifically designed for local development and testing.
 - It relies heavily on the **monomod gateway** for route management and other configurations.
 - The actual server implementation details are abstracted away by the framework-specific libraries.
+- Modular architecture with dependency injection
+- Framework-agnostic core with Express implementation
+- Configurable through environment and module settings
+- Comprehensive error handling and logging
+- Support for multiple microapps
+
+## Development
+
+For adding new features or modifications:
+
+1. Register new components in appropriate modules
+2. Implement required interfaces
+3. Use dependency injection for component management
+4. Follow the established message pattern for logging
 
 ## Code Walkthrough (src/main.ts)
 
 The `src/main.ts` file is the heart of the `server-local` application. Here's a breakdown of its key components:
 
 1. **Import Dependencies:**
-   - `Config` from `config.ts`: Contains the application's configuration settings.
+   - `Config` from `server.config.ts`: Contains the application's configuration settings.
    - `ApiCore` from `@monomod/gateway`: Used to interact with the gateway and retrieve microapp routes.
    - `Framework` from `libs/framework/*`: The framework-specific library for server instantiation and configuration.
 

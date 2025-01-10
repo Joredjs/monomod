@@ -69,3 +69,10 @@ export interface IPortParams {
 	response: IResponseResult;
 	services: IServices;
 }
+
+
+export interface IContainer {
+	register(token: symbol, instance: any, isConstant: boolean): void;
+	resolve(token: symbol): any;
+	hasRegistration(token: symbol): boolean;
+}

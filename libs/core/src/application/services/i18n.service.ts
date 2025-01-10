@@ -1,8 +1,6 @@
 import { IServiceI18n, ITextInfo, TLanguage, domainKeys } from '../../domain';
-import { Injectable } from '../decorators';
 import { normalizeError } from '../errors';
 
-@Injectable()
 export class ServiceI18n implements IServiceI18n {
 	#defaultLanguage: TLanguage = domainKeys.i18n.defaultLanguage as TLanguage;
 
@@ -11,7 +9,6 @@ export class ServiceI18n implements IServiceI18n {
 	#translationCache = new Map<string, string>();
 
 	constructor(selectedLanguage?: TLanguage) {
-		console.debug('i18n instance created');
 		// This.#currentLanguage = selectedLanguage || this.#defaultLanguage;
 		this.#currentLanguage = this.#getValidLanguage();
 	}

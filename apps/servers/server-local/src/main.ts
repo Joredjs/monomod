@@ -1,16 +1,16 @@
-import { Container } from '@monomod/core/application';
-import { ServerController } from './controller';
-import { appConfig } from './config';
-import { domainKeys } from '@monomod/core/domain';
+import { IServerController, TOKENS } from '@monomod/core/domain';
+import { ModuleManager } from './infra/module.manager';
+import { normalizeError } from '@monomod/core/application';
 
 async function bootstrap() {
-	const container = Container.getInstance();
+	const container = ModuleManager.initialize();
 
-	container
-		.bind(domainKeys.core.container.frameworkconfig)
-		.toConstantValue(appConfig);
-	const serverManager = container.resolve(ServerController);
-	await serverManager.deploy();
+	const serverController = container.resolve<IServerController>(
+		TOKENS.server.IServerController
+	);
+	await serverController.deploy();
 }
 
-bootstrap().catch(console.error);
+bootstrap().catch((error) => {
+	console.error(normalizeError(error));
+});
