@@ -1,7 +1,7 @@
 {
 	"root": true,
 	"ignorePatterns": ["**/*"],
-	"plugins": ["@nx"],
+	"plugins": ["@nx", "max-params-no-constructor"],
 	"rules": {
 		"no-magic-numbers": [
 			"error",

@@ -1,12 +1,10 @@
-import { errores } from './errores';
-import { headersPrefix } from './headers';
-import { httpCodes } from './http';
-import { patterns } from './patterns';
-import { translations } from './translations';
+import { headersPrefix } from './headers.const';
 
 // Const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
 
 // const allowedDomains: string[] = ['https://mysubdomain.mydomain.com'];
+
+// TODO: improve domainKeys file structure
 
 export const domainKeys = {
 	core: {
@@ -29,16 +27,19 @@ export const domainKeys = {
 			},
 		},
 	},
-	errores,
 	headersPrefix,
-	httpCodes,
-	i18n: {
-		allowedLanguages: ['en', 'es', 'it'],
-		defaultLanguage: 'en',
-		translations,
-	},
-	patterns,
 	storage: {
 		user: 'xrt-q23e',
 	},
 };
+
+export * from './defaults.const';
+export * from './errores.const';
+export * from './http.const';
+export * from './messages.const';
+export * from './mocks';
+export * from './modules.const';
+export * from './patterns.const';
+export * from './tokens.const';
+export * from './translations.const';
+

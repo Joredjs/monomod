@@ -1,8 +1,4 @@
-import {
-	IStorageClient,
-	ITypesStorage,
-	domainKeys,
-} from '../../domain';
+import { IStorageClient, ITypesStorage, PATTERNS } from '../../domain';
 import { Readable } from 'stream';
 import { normalizeError } from '../errors';
 
@@ -21,7 +17,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 
 	async upload(name: string, data: string, path?: string): Promise<string> {
 		try {
-			const matches = data.match(domainKeys.patterns.imagenb64);
+			const matches = data.match(PATTERNS.imagenb64);
 
 			const [base64Data, extension] = matches;
 			name = `${name}.${extension}`;

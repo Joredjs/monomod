@@ -1,28 +1,29 @@
 import {
+	ERRORS,
+	HTTPCODES,
 	IErrResponse,
 	IError,
 	IErrorMapping,
 	IOKResponse,
+	IPortLogs,
 	Result,
+	TOKENS,
 	TResultErr,
 	TResultOK,
-	domainKeys,
 } from '../domain';
 import { isIErrResponse, isIErrorMapping, normalizeError } from './errors';
-import { ServiceLogs } from './services';
+import { Inject } from './di';
 
 export class ResponseResult {
-	#logs: ServiceLogs;
+	@Inject(TOKENS.services.logs) readonly logs: IPortLogs;
 
-	constructor() {
-		this.#logs = new ServiceLogs();
-	}
+	/* Constructor() {
+	   	// this.#logs = logs;
+	   } */
 
 	#createErrorResponse(errInfo: IErrorMapping): IErrResponse {
-		const msj: IError = domainKeys.errores[errInfo.errType];
-		const detail = errInfo.showDetail
-			? errInfo.detail
-			: domainKeys.errores.nodetail.text;
+		const msj: IError = ERRORS[errInfo.errType];
+		const detail = errInfo.showDetail ? errInfo.detail : ERRORS.nodetail.text;
 
 		return {
 			code: msj.code,
@@ -36,7 +37,7 @@ export class ResponseResult {
 	resultOk<T>(value?: T): TResultOK<T> {
 		const res: IOKResponse<T> = {
 			body: value || ('OK' as T),
-			code: domainKeys.httpCodes[200].code,
+			code: HTTPCODES[200].code,
 		};
 		return Result.resOk(res);
 	}
@@ -60,7 +61,7 @@ export class ResponseResult {
 					: normalizedError.saveLog;
 
 			if (normalizedError && normalizedError.saveLog) {
-				this.#logs.save(normalizedError);
+				this.logs.saveError(normalizedError);
 			}
 
 			const res = this.#createErrorResponse(normalizedError);
@@ -68,7 +69,7 @@ export class ResponseResult {
 		}
 
 		const res: IErrResponse = {
-			code: domainKeys.httpCodes['500'].code,
+			code: HTTPCODES['500'].code,
 			error: normalizedError,
 		};
 		return Result.resErr(res);

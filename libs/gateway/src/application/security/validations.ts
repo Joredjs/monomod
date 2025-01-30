@@ -1,6 +1,7 @@
 import {
 	EHttpMethods,
 	IAppValidations,
+	IDomainGroup,
 	IJSONObject,
 	IRequestParams,
 	IResponseParams,

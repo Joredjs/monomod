@@ -1,27 +1,29 @@
 import {
+	ERRORS,
 	IAppValidations,
 	IController,
 	IErrResponse,
-	IFrameworkService,
 	IOKResponse,
-	IResponseResult,
+	IPortFrameworkService,
+	IPortResponseResult,
 	ITransactionValid,
 	TFrameworkRequest,
 	TFrameworkResponse,
-	domainKeys,
 } from '../domain';
 
-export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRes> {
+export class BaseController<TFwReq, TFwRes>
+	implements IController<TFwReq, TFwRes>
+{
 	validations: IAppValidations<TFwReq, TFwRes>;
 
-	framework: IFrameworkService<TFwRes>;
+	framework: IPortFrameworkService<TFwRes>;
 
-	response: IResponseResult;
+	response: IPortResponseResult;
 
 	constructor(
 		Validations: IAppValidations<TFwReq, TFwRes>,
-		frameworkService: IFrameworkService<TFwRes>,
-		response: IResponseResult
+		frameworkService: IPortFrameworkService<TFwRes>,
+		response: IPortResponseResult
 	) {
 		this.validations = Validations;
 		this.framework = frameworkService;
@@ -48,7 +50,7 @@ export class BaseController<TFwReq, TFwRes> implements IController<TFwReq, TFwRe
 			return (await info.handler(info)) as IOKResponse<unknown>;
 		} catch (err: unknown) {
 			const handlerErr = err as IErrResponse;
-			handlerErr.code ??= domainKeys.errores.nocatch.code;
+			handlerErr.code ??= ERRORS.nocatch.code;
 			throw handlerErr;
 		}
 	}

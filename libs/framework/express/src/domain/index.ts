@@ -1,1 +1,1 @@
-export * from './interface';
+export * from './express.interface';

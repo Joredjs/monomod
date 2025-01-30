@@ -1,7 +1,7 @@
 import {
 	IErrResponse,
 	IOKResponse,
-	IResponseResult,
+	IPortResponseResult,
 	IServices,
 	ITransactionParams,
 	IUseCase,
@@ -11,7 +11,7 @@ import {
 export class UseCaseExampleErr<TRepository> implements IUseCase<string> {
 	#appServices: IServices;
 
-	#response: IResponseResult;
+	#response: IPortResponseResult;
 
 	constructor(useCaseParams: IUseCaseParams<TRepository>) {
 		this.#appServices = useCaseParams.services;

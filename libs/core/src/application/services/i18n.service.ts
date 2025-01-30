@@ -1,23 +1,33 @@
-import { IServiceI18n, ITextInfo, TLanguage, domainKeys } from '../../domain';
+import {
+	EMessageGroup,
+	EMessageType,
+	IPortI18n,
+	ITextInfo,
+	TLanguage,
+	TOKENS,
+	TRANSLATIONS,
+} from '../../domain';
+import { DEFAULTS } from '../../domain/const/defaults.const';
+import { Injectable } from '../di';
 import { normalizeError } from '../errors';
 
-export class ServiceI18n implements IServiceI18n {
-	#defaultLanguage: TLanguage = domainKeys.i18n.defaultLanguage as TLanguage;
+@Injectable(TOKENS.services.I18n)
+export class ServiceI18n implements IPortI18n {
+	#defaultLanguage: TLanguage = DEFAULTS.language;
 
 	#currentLanguage: TLanguage;
 
 	#translationCache = new Map<string, string>();
 
 	constructor(selectedLanguage?: TLanguage) {
-		// This.#currentLanguage = selectedLanguage || this.#defaultLanguage;
-		this.#currentLanguage = this.#getValidLanguage();
+		this.#currentLanguage = this.#getValidLanguage(selectedLanguage);
 	}
 
-	#getValidLanguage(): TLanguage {
-		const language = process.env.LANGUAGE || this.#defaultLanguage;
+	#getValidLanguage(selectedLanguage?: TLanguage): TLanguage {
+		const language =
+			selectedLanguage || process.env.LANGUAGE || this.#defaultLanguage;
 
-		const allowedLanguages: TLanguage[] = domainKeys.i18n
-			.allowedLanguages as TLanguage[];
+		const allowedLanguages: TLanguage[] = DEFAULTS.languages as TLanguage[];
 
 		if (allowedLanguages.includes(language as TLanguage)) {
 			return language as TLanguage;
@@ -25,25 +35,25 @@ export class ServiceI18n implements IServiceI18n {
 		return this.#defaultLanguage;
 	}
 
-	#getTranslation(info: ITextInfo, language: TLanguage): string {
-		const { translations } = domainKeys.i18n;
-
+	#getTranslation(info: ITextInfo): string {
 		if (
-			!domainKeys.i18n.translations[info.group] ||
-			!domainKeys.i18n.translations[info.group][info.type] ||
-			!domainKeys.i18n.translations[info.group][info.type][info.key]
+			!TRANSLATIONS[info.group] ||
+			!TRANSLATIONS[info.group][info.type] ||
+			!TRANSLATIONS[info.group][info.type][info.key] ||
+			!TRANSLATIONS[info.group][info.type][info.key][this.#currentLanguage]
 		) {
 			info = {
-				group: 'generic',
+				group: EMessageGroup.SYSTEM,
 				key: 'default',
 				params: [info.group, info.type, info.key, ...info.params],
-				type: 'info',
+				type: EMessageType.INFO,
 			};
 		}
 
 		const template =
-			translations[info.group]?.[info.type]?.[info.key]?.[language] ||
-			'Error getting template message';
+			TRANSLATIONS[info.group]?.[info.type]?.[info.key]?.[
+				this.#currentLanguage
+			] || 'Error getting template message';
 
 		return template.replace(/\$(\d+)/g, (match, index) => {
 			const idx = parseInt(index, 10);
@@ -51,19 +61,27 @@ export class ServiceI18n implements IServiceI18n {
 				? match
 				: info.params[idx].toString();
 		});
+
+		/* Return template.replace(/\$(\d+)/g, (match, index) => {
+		     const paramIndex = parseInt(index, 10);
+		     if (paramIndex >= params.length) {
+		       return match; // Mantener el placeholder si no hay parámetro
+		     }
+		     return String(params[paramIndex] ?? match);
+		   }); */
 	}
 
 	getText(info: ITextInfo): string {
 		try {
-			const cacheKey = `${info.group}.${info.type}.${info.key}.${
-				this.#currentLanguage
+			// Return this.translations[this.currentLanguage]?.[params.group]?.[params.type]?.[params.key];
+			const cacheKey = `${this.#currentLanguage}.${info.group}.${info.type}.${
+				info.key
 			}`;
 
 			if (this.#translationCache.has(cacheKey)) {
 				return this.#translationCache.get(cacheKey);
 			}
-			const language: TLanguage = this.#getValidLanguage();
-			const translation = this.#getTranslation(info, language);
+			const translation = this.#getTranslation(info);
 			this.#translationCache.set(cacheKey, translation);
 			return translation;
 		} catch (error) {
@@ -79,6 +97,6 @@ export class ServiceI18n implements IServiceI18n {
 	}
 
 	setLanguage(lang: TLanguage): void {
-		this.#currentLanguage = lang;
+		this.#currentLanguage = this.#getValidLanguage(lang);
 	}
 }

@@ -27,6 +27,7 @@
 [ ] Make this project installable not only forkeable
 [ ] Release the first version
 [ ] Improve the dependency in the modules from TDomainGroup and the headers prefix from domain/keys/headers.ts
+[ ] Implement the healthcheck module
 - pagination (prev,next,last,first) (?page=1&size=100)
 - Filtering (?xxx=gt:10,lt:20&yyy=match:asd&zzz=eq:algo)
 - Ordering (?sort=xxx:asc,yyy:desc)

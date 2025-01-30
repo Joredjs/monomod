@@ -203,7 +203,7 @@ module.exports = {
        for a complete list
     */
 		doNotFollow: {
-			path: 'node_modules',
+			path: 'node_modules|result|tests|jest.config*',
 		},
 
 		/* conditions specifying which dependencies to exclude
@@ -212,7 +212,7 @@ module.exports = {
           leave out if you want to exclude neither (recommended!)
     */
 		exclude: {
-			path: '^(result|node_modules|jest.config*)',
+			path: '^(node_modules)',
 		},
 
 		/* pattern specifying which files to include (regular expression)

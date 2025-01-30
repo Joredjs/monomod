@@ -1,4 +1,5 @@
 import {
+	ERRORS,
 	ICryptoClient,
 	ICryptoOptions,
 	ICryptoRequest,
@@ -8,6 +9,7 @@ import {
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 import { normalizeError } from '../errors';
+
 
 
 export class ServiceCrypto implements IServiceCrypto {
@@ -153,7 +155,7 @@ export class ServiceCrypto implements IServiceCrypto {
 			);
 
 			if (!infoEncripted.x0x1 || !infoEncripted.x0x2 || !infoEncripted.x0x3) {
-				throw new Error(domainKeys.errores.params.text);
+				throw new Error(ERRORS.params.text);
 			}
 
 			const cryptoReq: ICryptoRequest = {

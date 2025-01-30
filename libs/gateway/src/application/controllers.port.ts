@@ -2,10 +2,10 @@ import { AppValidations, NoValidations } from './security';
 import {
 	IAppValidations,
 	IController,
-	IFrameworkService,
+	IPortFrameworkService,
+	IPortResponseResult,
 	IRequestParams,
 	IResponseParams,
-	IResponseResult,
 	IServices,
 	TControllers,
 	TMyModulesInstances,
@@ -17,16 +17,16 @@ export class PortControllers<
 	TFwReq extends IRequestParams,
 	TFwRes extends IResponseParams
 > {
-	#framework: IFrameworkService<TFwRes>;
+	#framework: IPortFrameworkService<TFwRes>;
 
 	#modulesInstances: TMyModulesInstances;
 
-	#response: IResponseResult;
+	#response: IPortResponseResult;
 
 	constructor(
-		frameworkService: IFrameworkService<TFwRes>,
+		frameworkService: IPortFrameworkService<TFwRes>,
 		modulesInstances: TMyModulesInstances,
-		response: IResponseResult
+		response: IPortResponseResult
 	) {
 		this.#framework = frameworkService;
 		this.#modulesInstances = modulesInstances;

@@ -1,26 +1,28 @@
-import { IDomainGroup, IFrameworkAdapter, TOKENS } from '@monomod/core/domain';
 import {
-	IExpressApps,
-	IExpressFactory,
-	TExpressReq,
-	TExpressRes,
-} from '../domain/interface';
-import { Inject, normalizeError } from '@monomod/core/application';
+	IDomainGroup,
+	IMicroApp,
+	IPortFrameworkAdapter,
+	IPortFrameworkDebug,
+	IPortFrameworkFactory,
+	TOKENS,
+} from '@monomod/core/domain';
+import { Inject, Injectable, normalizeError } from '@monomod/core/application';
+import { TExpressReq, TExpressRes } from '../domain/express.interface';
 import { ApiCore } from '@monomod/gateway';
 
-export class AdapterExpress implements IFrameworkAdapter {
-	constructor(
-		@Inject(TOKENS.framework.IExpressFactory)
-		private appFactory: IExpressFactory
-	) {}
+@Injectable(TOKENS.framework.IFrameworkAdapter)
+export class AdapterExpress implements IPortFrameworkAdapter {
+	@Inject(TOKENS.framework.IFrameworkFactory)
+	private appFactory: IPortFrameworkFactory;
 
-	getApps(): IExpressApps {
-		const apps: IExpressApps = {};
+	@Inject(TOKENS.framework.IFrameworkDebug)
+	private debug: IPortFrameworkDebug;
+
+	getApps(): IMicroApp {
+		const apps: IMicroApp = {};
 
 		try {
-			const apiCore = new ApiCore<TExpressReq, TExpressRes>(
-				this.appFactory.getService()
-			);
+			const apiCore = new ApiCore<TExpressReq, TExpressRes>();
 
 			const domains: IDomainGroup[] = apiCore.getDomains();
 
@@ -29,9 +31,7 @@ export class AdapterExpress implements IFrameworkAdapter {
 				apps[appName] = this.appFactory.createMicroApp(domainGroup);
 			});
 
-			if (this.appFactory.getConfig().debug.routes) {
-				this.appFactory.getDebug().routes(apps);
-			}
+			this.debug.routes(apps);
 		} catch (error) {
 			throw normalizeError(error);
 		}

@@ -1,7 +1,7 @@
 import {
 	IPort,
 	IPortParams,
-	IResponseResult,
+	IPortResponseResult,
 	IServices,
 	TDomainGroups,
 	TExternalUseCases,
@@ -15,14 +15,14 @@ export class PortPorts {
 
 	#modulesInstances: TMyModulesInstances;
 
-	#response: IResponseResult;
+	#response: IPortResponseResult;
 
 	#externalUseCasesList: TExternalUseCases = {};
 
 	constructor(
 		services: IServices,
 		modulesInstances: TMyModulesInstances,
-		response: IResponseResult
+		response: IPortResponseResult
 	) {
 		this.#modulesInstances = modulesInstances;
 		this.#response = response;

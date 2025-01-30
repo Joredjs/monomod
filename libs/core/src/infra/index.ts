@@ -1,2 +1,2 @@
 export * from './base.controller';
-export * from './core.module';
+export * from './core.registry';

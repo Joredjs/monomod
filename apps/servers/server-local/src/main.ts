@@ -1,12 +1,17 @@
-import { IServerController, TOKENS } from '@monomod/core/domain';
-import { ModuleManager } from './infra/module.manager';
+import {
+	IPortContainer,
+	IPortServerController,
+	TOKENS,
+} from '@monomod/core/domain';
+import { ProjectRegisterServerLocal } from './infra/local.server.project.register';
 import { normalizeError } from '@monomod/core/application';
 
 async function bootstrap() {
-	const container = ModuleManager.initialize();
+	const container: IPortContainer =
+		new ProjectRegisterServerLocal().initialize();
 
-	const serverController = container.resolve<IServerController>(
-		TOKENS.server.IServerController
+	const serverController = container.resolve<IPortServerController>(
+		TOKENS.server.IPortServerController
 	);
 	await serverController.deploy();
 }

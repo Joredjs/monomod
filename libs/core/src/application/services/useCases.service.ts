@@ -1,4 +1,9 @@
-import { IErrResponse, IExternalUseCaseParams, domainKeys } from '../../domain';
+import {
+	HTTPCODES,
+	IErrResponse,
+	IExternalUseCaseParams,
+	domainKeys,
+} from '../../domain';
 import { normalizeError } from '../errors';
 
 export class ServiceUseCases {
@@ -23,7 +28,7 @@ export class ServiceUseCases {
 		if (
 			!resultConsulta ||
 			!resultConsulta.body ||
-			resultConsulta.code !== domainKeys.httpCodes[okCode].code
+			resultConsulta.code !== HTTPCODES[okCode].code
 		) {
 			const resp: IErrResponse = resultConsulta as IErrResponse;
 			if (resp.code && resp.error) {

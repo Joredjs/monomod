@@ -1,8 +1,8 @@
-import { IHeadersInfo } from './validations';
+import { IHeadersInfo } from './interfaces/validations.interface';
 import { domainKeys } from './const';
 
-/* TODO: mover a const ?
-    Global project headers */
+/* TODO: mover a const
+   TODO: Change to const instead class */
 export class DataHeaders {
 	headers: IHeadersInfo = {
 		crdata: {

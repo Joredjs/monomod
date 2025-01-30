@@ -1,13 +1,26 @@
 import {
 	IDomainGroup,
-	IFrameworkService,
+	IPortFrameworkService,
+	IPortLogs,
+	IPortResponseResult,
 	IRequestParams,
 	IResponseParams,
-	IResponseResult,
 	IServices,
 	IServicesDependencies,
 	TMyModulesInstances,
+	TOKENS,
 } from '@monomod/core/domain';
+import {
+	Inject,
+	ResponseResult,
+	ServiceCrypto,
+	ServiceEncode,
+	ServiceHeaders,
+	ServiceMail,
+	ServiceSchema,
+	ServiceUseCases,
+	normalizeError,
+} from '@monomod/core/application';
 import {
 	ModuleExampleController,
 	ModuleExamplePort,
@@ -19,16 +32,6 @@ import {
 	PortRoutes,
 	ServiceLayers,
 } from '../application';
-import {
-	ResponseResult,
-	ServiceCrypto,
-	ServiceEncode,
-	ServiceHeaders,
-	ServiceMail,
-	ServiceSchema,
-	ServiceUseCases,
-	normalizeError,
-} from '@monomod/core/application';
 import { clientAjv, clientCrypto, clientNodemailer } from './dependencies';
 
 export class AdapterApi<
@@ -39,7 +42,7 @@ export class AdapterApi<
 
 	#services: IServices = {};
 
-	#response: IResponseResult = new ResponseResult();
+	#response: IPortResponseResult;
 
 	#layersService;
 
@@ -52,7 +55,8 @@ export class AdapterApi<
 		},
 	};
 
-	constructor(frameworkService: IFrameworkService<TFwRes>) {
+	constructor(frameworkService: IPortFrameworkService<TFwRes>) {
+		this.#response = new ResponseResult();
 		try {
 			this.#setServices();
 
