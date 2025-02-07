@@ -28,7 +28,3 @@ These drawbacks are not present in a monolith architecture, but the monolith arc
 - **Simplified Development and Performance:** Benefit from fast development cycles and superior performance with minimal communication overhead, while maintaining clean separation of concerns.
 - **Framework-Agnostic:** Works with your preferred backend framework. The default configurated framework is express, but you can configure any other framework like NestJS, Koa, Fastify or your preferred framework.
 - **Maximum Flexibility:** Choose your preferred backend framework and seamlessly deploy anywhere - from simple VPS to complex cloud infrastructures.
-
-## Architecture Overview
-
-See [Architecture Overview](./docs/architecture.md) for more details.

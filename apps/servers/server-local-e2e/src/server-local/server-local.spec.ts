@@ -14,18 +14,18 @@ describe('API E2E Tests', () => {
 	});
 
 	it('should test all endpoints', async () => {
-		// const modules = gateway.getModules();
-		// const promises = [];
-		// for (const module of modules) {
-		// 	if (module) {
-		// 		const routes = module.getRoutes();
-		// 		for (const path in routes.paths) {
-		// 			if (path) {
-		// 				promises.push(tester.testEndpoint(routes, path));
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// await Promise.all(promises);
+		/* Const modules = gateway.getModules();
+		   const promises = [];
+		   for (const module of modules) {
+		   	if (module) {
+		   		const routes = module.getRoutes();
+		   		for (const path in routes.paths) {
+		   			if (path) {
+		   				promises.push(tester.testEndpoint(routes, path));
+		   			}
+		   		}
+		   	}
+		   }
+		   await Promise.all(promises); */
 	});
 });

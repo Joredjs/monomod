@@ -24,6 +24,7 @@ export interface IErrorMapping {
 	saveLog?: boolean;
 	showDetail?: boolean;
 	text?: string;
+	messageKey?: string;
 }
 
 export type TResultOK<T> = Result<IOKResponse<T>, IErrResponse>;

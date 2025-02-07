@@ -1,17 +1,25 @@
-# monomod: A Monorepo Modular Monolith Framework for TypeScript
+# monomod
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node Version](https://img.shields.io/badge/node-%5E18.0.0-olive)
-![TypeScript](https://img.shields.io/badge/typescript-%5E5.0.0-olive)
+A Modular Monolith Framework for TypeScript
 
-A framework designed for building highly scalable and maintainable TypeScript applications using a modular monolith architecture. Its could be referenced as the sweet spot between monoliths and microservices.
+![License](https://img.shields.io/github/license/joredjs/monomod)
+![Size](https://img.shields.io/github/repo-size/joredjs/monomod)
+![Node Version](https://img.shields.io/badge/node-%5E18.0.0-brightgreen)
+![TypeScript](https://img.shields.io/badge/typescript-%5E5.0.0-brightgreen)
+![NX](https://img.shields.io/badge/nx-%5E20.0.0-brightgreen)
 
-- [monomod: A Monorepo Modular Monolith Framework for TypeScript](#monomod-a-monorepo-modular-monolith-framework-for-typescript)
+- [monomod](#monomod)
   - [Overview](#overview)
-  - [Project Structure](#project-structure)
-  - [Key Features](#key-features)
-  - [When to Use monomod?](#when-to-use-monomod)
-  - [Details](#details)
+    - [When to Use monomod?](#when-to-use-monomod)
+    - [Features](#features)
+    - [Included Tools](#included-tools)
+    - [Key Concepts](#key-concepts)
+    - [Best Practices](#best-practices)
+    - [Scaling Strategy](#scaling-strategy)
+  - [Architecture](#architecture)
+    - [Project Structure](#project-structure)
+    - [Module Structure](#module-structure)
+    - [Project Diagram](#project-diagram)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Basic Setup](#basic-setup)
@@ -24,70 +32,13 @@ A framework designed for building highly scalable and maintainable TypeScript ap
   - [Contributing](#contributing)
     - [Contributors](#contributors)
   - [License](#license)
+  - [Acknowledgments](#acknowledgments)
 
 ## Overview
 
-**monomod** helps you build applications that are:
+monomod is a modern TypeScript framework for building highly scalable and maintainable modular monoliths. It combines the simplicity of monoliths with the modularity of microservices, providing a pragmatic approach to application architecture. It could be referenced as the sweet spot between monoliths and microservices.
 
-- 🎯 **Modular**: Each feature is a self-contained module
-- 📦 **Monolithic**: Single deployable unit (simpler than microservices)
-- 🔄 **Migration-Ready**: Easy path to microservices when needed
-- 🛠 **Framework-Agnostic**: Works with Express, Fastify, or your preferred framework
-
-```mermaid
-graph TD
-    B["server-local"]
-    C["framework-express"]
-    D["gateway"]
-    E["module-example"]
-    F["core"]
-    G["module-A"]
-    H["module-B"]
-    I["server-your_cloud"]
-    J["framework-your_framework"]
-
-
-    B --> C
-    C --> D
-    C --> F
-    D --> F
-    E --> F
-    G --> F
-    H --> F
-    I --> J
-    J --> D
-```
-
-## Project Structure
-
-```markdown
-monomod/
-├── apps/                  # Applications (servers, CLIs)
-├── libs/                  # Core framework libraries
-│   ├── core/             # Core domain and utilities
-│   ├── gateway/          # API Gateway functionality
-│   └── framework/        # Framework adapters (Express, etc)
-└── modules/              # Your business modules
-    └── example/          # Example module (reference implementation)
-```
-
-```markdown
-modules/
-├── example/
-│   ├── src/
-│   │   ├── domain/       // Business logic
-│   │   ├── application/  // Use cases
-│   │   └── infra/       // External interfaces
-```
-
-## Key Features
-
-- 🏗 **Hexagonal Architecture**: Clean separation of concerns
-- 🔐 **Built-in Gateway**: Authentication, routing, and module management
-- 🔌 **Pluggable Infrastructure**: Switch databases or frameworks without touching business logic
-- 📊 **NX Monorepo**: Efficient build system and dependency management
-
-## When to Use monomod?
+### When to Use monomod?
 
 ✅ **Perfect for:**
 
@@ -100,9 +51,146 @@ modules/
 - Tiny single-purpose applications
 - Projects requiring immediate microservice architecture
 
-## Details
+### Features
+
+- 📦 **Monorepo**: Single codebase (simpler than microservices)
+- 🎯 **Modular Architecture**: Build independent, self-contained modules
+- 🏗 **Hexagonal Architecture**: Clean separation of concerns
+- ⏫ **Migration-Ready**: Easy path to microservices when needed
+- 🛠 **Framework-Agnostic**: Works with Express, Fastify, or your preferred framework
+- 🛡️ **Built-in Gateway**: Integrated API gateway with authentication and routing
+- 🔌 **Pluggable Infrastructure**: Switch databases or frameworks without touching business logic
+
+### Included Tools
+
+- 🏗️ **NX**: Monorepo management and build system
+- 🔍 **ESLint**: Code quality and style checking
+- 🧪 **Jest**: Testing framework
+- 📝 **TypeDoc**: Documentation generation
+- 🔄 **Husky**: Git hooks for code quality
+
+### Key Concepts
+
+1. **Modular Design**
+
+   - Each module is independent
+   - Clear boundaries between modules
+   - Internal implementation freedom
+
+2. **Hexagonal Architecture**
+
+   - Domain-driven design
+   - Clear separation of concerns
+   - Framework independence
+
+3. **API Gateway**
+
+   - Centralized routing
+   - Authentication/Authorization
+   - Request/Response transformation
+
+### Best Practices
+
+1. **Module Development**
+   - Keep modules focused and cohesive
+   - Implement clear module boundaries
+   - Document module interfaces
+
+2. **Testing**
+   - Write comprehensive tests
+   - Use test-driven development
+   - Maintain high coverage
+
+3. **Code Quality**
+   - Follow TypeScript best practices
+   - Use ESLint and Prettier
+   - Document public APIs
+
+### Scaling Strategy
+
+1. **Start Modular**
+   - Build independent modules
+   - Define clear interfaces
+   - Maintain loose coupling
+
+2. **Monitor Growth**
+   - Track module dependencies
+   - Monitor performance
+   - Identify bottlenecks
+
+3. **Scale Out**
+   - Extract high-load modules
+   - Convert to microservices
+   - Maintain distributed monolith
 
 For full explanation of what monomod is and how it works see [Project Details](./docs/detail.md)
+
+## Architecture
+
+### Project Structure
+
+```markdown
+monomod/
+├── apps/                 # Applications (servers)
+│   └── server-local/     # Development server
+├── libs/                 # Core libraries
+│   ├── core/             # Core domain and utilities
+│   ├── gateway/          # API Gateway functionality
+│   └── framework/        # Framework adapters (Express, etc)
+└── modules/              # Business modules
+    └── example/          # Example module (reference implementation)
+```
+
+### Module Structure
+
+```markdown
+modules/
+├── example/               #example module 
+│   ├── src/
+│   │   ├── domain/        # Business logic
+│   │   ├── application/   # Use cases
+│   │   └── infra/         # External interfaces
+│   ├── test/              # Tests
+│   └── README.md          # Module documentation
+└── another_module/        #your own module       
+```
+
+### Project Diagram
+
+```mermaid
+graph TD
+    B["server-local"]
+    C["framework-express"]
+    D["gateway"]
+    E["module-example"]
+    F["core"]
+    G["module-A"]
+    H["module-B"]
+    I["server-{{your_cloud}}"]
+    J["framework-{{your_framework}}"]
+    XOR1{{"Choose your preferred framework"}}
+    XOR2{{"Choose your preferred framework"}}
+
+    %% Bloque B puede usar C o J, pero no ambos
+    B -.-> XOR1
+    XOR1 -.-> C
+    XOR1 -.-> J
+
+    %% Bloque I puede usar C o J, pero no ambos
+    I -.-> XOR2
+    XOR2 -.-> C
+    XOR2 -.-> J
+
+    %% Resto de las conexiones
+    C --> D
+    J --> D
+    D --> F
+    E --> F
+    G --> F
+    H --> F
+```
+
+See [Architecture Overview](./docs/architecture.md) for more details.
 
 For full structure details see [Project Structure](./docs/structure.md)
 
@@ -118,14 +206,39 @@ For full structure details see [Project Structure](./docs/structure.md)
 
 ### Basic Setup
 
-1. Fork the project locally: `git clone --depth=1 https://github.com/Joredjs/monomod.git {{your-project-name}}` the "--depth=1" flag is optional and it is for not get all the project history just the last commit
-2. Go to your project directory: `cd {{your-project-name}}`
-3. Initialize a new Git repository: `rm -rf .git && git init`
-4. Create the fisrt commit: `git add . && git commit -m 'core: initial commit forked from monomod'`
-5. Set your project name: For thsi replacing "@monomod/" -> "@{{your-project-name}}/"
-6. Install all the dependencies: `npm install`
-7. Test the server local project: `nx serve server-local` this will run the default module 'example'
-8. Commit the changes with the setup project: `git add . && git commit -m 'core: Setting up {{your-project-name}} project'`
+1. Fork the project locally
+2. Go to your project directory
+3. Initialize a new Git repository
+4. Create the fisrt commit
+5. Set your project name:
+   - For this replace "@monomod/" -> "@{{your-project-name}}/" in the entire project
+6. Install all the dependencies
+7. Test the server local project, this will run the default module 'example'
+8. Commit the changes with the setup project
+
+```bash
+## 1. Fork the project locally:
+### the "--depth=1" flag is optional and it is for not get all the project history just the last commit
+`git clone --depth=1 https://github.com/Joredjs/monomod.git {{your-project-name}}`
+
+## 2. Go to your project directory:
+cd {{your-project-name}}
+
+## 3. Initialize a new Git repository:
+rm -rf .git && git init
+
+## 4. Create the fisrt commit:
+git add . && git commit -m 'core: initial commit forked from monomod'
+
+## 6. Install all the dependencies:
+npm install
+
+## 7. Test the server local project: 
+nx serve server-local
+
+## 8. Commit the changes with the setup project: 
+git add . && git commit -m 'core: Setting up {{your-project-name}} project'
+```
 
 ### Upgrading the NX version (Optional)
 
@@ -160,7 +273,7 @@ nx build server-local     # Build for production
 
 ## Documentation and Resources
 
-- 📒 [Full Project Documentation](./docs/detail.md)
+- 📒 [Framework details](./docs/detail.md)
 - 🏛️ [Architecture Guide](./docs/architecture.md) - Detailed design patterns
 - 🏗️ [Structure](./docs/structure.md): Detailed explanation of the project structure
 - 👉 [Code Style](./docs/codeStyle.md): Coding conventions and style guidelines
@@ -183,7 +296,13 @@ Common issues and their solutions:
 
 ## Contributing
 
-We welcome contributions! See our [Contributing Guide](./docs/CONTRIBUTING.md) for details.
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for details.
 
 ### Contributors
 
@@ -191,4 +310,14 @@ We welcome contributions! See our [Contributing Guide](./docs/CONTRIBUTING.md) f
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Acknowledgments
+
+- NX Team for the excellent monorepo tooling
+- Express.js community for the framework adapter reference
+- Contributors and early adopters
+
+---
+
+Built with ❤️ by the monomod team

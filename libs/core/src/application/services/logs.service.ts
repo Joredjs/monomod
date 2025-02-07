@@ -1,38 +1,62 @@
 import {
 	ELogLevel,
 	IErrorMapping,
-	ILogs,
+	ILogsEntry,
+	ILogsMapping,
 	IPortLogs,
+	IPortMessages,
 	TOKENS,
 } from '../../domain';
 import { Injectable } from '../di';
 
 @Injectable(TOKENS.services.logs)
 export class ServiceLogs implements IPortLogs {
-	#formatLog(infoLog: ILogs): string {
+	constructor(private messages: IPortMessages) {}
+
+	#formatLog(infoLog: ILogsEntry): string {
 		return `[${infoLog.timestamp.toISOString()}] [${infoLog.level}] ${
 			infoLog.traceId ? `[${infoLog.traceId}] ` : ''
 		}${infoLog.context ? `[${infoLog.context}] ` : ''}${infoLog.message}`;
 	}
 
-	#createLog(level: ELogLevel, message: string, metadata?: unknown): ILogs {
+	#getMessage(logInfo: ILogsMapping): string {
+		// TODO: no dejar quemado
+		let message = 'No message specified';
+		if (logInfo.messageKey) {
+			message = this.messages.getMessage(
+				logInfo.messageKey,
+				logInfo.messageParams || []
+			);
+		} else {
+			message = logInfo.text || 'Message bad configured';
+		}
+		return message;
+	}
+
+	#createLog(level: ELogLevel, logInfo: ILogsMapping): ILogsEntry {
+		const context = this.messages?.getContext() || 'nocontext';
+		const message = this.#getMessage(logInfo);
+
+		/*  TODO: add trace id??
+			   TODO: add context always */
 		return {
-			context: 'context',
+			context,
 			level,
 			message,
-			metadata,
+			metadata: logInfo.detail,
 			timestamp: new Date(),
 		};
 	}
 
-	#log(infoLog: ILogs) {
+	#log(infoLog: ILogsEntry) {
+		// TODO: implement log transport (elastic, console, bd, file, etc)
 		const message = this.#formatLog(infoLog);
 		switch (infoLog.level) {
 			case ELogLevel.DEBUG:
 				console.debug(message, infoLog.metadata || '');
 				break;
 			case ELogLevel.ERROR:
-				console.error(message, infoLog.metadata);
+				console.error(message, infoLog.metadata || '');
 				break;
 			default:
 				console.error('UNDEFINED LOG TYPE', message);
@@ -49,13 +73,13 @@ export class ServiceLogs implements IPortLogs {
 		console.error('----------------------');
 	}
 
-	debug(message: string, args: unknown) {
-		const infoLog = this.#createLog(ELogLevel.DEBUG, message, args);
-		this.#log(infoLog);
+	debug(logInfo: ILogsMapping) {
+		const log = this.#createLog(ELogLevel.DEBUG, logInfo);
+		this.#log(log);
 	}
 
-	error(message: string, args: unknown) {
-		const infoLog = this.#createLog(ELogLevel.ERROR, message, args);
-		this.#log(infoLog);
+	error(logInfo: ILogsMapping) {
+		const log = this.#createLog(ELogLevel.ERROR, logInfo);
+		this.#log(log);
 	}
 }

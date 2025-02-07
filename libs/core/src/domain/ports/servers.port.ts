@@ -6,8 +6,6 @@ import { IPortMessages } from './messages.port';
 
 export interface IPortServerAdapter {
 	start(microApp: IFrameworkMicroApp): void;
-	errorHandler(server: any, name: string): void;
-	gracefulShutdown(server: any, name: string): void;
 }
 
 export interface IPortServerController {

@@ -139,7 +139,7 @@ export class ServiceCrypto implements IServiceCrypto {
 
 			// Return Buffer.from(JSON.stringify(enc), 'utf-8').toString('base64');
 
-			console.error('ERROR al encriptar', err);
+			// console.error('ERROR al encriptar', err);
 			throw normalizeError({
 				detail: err,
 				errType: 'nocatch',
@@ -189,8 +189,8 @@ export class ServiceCrypto implements IServiceCrypto {
 
 			return decrypted;
 		} catch (err) {
-			console.error('ERROR al desencriptar', err);
-			// Return 'error';
+			/* Console.error('ERROR al desencriptar', err);
+			   Return 'error'; */
 			throw normalizeError({
 				detail: err,
 				errType: 'nocatch',

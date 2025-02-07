@@ -6,12 +6,12 @@ import {
 	IPortMessages,
 	TOKENS,
 } from '../../domain';
-import { Inject, Injectable, normalizeError } from '../../application';
+import { Inject, Injectable, normalizeError } from '..';
 
+// @Injectable(TOKENS.services.messages)
 export abstract class ServiceMessages implements IPortMessages {
-
 	@Inject(TOKENS.services.I18n)
-		protected readonly i18n: IPortI18n
+	protected readonly i18n: IPortI18n;
 
 	protected abstract getMessageConfig(): IMessageConfig;
 
@@ -31,6 +31,11 @@ export abstract class ServiceMessages implements IPortMessages {
 		}
 
 		return '';
+	}
+
+	getContext(): EMessageGroup {
+		const config = this.getMessageConfig();
+		return config.group;
 	}
 
 	#validateMessage(config: IMessageConfig): boolean {

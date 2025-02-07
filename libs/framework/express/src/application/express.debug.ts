@@ -30,29 +30,29 @@ export class ExpressDebug implements IPortFrameworkDebug {
 					});
 				}
 			}
-			this.logs.debug('Exposed routes:', routes);
-			this.logs.debug('Total ammount routes:', routes.length);
+			this.logs.debug({ detail: routes, text: 'Exposed routes:' });
+			this.logs.debug({ detail: routes.length, text: 'Total ammount routes:' });
 		}
 	}
 
 	paths(microApp: IFrameworkMicroApp, req: any, domainInfo: IRoute) {
 		if (this.appConfig.debug.paths) {
-			this.logs.debug('******************');
-			this.logs.debug('DEBUGGING APP URL');
-			this.logs.debug('microAPP:', microApp.name);
-			this.logs.debug('URL:', req.url);
-			this.logs.debug('INFO:', domainInfo);
+			this.logs.debug({ text: '*************' });
+			this.logs.debug({ text: 'DEBUGGING APP URL' });
+			this.logs.debug({ detail: microApp.name, text: 'microAPP' });
+			this.logs.debug({ detail: req.url, text: 'URL' });
+			this.logs.debug({ detail: domainInfo, text: 'DOMAIN' });
 		}
 	}
 
 	cors(microApp: IFrameworkMicroApp, origin: any, info: any) {
 		if (this.appConfig.debug.cors) {
-			this.logs.debug('******************');
-			this.logs.debug('DEBUGGING APP CORS');
-			this.logs.debug('microAPP:', microApp.name);
-			this.logs.debug('Cors config:', microApp.cors);
-			this.logs.debug('Origin:', origin);
-			this.logs.debug('Info:', info);
+			this.logs.debug({ text: '*************' });
+			this.logs.debug({ text: 'DEBUGGING APP CORS' });
+			this.logs.debug({ detail: microApp.name, text: 'microAPP' });
+			this.logs.debug({ detail: microApp.cors, text: 'Cors config' });
+			this.logs.debug({ detail: origin, text: 'Origin' });
+			this.logs.debug({ detail: info, text: 'Info' });
 		}
 	}
 }

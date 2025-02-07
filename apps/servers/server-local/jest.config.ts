@@ -23,6 +23,7 @@ export default {
 	},
 	moduleFileExtensions: ['ts', 'js', 'html'],
 	coverageDirectory: '../../../results/server-local/coverage/',
+	collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
 	testMatch: ['<rootDir>/tests/**/*.spec.ts', '<rootDir>/src/**/*.spec.ts'],
 	setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts'],
 	reporters: [

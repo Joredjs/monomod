@@ -1,7 +1,7 @@
-import { IErrorMapping } from '../interfaces';
+import { IErrorMapping, ILogsMapping } from '../interfaces';
 
 export interface IPortLogs {
 	saveError(errInfo: IErrorMapping): void;
-	debug(message: string, ...args: any): void;
-	error(message: string, ...args: any): void;
+	debug(logInfo: ILogsMapping): void;
+	error(logInfo: ILogsMapping): void;
 }

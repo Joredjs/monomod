@@ -3,7 +3,6 @@ import {
 	IOKResponse,
 	IPortResponseResult,
 	IServices,
-	ITransactionParams,
 	IUseCase,
 	IUseCaseParams,
 } from '@monomod/core/domain';
@@ -21,6 +20,12 @@ export class UseCaseExampleErr<TRepository> implements IUseCase<string> {
 	async execute(): Promise<IOKResponse<string> | IErrResponse> {
 		const test = await this.#appServices.crypto.encrypt('test');
 		console.debug('debugging', test);
-		throw this.#response.resultErr('Example error').unwrap();
+		throw this.#response
+			.resultErr({
+				detail: 'test',
+				errType: 'forbidden',
+				text: 'Example error',
+			})
+			.unwrap();
 	}
 }

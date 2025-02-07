@@ -17,16 +17,12 @@ export class ProjectRegisterServerLocal implements IPortServerRegister {
 	constructor() {
 		this.#container = DIContainer.getInstance();
 		this.#projects = [
-			// New RegistryCore(),
 			new RegistryExpress(),
 			new RegistryServerLocal(),
 		];
 	}
 
 	initialize(): IPortContainer {
-		/* This.#projects.forEach((project) => {
-		   	this.#registerProjectOnce(project);
-		   }); */
 		this.#projects.forEach(this.#registerProjectOnce.bind(this));
 		return this.#container;
 	}

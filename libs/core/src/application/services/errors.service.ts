@@ -2,17 +2,20 @@ import {
 	IErrResponse,
 	IErrorMapping,
 	IPortErrors,
-	IPortLogs,
+	IPortMessages,
 	TOKENS,
 } from '../../domain';
-import { Inject, Injectable } from '../di';
+import { Injectable } from '../di';
 
 @Injectable(TOKENS.services.errors)
 export class ServiceErrors implements IPortErrors {
-	// Constructor(@Inject(TOKENS.services.logs) private readonly logs: IPortLogs) {}
+	constructor(private messages: IPortMessages) {}
 
-	handle(errInfo: IErrorMapping): never {
-		throw this.#normalizeError(errInfo);
+	normalize(errInfo: IErrorMapping): IErrorMapping | IErrResponse {
+		if (errInfo.messageKey) {
+			errInfo.text = this.messages.getMessage(errInfo.messageKey);
+		}
+		return this.#normalizeError(errInfo);
 	}
 
 	isIErrResponse(errInfo: unknown): errInfo is IErrResponse {

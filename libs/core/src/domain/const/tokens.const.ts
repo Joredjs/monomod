@@ -14,7 +14,8 @@ export const TOKENS = {
 	server: {
 		IPortServerAdapter: Symbol('IPortServerAdapter'),
 		IPortServerController: Symbol('IPortServerController'),
-		ServerMessagesService: Symbol('ServerMessagesService'),
+		ServiceLogsServer: Symbol('ServiceLogsServer'),
+		ServiceMessagesServer: Symbol('ServiceMessagesServer'),
 		config: Symbol('configServer'),
 	},
 	services: {

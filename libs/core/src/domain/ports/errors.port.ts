@@ -1,7 +1,7 @@
 import { IErrResponse, IErrorMapping } from '../interfaces';
 
 export interface IPortErrors {
-	handle(errInfo: IErrorMapping): never;
+	normalize(errInfo: IErrorMapping): IErrorMapping | IErrResponse;
 	isIErrResponse(errInfo: unknown): errInfo is IErrResponse;
 	isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping;
 }

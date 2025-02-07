@@ -16,48 +16,6 @@ export function Injectable(token: symbol) {
 	};
 }
 
-/* Export function Injectable(token: symbol) {
-	return (Target: any): void => {
-		Reflect.defineMetadata(INJECTABLE_METADATA_KEY, token, Target);
-
-		// Get property injections
-		const propertyMetadata: PropertyMetadata[] =
-			Reflect.getMetadata(INJECT_METADATA_KEY, Target.prototype) || [];
-
-		// Create new constructor
-		const newConstructor: any = (...args: any[]): void => {
-			const instance = new Target(...args);
-
-			// Inject properties
-			propertyMetadata.forEach((metadata) => {
-				const container = DIContainer.getInstance();
-				Object.defineProperty(instance, metadata.propertyKey, {
-					enumerable: true,
-					value: container.resolve(metadata.token),
-					writable: false,
-				});
-			});
-
-			return instance;
-		};
-
-		newConstructor.prototype = Target.prototype;
-		return newConstructor;
-	};
-}
- */
-/*
-Export function Inject(token: symbol) {
-	return (target: any, propertyKey: string, parameterIndex: number) => {
-		const params = Reflect.getMetadata('design:paramtypes', target) || [];
-		// console.debug('target', target);
-		// console.debug('params', params);
-		params[parameterIndex] = token;
-		Reflect.defineMetadata('design:paramtypes', params, target);
-	};
-}
- */
-
 export function Inject(token: symbol) {
 	return (
 		target: any,

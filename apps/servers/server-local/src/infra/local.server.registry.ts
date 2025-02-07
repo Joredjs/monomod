@@ -1,10 +1,10 @@
+import { AdapterServerLocal, ServiceLogsServer } from '../application';
 import {
 	IContainerComponent,
 	IPortContainer,
 	IPortRegistry,
 	TOKENS,
 } from '@monomod/core/domain';
-import { AdapterServerLocalExpress } from '../application';
 import { ControllerServerLocal } from './local.server.controller';
 import { localServerConfig } from '../domain';
 
@@ -12,11 +12,15 @@ export class RegistryServerLocal implements IPortRegistry {
 	#components: IContainerComponent[] = [
 		{
 			token: TOKENS.server.IPortServerAdapter,
-			value: AdapterServerLocalExpress,
+			value: AdapterServerLocal,
 		},
 		{
 			token: TOKENS.server.IPortServerController,
 			value: ControllerServerLocal,
+		},
+		{
+			token: TOKENS.server.ServiceLogsServer,
+			value: ServiceLogsServer,
 		},
 		{ isConstant: true, token: TOKENS.server.config, value: localServerConfig },
 	];
@@ -25,12 +29,12 @@ export class RegistryServerLocal implements IPortRegistry {
 		return this.constructor.name;
 	}
 
-	registerDependency(container: IPortContainer): IPortContainer {
+	registerDependency(container: IPortContainer): void {
 		this.#components.forEach((component) => {
 			if (!container.hasRegistration(component.token)) {
 				container.register(component);
 			}
 		});
-		return container;
+		// Return container;
 	}
 }

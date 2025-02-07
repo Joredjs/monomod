@@ -25,7 +25,11 @@
 				"libs/framework/express/src/infra/index.ts"
 			],
 			"@monomod/gateway": ["libs/gateway/src/index.ts"],
-			"@monomod/module-example": ["modules/example/src/index.ts"]
+			"@monomod/module-example": ["modules/example/src/index.ts"],
+			"@monomod/server-local/application": [
+				"apps/servers/server-local/src/application"
+			],
+			"@monomod/server-local/infra": ["apps/servers/server-local/src/infra"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

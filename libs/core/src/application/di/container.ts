@@ -20,7 +20,7 @@ export class DIContainer implements IPortContainer {
 	}
 
 	register(component: IContainerComponent) {
-		console.debug('Registering:', component);
+		// Console.debug('Registering:', component);
 		if (component.isConstant) {
 			this.#constants.set(component.token, component.value);
 			return;
@@ -41,9 +41,9 @@ export class DIContainer implements IPortContainer {
 			// Console.debug('registering', token);
 		}
 
-		console.debug('dependencies', this.#dependencies);
-		console.debug('instances', this.#instances);
-		console.debug('constants', this.#constants);
+		/* Console.debug('dependencies', this.#dependencies);
+		   console.debug('instances', this.#instances);
+		   console.debug('constants', this.#constants); */
 	}
 
 	#createInstance<T>(Implementation: new (...args: any[]) => T): T {
@@ -73,7 +73,7 @@ export class DIContainer implements IPortContainer {
 	}
 
 	resolve<T>(token: symbol): T {
-		console.debug('REsolving', token);
+		// Console.debug('REsolving', token);
 
 		if (this.#instances.has(token)) {
 			return this.#instances.get(token);

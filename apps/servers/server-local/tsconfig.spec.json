@@ -12,6 +12,8 @@
 		"src/**/*.test.ts",
 		"src/**/*.spec.ts",
 		"src/**/*.d.ts",
-		"tests/**/*.spec.ts"
+		"tests/**/*.spec.ts",
+		"tests/**/*.mock.ts",
+		"tests/main.spec.ts"
 	]
 }

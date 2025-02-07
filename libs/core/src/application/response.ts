@@ -6,6 +6,7 @@ import {
 	IErrorMapping,
 	IOKResponse,
 	IPortLogs,
+	IPortResponseResult,
 	Result,
 	TOKENS,
 	TResultErr,
@@ -14,17 +15,14 @@ import {
 import { isIErrResponse, isIErrorMapping, normalizeError } from './errors';
 import { Inject } from './di';
 
-export class ResponseResult {
+export class ResponseResult implements IPortResponseResult {
 	@Inject(TOKENS.services.logs) readonly logs: IPortLogs;
-
-	/* Constructor() {
-	   	// this.#logs = logs;
-	   } */
 
 	#createErrorResponse(errInfo: IErrorMapping): IErrResponse {
 		const msj: IError = ERRORS[errInfo.errType];
 		const detail = errInfo.showDetail ? errInfo.detail : ERRORS.nodetail.text;
 
+		// TODO: translate error text
 		return {
 			code: msj.code,
 			error: {

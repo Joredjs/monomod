@@ -61,19 +61,10 @@ export class ServiceI18n implements IPortI18n {
 				? match
 				: info.params[idx].toString();
 		});
-
-		/* Return template.replace(/\$(\d+)/g, (match, index) => {
-		     const paramIndex = parseInt(index, 10);
-		     if (paramIndex >= params.length) {
-		       return match; // Mantener el placeholder si no hay parámetro
-		     }
-		     return String(params[paramIndex] ?? match);
-		   }); */
 	}
 
 	getText(info: ITextInfo): string {
 		try {
-			// Return this.translations[this.currentLanguage]?.[params.group]?.[params.type]?.[params.key];
 			const cacheKey = `${this.#currentLanguage}.${info.group}.${info.type}.${
 				info.key
 			}`;

@@ -3,8 +3,9 @@ import {
 	IPortServerController,
 	TOKENS,
 } from '@monomod/core/domain';
-import { ProjectRegisterServerLocal } from './infra/local.server.project.register';
-import { normalizeError } from '@monomod/core/application';
+import { ProjectRegisterServerLocal } from './infra';
+import { ServiceErrors } from '@monomod/core/application';
+import { ServiceMessagesServer } from './application';
 
 async function bootstrap() {
 	const container: IPortContainer =
@@ -17,5 +18,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error) => {
-	console.error(normalizeError(error));
+	const errors = new ServiceErrors(new ServiceMessagesServer());
+	console.error(errors.normalize(error));
 });

@@ -10,12 +10,12 @@ export class RegistryExpress implements IPortRegistry {
 		return this.constructor.name;
 	}
 
-	registerDependency(container: IPortContainer): IPortContainer {
+	registerDependency(container: IPortContainer): void {
 		this.#components.forEach((component) => {
 			if (!container.hasRegistration(component.token)) {
 				container.register(component);
 			}
 		});
-		return container;
+		// Return container;
 	}
 }

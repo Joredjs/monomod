@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-// Import the mock decorators
-import './mocks/decorators.mock';
-
 // Global Jest setup
 beforeAll(() => {
-	// Setup code
+	jest.clearAllMocks();
 });
 
 afterAll(() => {
 	// Cleanup code
 });
+
+
+process.env.NODE_ENV = 'test';

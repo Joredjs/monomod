@@ -45,7 +45,7 @@ export class SecurityClass<TFwReq extends IRequestParams> {
 		return false;
 	}
 
-	// TODO: Is it correct this to be here?
+	// TODO: Is it correct this to be here (resultErr)?
 	public emptyHandler(
 		info: ITransactionValid
 	): Promise<IOKResponse<string> | IErrResponse> {
