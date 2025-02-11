@@ -1,15 +1,13 @@
 import {
+	DEFAULTS,
 	IDomainGroup,
 	IPortFrameworkDebug,
 	IPortFrameworkMiddleware,
 	IPortFrameworkService,
-	IPortLogs,
 	IPortResponseResult,
 	IRoute,
-	IServerConfig,
-	TOKENS,
+	SYMBOLS,
 	TVersion,
-	domainKeys,
 } from '@monomod/core/domain';
 import {
 	IExpressMicroApp,
@@ -22,16 +20,16 @@ import cors from 'cors';
 
 // TODO: recieve the service in constructor
 
-@Injectable(TOKENS.framework.IFrameworkMiddleware)
+@Injectable(SYMBOLS.framework.IFrameworkMiddleware)
 export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 	implements IPortFrameworkMiddleware<TFwRes, TFwReq, TFwNext>
 {
 	#response: IPortResponseResult;
 
-	@Inject(TOKENS.framework.IFrameworkDebug)
+	@Inject(SYMBOLS.framework.IFrameworkDebug)
 	private debug: IPortFrameworkDebug;
 
-	@Inject(TOKENS.framework.IFrameworkService)
+	@Inject(SYMBOLS.framework.IFrameworkService)
 	private service: IPortFrameworkService<TFwRes>;
 
 	// eslint-disable-next-line max-params
@@ -93,7 +91,7 @@ export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 			origin(originCors, callback) {
 				originCors = originCors ?? false;
 
-				const isMyOrigin = originCors === domainKeys.core.cors.origin;
+				const isMyOrigin = originCors === DEFAULTS.cors.origin;
 				const isDomainAllowed =
 					microApp.cors.dnsDomains.indexOf(originCors) !== -1;
 				const isLocalhostAllowed =

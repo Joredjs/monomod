@@ -4,13 +4,13 @@ import {
 	IMessageConfig,
 	IPortI18n,
 	IPortMessages,
-	TOKENS,
+	SYMBOLS,
 } from '../../domain';
-import { Inject, Injectable, normalizeError } from '..';
+import { Inject, normalizeError } from '..';
 
 // @Injectable(TOKENS.services.messages)
 export abstract class ServiceMessages implements IPortMessages {
-	@Inject(TOKENS.services.I18n)
+	@Inject(SYMBOLS.services.I18n)
 	protected readonly i18n: IPortI18n;
 
 	protected abstract getMessageConfig(): IMessageConfig;

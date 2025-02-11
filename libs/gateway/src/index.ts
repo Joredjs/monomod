@@ -4,18 +4,15 @@ import {
 	IPortLogs,
 	IRequestParams,
 	IResponseParams,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, normalizeError } from '@monomod/core/application';
 import { AdapterApi } from './infra';
 
-export class ApiCore<
-	TFwReq extends IRequestParams,
-	TFwRes extends IResponseParams
-> {
+export class ApiCore<TFwReq extends IRequestParams, TFwRes extends IResponseParams> {
 	// #framework: IPortFrameworkService<TFwRes>;
 
-	@Inject(TOKENS.framework.IFrameworkService)
+	@Inject(SYMBOLS.framework.IFrameworkService)
 	private framework: IPortFrameworkService<TFwRes>;
 
 	/* Constructor(frameworkService: IPortFrameworkService<TFwRes>) {

@@ -41,7 +41,7 @@ export class ServiceMail {
 			await this.#transporter.sendMail(this.#mailOptions);
 			return true;
 		} catch (error) {
-			console.error('Error al enviar el correo');
+			// Console.error('Error al enviar el correo');
 			throw normalizeError(error);
 		}
 	}

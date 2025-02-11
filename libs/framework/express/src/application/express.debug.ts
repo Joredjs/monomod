@@ -5,15 +5,15 @@ import {
 	IPortLogs,
 	IRoute,
 	IServerConfig,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, Injectable } from '@monomod/core/application';
 
-@Injectable(TOKENS.framework.IFrameworkDebug)
+@Injectable(SYMBOLS.framework.IFrameworkDebug)
 export class ExpressDebug implements IPortFrameworkDebug {
-	@Inject(TOKENS.services.logs) private logs: IPortLogs;
+	@Inject(SYMBOLS.services.logs) private logs: IPortLogs;
 
-	@Inject(TOKENS.server.config) private appConfig: IServerConfig;
+	@Inject(SYMBOLS.server.config) private appConfig: IServerConfig;
 
 	routes(apps: IMicroApp) {
 		if (this.appConfig.debug.routes) {

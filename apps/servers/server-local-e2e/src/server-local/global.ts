@@ -5,7 +5,7 @@ import {
 	IFrameworkMicroApp,
 	IPortFrameworkAdapter,
 	IRoute,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { ApiCore } from '@monomod/gateway';
 import { Inject } from '@monomod/core/application';
@@ -21,7 +21,7 @@ interface EndpointInfo {
 export class TestHelper {
 	private static endpoints: Map<string, EndpointInfo> = new Map();
 
-	@Inject(TOKENS.framework.IFrameworkAdapter)
+	@Inject(SYMBOLS.framework.IFrameworkAdapter)
 	private readonly frameworkAdapter: IPortFrameworkAdapter;
 
 	async loadEndpoints() {

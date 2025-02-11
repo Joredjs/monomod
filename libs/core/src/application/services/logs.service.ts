@@ -5,11 +5,11 @@ import {
 	ILogsMapping,
 	IPortLogs,
 	IPortMessages,
-	TOKENS,
+	SYMBOLS,
 } from '../../domain';
 import { Injectable } from '../di';
 
-@Injectable(TOKENS.services.logs)
+@Injectable(SYMBOLS.services.logs)
 export class ServiceLogs implements IPortLogs {
 	constructor(private messages: IPortMessages) {}
 

@@ -1,7 +1,7 @@
 import {
 	IPortContainer,
 	IPortServerController,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { ProjectRegisterServerLocal } from './infra';
 import { ServiceErrors } from '@monomod/core/application';
@@ -12,7 +12,7 @@ async function bootstrap() {
 		new ProjectRegisterServerLocal().initialize();
 
 	const serverController = container.resolve<IPortServerController>(
-		TOKENS.server.IPortServerController
+		SYMBOLS.server.IPortServerController
 	);
 	await serverController.deploy();
 }

@@ -1,46 +1,46 @@
 import {
-	IErrResponse,
 	IErrorMapping,
 	IPortErrors,
 	IPortMessages,
-	TOKENS,
+	SYMBOLS,
 } from '../../domain';
 import { Injectable } from '../di';
 
-@Injectable(TOKENS.services.errors)
+@Injectable(SYMBOLS.services.errors)
 export class ServiceErrors implements IPortErrors {
 	constructor(private messages: IPortMessages) {}
 
-	normalize(errInfo: IErrorMapping): IErrorMapping | IErrResponse {
+	normalize(errInfo: IErrorMapping): IErrorMapping {
 		if (errInfo.messageKey) {
 			errInfo.text = this.messages.getMessage(errInfo.messageKey);
 		}
 		return this.#normalizeError(errInfo);
 	}
 
-	isIErrResponse(errInfo: unknown): errInfo is IErrResponse {
-		return (
-			errInfo !== null &&
-			typeof errInfo === 'object' &&
-			'code' in errInfo &&
-			'error' in errInfo &&
-			typeof errInfo.error === 'object' &&
-			'detail' in errInfo.error &&
-			'text' in errInfo.error
-		);
-	}
+	/* IsIErrResponse(errInfo: unknown): errInfo is IErrResponse {
+	   	return (
+	   		errInfo !== null &&
+	   		typeof errInfo === 'object' &&
+	   		'code' in errInfo &&
+	   		'error' in errInfo &&
+	   		typeof errInfo.error === 'object' &&
+	   		'detail' in errInfo.error &&
+	   		'text' in errInfo.error
+	   	);
+	   } */
 
-	isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping {
-		return (
-			errInfo !== null &&
-			typeof errInfo === 'object' &&
-			'detail' in errInfo &&
-			'errType' in errInfo
-		);
-	}
+	/* isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping {
+	   	return (
+	   		errInfo !== null &&
+	   		typeof errInfo === 'object' &&
+	   		'detail' in errInfo &&
+	   		'errType' in errInfo
+	   	);
+	   } */
 
-	#normalizeError(errInfo: IErrorMapping): IErrorMapping | IErrResponse {
-		if (errInfo && typeof errInfo === 'object') {
+	#normalizeError(errInfo: IErrorMapping): IErrorMapping {
+		return errInfo as IErrorMapping;
+		/* If (errInfo && typeof errInfo === 'object') {
 			if (this.isIErrResponse(errInfo)) {
 				// It's likely an IErrResponse
 				return errInfo as IErrResponse;
@@ -63,6 +63,6 @@ export class ServiceErrors implements IPortErrors {
 		return {
 			detail: typeof errInfo === 'string' ? errInfo : JSON.stringify(errInfo),
 			errType: 'nocatch',
-		};
+		}; */
 	}
 }

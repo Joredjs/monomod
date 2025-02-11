@@ -1,4 +1,4 @@
-import { EMessageGroup, EMessageType } from '../const/messages.const';
+import { EMessageGroup, EMessageType } from '../const';
 import { TLanguage } from './language.interface';
 
 export interface ITextInfo {

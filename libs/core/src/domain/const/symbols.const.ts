@@ -1,4 +1,4 @@
-export const TOKENS = {
+export const SYMBOLS = {
 	/* Dependencies: {
 	   	// core: Symbol('CoreDependenciesFactory'),
 	   	// express: Symbol('ExpressDependenciesFactory'),

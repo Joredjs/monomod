@@ -3,7 +3,7 @@ import {
 	IPortErrors,
 	IPortLogs,
 	IPortServerAdapter,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, Injectable } from '@monomod/core/application';
 
@@ -12,11 +12,11 @@ interface IAdapterParams {
 	name: string;
 }
 
-@Injectable(TOKENS.server.IPortServerAdapter)
+@Injectable(SYMBOLS.server.IPortServerAdapter)
 export class AdapterServerLocal implements IPortServerAdapter {
 	constructor(
-		@Inject(TOKENS.server.ServiceLogsServer) private logs: IPortLogs,
-		@Inject(TOKENS.services.errors) private errors: IPortErrors
+		@Inject(SYMBOLS.server.ServiceLogsServer) private logs: IPortLogs,
+		@Inject(SYMBOLS.services.errors) private errors: IPortErrors
 	) {}
 
 	#validateMicroApp(microApp: IFrameworkMicroApp): void {

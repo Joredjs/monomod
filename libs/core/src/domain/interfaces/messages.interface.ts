@@ -1,4 +1,4 @@
-import { EMessageGroup, EMessageType } from '../const/messages.const';
+import { EMessageGroup, EMessageType } from '../const';
 
 export interface IMessageConfig {
 	group: EMessageGroup;

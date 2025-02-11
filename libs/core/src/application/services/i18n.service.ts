@@ -3,15 +3,15 @@ import {
 	EMessageType,
 	IPortI18n,
 	ITextInfo,
+	SYMBOLS,
 	TLanguage,
-	TOKENS,
 	TRANSLATIONS,
 } from '../../domain';
-import { DEFAULTS } from '../../domain/const/defaults.const';
+import { DEFAULTS } from '../../domain/const';
 import { Injectable } from '../di';
 import { normalizeError } from '../errors';
 
-@Injectable(TOKENS.services.I18n)
+@Injectable(SYMBOLS.services.I18n)
 export class ServiceI18n implements IPortI18n {
 	#defaultLanguage: TLanguage = DEFAULTS.language;
 

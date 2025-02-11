@@ -3,6 +3,8 @@ import {
 	IErrorMapping,
 } from '../domain';
 
+// TODO: migrate from this file to errors.service
+
 export function isIErrResponse(errInfo: unknown): errInfo is IErrResponse {
 	return (
 		errInfo !== null &&
@@ -24,7 +26,9 @@ export function isIErrorMapping(errInfo: unknown): errInfo is IErrorMapping {
 	);
 }
 
-export function normalizeError(errInfo: IErrorMapping): IErrorMapping | IErrResponse {
+export function normalizeError(
+	errInfo: IErrorMapping | unknown
+): IErrorMapping | IErrResponse {
 	if (errInfo && typeof errInfo === 'object') {
 		if (isIErrResponse(errInfo)) {
 			// It's likely an IErrResponse

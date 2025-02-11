@@ -7,11 +7,9 @@
 	"include": [],
 	"references": [
 		{
-			"composite": true,
 			"path": "./tsconfig.lib.json"
 		},
 		{
-			"composite": true,
 			"path": "./tsconfig.spec.json"
 		}
 	]

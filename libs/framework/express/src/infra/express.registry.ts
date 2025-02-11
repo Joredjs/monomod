@@ -1,9 +1,9 @@
-import { IPortContainer, IPortRegistry, TOKENS } from '@monomod/core/domain';
+import { IPortContainer, IPortRegistry, SYMBOLS } from '@monomod/core/domain';
 import { ExpressFactory } from '../application';
 
 export class RegistryExpress implements IPortRegistry {
 	#components = [
-		{ token: TOKENS.framework.IFrameworkFactory, value: ExpressFactory },
+		{ token: SYMBOLS.framework.IFrameworkFactory, value: ExpressFactory },
 	];
 
 	getName(): string {

@@ -1,6 +1,4 @@
-import { ServiceEncode } from './encode.service';
-/* Import { normalizeError } from '../errors';
-   Import { mocks } from '../mocks'; */
+import { ServiceEncode } from '@monomod/core/application';
 
 describe('ServiceEncode', () => {
 	let serviceEncode: ServiceEncode = new ServiceEncode();

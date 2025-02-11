@@ -1,30 +1,33 @@
-import { isIErrResponse, isIErrorMapping, normalizeError } from './errors';
-import { mocks } from '../domain';
-
+import {
+	isIErrResponse,
+	isIErrorMapping,
+	normalizeError,
+} from '@monomod/core/application';
+import { mockErrors } from '../mocks/errors.mock';
 
 // #region helpers
 
 function assertIsNotFormattedError(fnToCheck) {
-	expect(fnToCheck(mocks.errNoFormat)).toBe(false);
-	expect(fnToCheck(mocks.errNoFormat2)).toBe(false);
+	expect(fnToCheck(mockErrors.errNoFormat)).toBe(false);
+	expect(fnToCheck(mockErrors.errNoFormat2)).toBe(false);
 	expect(fnToCheck(null)).toBe(false);
 	expect(fnToCheck(undefined)).toBe(false);
-	expect(fnToCheck(mocks.errNoFormat3)).toBe(false);
-	expect(fnToCheck(mocks.errNoFormat4)).toBe(false);
-	expect(fnToCheck(mocks.errNumber)).toBe(false);
-	expect(fnToCheck(mocks.errObj)).toBe(false);
-	expect(fnToCheck(mocks.errStr)).toBe(false);
+	expect(fnToCheck(mockErrors.errNoFormat3)).toBe(false);
+	expect(fnToCheck(mockErrors.errNoFormat4)).toBe(false);
+	expect(fnToCheck(mockErrors.errNumber)).toBe(false);
+	expect(fnToCheck(mockErrors.errObj)).toBe(false);
+	expect(fnToCheck(mockErrors.errStr)).toBe(false);
 }
 
 function assertIsIErrResponse() {
-	expect(isIErrResponse(mocks.errIErrResponse)).toBe(true);
-	expect(isIErrResponse(mocks.errIErrorMapping)).toBe(false);
+	expect(isIErrResponse(mockErrors.errIErrResponse)).toBe(true);
+	expect(isIErrResponse(mockErrors.errIErrorMappingInvalid)).toBe(false);
 	assertIsNotFormattedError(isIErrResponse);
 }
 
 function assertIsIErrorMapping() {
-	expect(isIErrorMapping(mocks.errIErrorMapping)).toBe(true);
-	expect(isIErrorMapping(mocks.errIErrResponse)).toBe(false);
+	expect(isIErrorMapping(mockErrors.errIErrorMappingInvalid)).toBe(true);
+	expect(isIErrorMapping(mockErrors.errIErrResponse)).toBe(false);
 	assertIsNotFormattedError(isIErrorMapping);
 }
 
@@ -38,7 +41,7 @@ function assertNormalizeError(mock, expected) {
 
 describe('isIErrResponse', () => {
 	it('should return true for valid IErrResponse objects', () => {
-		expect(isIErrResponse(mocks.errIErrResponse)).toBe(true);
+		expect(isIErrResponse(mockErrors.errIErrResponse)).toBe(true);
 	});
 
 	it('should return false for invalid objects', () => {
@@ -48,7 +51,7 @@ describe('isIErrResponse', () => {
 
 describe('isIErrorMapping', () => {
 	it('should return true for valid IErrorMapping objects', () => {
-		expect(isIErrorMapping(mocks.errIErrorMapping)).toBe(true);
+		expect(isIErrorMapping(mockErrors.errIErrorMappingInvalid)).toBe(true);
 	});
 
 	it('should return false for invalid objects', () => {
@@ -58,38 +61,44 @@ describe('isIErrorMapping', () => {
 
 describe('normalizeError', () => {
 	it('should return the same IErrResponse if already in the correct format', () => {
-		assertNormalizeError(mocks.errIErrResponse, mocks.errIErrResponse);
+		assertNormalizeError(
+			mockErrors.errIErrResponse,
+			mockErrors.errIErrResponse
+		);
 	});
 
 	it('should return the same IErrorMapping if already in the correct format', () => {
-		assertNormalizeError(mocks.errIErrorMapping, mocks.errIErrorMapping);
+		assertNormalizeError(
+			mockErrors.errIErrorMappingInvalid,
+			mockErrors.errIErrorMappingInvalid
+		);
 	});
 
 	it('should convert an object to IErrorMapping with "nocatch" errType if it is not in the correct format', () => {
 		const expected = {
 			detail: JSON.stringify(
-				mocks.errObj,
-				Object.getOwnPropertyNames(mocks.errObj)
+				mockErrors.errObj,
+				Object.getOwnPropertyNames(mockErrors.errObj)
 			),
 			errType: 'nocatch',
 		};
-		assertNormalizeError(mocks.errObj, expected);
+		assertNormalizeError(mockErrors.errObj, expected);
 	});
 
 	it('should convert a string to IErrorMapping with "nocatch" errType', () => {
 		const expected = {
-			detail: mocks.errStr,
+			detail: mockErrors.errStr,
 			errType: 'nocatch',
 		};
-		assertNormalizeError(mocks.errStr, expected);
+		assertNormalizeError(mockErrors.errStr, expected);
 	});
 
 	it('should convert an unknown error format to IErrorMapping with "nocatch" errType', () => {
 		const expected = {
-			detail: JSON.stringify(mocks.errNumber),
+			detail: JSON.stringify(mockErrors.errNumber),
 			errType: 'nocatch',
 		};
-		assertNormalizeError(mocks.errNumber, expected);
+		assertNormalizeError(mockErrors.errNumber, expected);
 	});
 });
 

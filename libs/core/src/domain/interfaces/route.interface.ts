@@ -1,4 +1,4 @@
-import { EPrivacyLevel, TDomainGroups, TVersion } from '../const/modules.const';
+import { EPrivacyLevel, TDomainGroups, TVersion } from '../const';
 import { ISchemaObject, TRouteSchema } from './schema.interface';
 import { IHeadersStructure } from './validations.interface';
 import { IPort } from '../ports';

@@ -1,6 +1,6 @@
-import { IHeadersPrefix } from '../interfaces/validations.interface';
+import { IHeadersPrefix } from '../interfaces';
 
-export const headersPrefix: IHeadersPrefix = {
+export const HEADERPREFIX: IHeadersPrefix = {
 	v1: {
 		letter: 'x',
 		prefix: 'monomod',

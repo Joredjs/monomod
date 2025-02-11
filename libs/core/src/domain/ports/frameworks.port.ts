@@ -6,7 +6,6 @@ import {
 	IFrameworkResponseInfo,
 	IMicroApp,
 	IRoute,
-	IServerConfig,
 } from '../interfaces';
 import { TVersion } from '../const';
 

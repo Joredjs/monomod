@@ -17,13 +17,15 @@ export interface ICryptoOptions {
 	key: { valor: string; size?: number; hash: CipherKey };
 	mode: CipherCCMTypes;
 	modeInfo?: CipherInfo;
-	tag: NodeJS.ArrayBufferView;
+	// Tag: NodeJS.ArrayBufferView;
+	tag: Buffer;
 	texto: Buffer;
 	vector: { valor?: Buffer; size?: number; hash: BinaryLike };
 }
 
 export interface ICryptoRequest {
 	tag: Buffer;
+	// Tag: NodeJS.ArrayBufferView;
 	texto: Buffer;
 	vector: Buffer;
 }
@@ -38,11 +40,11 @@ export interface ICryptoResponse {
 	x0x3?: string;
 }
 
-export interface ITypesCrypto {
-	CCMCipher: any;
-	CCMDecipher: any;
-	CCMTypes: any;
-}
+/* Export interface ITypesCrypto {
+   	CCMCipher: any;
+   	CCMDecipher: any;
+   	CCMTypes: any;
+   } */
 
 export interface ICryptoClient {
 	decrypt: any;

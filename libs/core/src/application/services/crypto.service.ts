@@ -1,18 +1,16 @@
 import {
+	DEFAULTS,
 	ERRORS,
 	ICryptoClient,
 	ICryptoOptions,
 	ICryptoRequest,
 	ICryptoResponse,
-	IServiceCrypto,
-	domainKeys
+	IPortCrypto,
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 import { normalizeError } from '../errors';
 
-
-
-export class ServiceCrypto implements IServiceCrypto {
+export class ServiceCrypto implements IPortCrypto {
 	#client: ICryptoClient;
 
 	#cryptoOptions: ICryptoOptions;
@@ -27,7 +25,7 @@ export class ServiceCrypto implements IServiceCrypto {
 			hashType: 'sha256',
 			key: { hash: 'x', valor: process.env.CRYPTO_key },
 			mode: 'aes-256-ccm',
-			tag: new Int32Array(client.random(domainKeys.core.crypto.defaultBytes)),
+			tag: new Int32Array(client.random(DEFAULTS.crypto.bytes)),
 			texto: Buffer.from('x', 'utf-8'),
 			vector: {
 				hash: 'x',
@@ -105,7 +103,7 @@ export class ServiceCrypto implements IServiceCrypto {
 				this.#cryptoOptions.key.hash,
 				this.#cryptoOptions.vector.hash,
 				{
-					authTagLength: domainKeys.core.crypto.defaultAuthTagLength,
+					authTagLength: DEFAULTS.crypto.authTagLength,
 				}
 			);
 
@@ -170,7 +168,7 @@ export class ServiceCrypto implements IServiceCrypto {
 				this.#cryptoOptions.key.hash,
 				this.#cryptoOptions.vector.hash,
 				{
-					authTagLength: domainKeys.core.crypto.defaultAuthTagLength,
+					authTagLength: DEFAULTS.crypto.authTagLength,
 				}
 			);
 

@@ -14,8 +14,8 @@ import {
 } from '../interfaces';
 import { IMailClient, IServiceMail } from './mail.port';
 import { IDatabaseAdapter } from './database.port';
+import { IPortCrypto } from './crypto.port';
 import { IPortResponseResult } from './result.port';
-import { IServiceCrypto } from './crypto.port';
 import { IServiceHeader } from './headers.port';
 import { IServiceSchema } from './schema.port';
 import { IServiceStorage } from './storage.port';
@@ -43,7 +43,7 @@ export type TPorts = {
 };
 
 export interface IServices {
-	crypto?: IServiceCrypto;
+	crypto?: IPortCrypto;
 	db?: IDatabaseAdapter;
 	encode?: {
 		encode(texto: string): string;

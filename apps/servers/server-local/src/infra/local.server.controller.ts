@@ -4,18 +4,18 @@ import {
 	IPortLogs,
 	IPortServerAdapter,
 	IPortServerController,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, Injectable } from '@monomod/core/application';
 
-@Injectable(TOKENS.server.IPortServerController)
+@Injectable(SYMBOLS.server.IPortServerController)
 export class ControllerServerLocal implements IPortServerController {
 	constructor(
-		@Inject(TOKENS.server.ServiceLogsServer)
+		@Inject(SYMBOLS.server.ServiceLogsServer)
 		private readonly logs: IPortLogs,
-		@Inject(TOKENS.framework.IFrameworkAdapter)
+		@Inject(SYMBOLS.framework.IFrameworkAdapter)
 		private readonly frameworkAdapter: IPortFrameworkAdapter,
-		@Inject(TOKENS.server.IPortServerAdapter)
+		@Inject(SYMBOLS.server.IPortServerAdapter)
 		private readonly serverAdapter: IPortServerAdapter
 	) {}
 

@@ -84,6 +84,7 @@ export class ServiceSchema {
 
 		try {
 			const validate = this.#validator.compile<MyData>(properties);
+
 			if (!validate(params)) {
 				let validateError = '';
 				validate.errors.some((error) => {

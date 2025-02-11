@@ -15,25 +15,42 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 		this.#storage.Client = new storage.Client({ region: 'us-east-1' });
 	}
 
+	#getUploadBuffer(
+		name: string,
+		data: string
+	): { buffer: Buffer; name: string } {
+		const matches = data.match(PATTERNS.imagenb64);
+
+		if (!matches) {
+			throw normalizeError({
+				detail: matches,
+				errType: 'invalid',
+				text: 'Objeto no válido para subir al storage',
+			});
+		}
+
+		const [base64Data, extension] = matches;
+		name = `${name}.${extension}`;
+
+		const [, base64] = base64Data.split(',');
+
+		const buffer = Buffer.from(base64, 'base64');
+
+		return { buffer, name };
+	}
+
 	async upload(name: string, data: string, path?: string): Promise<string> {
 		try {
-			const matches = data.match(PATTERNS.imagenb64);
-
-			const [base64Data, extension] = matches;
-			name = `${name}.${extension}`;
-
-			const [, base64] = base64Data.split(',');
-
-			const buffer = Buffer.from(base64, 'base64');
+			const { buffer, name: _name } = this.#getUploadBuffer(name, data);
 
 			const params: TGTStorage['addInput'] = {
 				Body: buffer,
 				Bucket: this.#bucketName,
-				Key: name,
+				Key: _name,
 			};
 
 			if (path) {
-				params.Key = `${path}/${name}`;
+				params.Key = `${path}/${_name}`;
 			}
 
 			const response: TGTStorage['addOutput'] = await this.#storage.Client.send(
@@ -52,6 +69,7 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 				text: 'Error al subir objeto al storage',
 			});
 		} catch (error) {
+			// Console.error('ERR', error);
 			throw normalizeError(error);
 		}
 	}
@@ -74,7 +92,9 @@ export class ServiceStorage<TGTStorage extends ITypesStorage> {
 			const objectData = (await response.Body) as Readable;
 			const buffers: Uint8Array[] = [];
 			for await (const chunk of objectData) {
-				buffers.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk));
+				buffers.push(
+					chunk instanceof Uint8Array ? chunk : new Uint8Array(chunk)
+				);
 			}
 			const buffer = Buffer.concat(buffers);
 

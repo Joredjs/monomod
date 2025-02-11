@@ -1,7 +1,7 @@
 // test/registry-server-local.spec.ts
 import { RegistryServerLocal } from '../src/infra/local.server.registry';
 import { createMockContainer } from './mocks/shared.mock';
-import { TOKENS } from '@monomod/core/domain';
+import { SYMBOLS } from '@monomod/core/domain';
 import { ControllerServerLocal } from '@monomod/server-local/infra';
 import { AdapterServerLocal } from '@monomod/server-local/application';
 import { localServerConfig } from '../src/domain/local.server.config';
@@ -30,20 +30,20 @@ describe('RegistryServerLocal', () => {
 
 			expect(mockContainer.register).toHaveBeenCalledTimes(4);
 			expect(mockContainer.register).toHaveBeenCalledWith({
-				token: TOKENS.server.IPortServerAdapter,
+				token: SYMBOLS.server.IPortServerAdapter,
 				value: AdapterServerLocal,
 			});
 			expect(mockContainer.register).toHaveBeenCalledWith({
-				token: TOKENS.server.IPortServerController,
+				token: SYMBOLS.server.IPortServerController,
 				value: ControllerServerLocal,
 			});
 			expect(mockContainer.register).toHaveBeenCalledWith({
-				token: TOKENS.server.ServiceLogsServer,
+				token: SYMBOLS.server.ServiceLogsServer,
 				value: ServiceLogsServer,
 			});
 			expect(mockContainer.register).toHaveBeenCalledWith({
 				isConstant: true,
-				token: TOKENS.server.config,
+				token: SYMBOLS.server.config,
 				value: localServerConfig,
 			});
 		});
@@ -72,12 +72,12 @@ describe('RegistryServerLocal', () => {
 			expect(registeredComponents).toEqual(
 				expect.arrayContaining([
 					{
-						token: TOKENS.server.IPortServerAdapter,
+						token: SYMBOLS.server.IPortServerAdapter,
 						value: AdapterServerLocal,
 					},
 					{
 						isConstant: true,
-						token: TOKENS.server.config,
+						token: SYMBOLS.server.config,
 						value: localServerConfig,
 					},
 				])

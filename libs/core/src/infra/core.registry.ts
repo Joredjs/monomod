@@ -1,10 +1,7 @@
-import { IPortContainer, IPortRegistry, TOKENS } from '../domain';
-import { ServiceErrors } from '../application/services/errors.service';
+import { IPortContainer, IPortRegistry } from '../domain';
 
 export class RegistryCore implements IPortRegistry {
-	#components = [
-		// { token: TOKENS.services.errors, value: ServiceErrors }
-	];
+	#components = [];
 
 	getName(): string {
 		return this.constructor.name;

@@ -4,18 +4,18 @@ import {
 	IPortFrameworkAdapter,
 	IPortFrameworkDebug,
 	IPortFrameworkFactory,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, Injectable, normalizeError } from '@monomod/core/application';
 import { TExpressReq, TExpressRes } from '../domain/express.interface';
 import { ApiCore } from '@monomod/gateway';
 
-@Injectable(TOKENS.framework.IFrameworkAdapter)
+@Injectable(SYMBOLS.framework.IFrameworkAdapter)
 export class AdapterExpress implements IPortFrameworkAdapter {
-	@Inject(TOKENS.framework.IFrameworkFactory)
+	@Inject(SYMBOLS.framework.IFrameworkFactory)
 	private appFactory: IPortFrameworkFactory;
 
-	@Inject(TOKENS.framework.IFrameworkDebug)
+	@Inject(SYMBOLS.framework.IFrameworkDebug)
 	private debug: IPortFrameworkDebug;
 
 	getApps(): IMicroApp {

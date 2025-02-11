@@ -1,9 +1,4 @@
-import {
-	HTTPCODES,
-	IErrResponse,
-	IExternalUseCaseParams,
-	domainKeys,
-} from '../../domain';
+import { HTTPCODES, IErrResponse, IExternalUseCaseParams } from '../../domain';
 import { normalizeError } from '../errors';
 
 export class ServiceUseCases {

@@ -1,5 +1,5 @@
 import { HTTPCODES } from './http.const';
-import { TErrores } from '../interfaces/values.interface';
+import { TErrores } from '../interfaces';
 
 export const ERRORS: TErrores = {
 	alreadyExists: {

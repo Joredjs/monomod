@@ -8,15 +8,15 @@ import {
 	IPortLogs,
 	IPortResponseResult,
 	Result,
-	TOKENS,
+	SYMBOLS,
 	TResultErr,
 	TResultOK,
 } from '../domain';
-import { isIErrResponse, isIErrorMapping, normalizeError } from './errors';
 import { Inject } from './di';
+import { normalizeError } from './errors';
 
 export class ResponseResult implements IPortResponseResult {
-	@Inject(TOKENS.services.logs) readonly logs: IPortLogs;
+	@Inject(SYMBOLS.services.logs) readonly logs: IPortLogs;
 
 	#createErrorResponse(errInfo: IErrorMapping): IErrResponse {
 		const msj: IError = ERRORS[errInfo.errType];
@@ -41,6 +41,26 @@ export class ResponseResult implements IPortResponseResult {
 	}
 
 	resultErr(errInfo: IErrorMapping): TResultErr {
+		const normalizedError = normalizeError(errInfo) as IErrorMapping;
+
+		normalizedError.showDetail =
+			typeof normalizedError.showDetail === 'undefined'
+				? true
+				: normalizedError.showDetail;
+		normalizedError.saveLog =
+			typeof normalizedError.saveLog === 'undefined'
+				? true
+				: normalizedError.saveLog;
+
+		if (normalizedError && normalizedError.saveLog) {
+			this.logs.saveError(normalizedError);
+		}
+
+		const res = this.#createErrorResponse(normalizedError);
+		return Result.resErr(res);
+	}
+
+	/* ResultErr(errInfo: IErrorMapping): TResultErr {
 		const normalizedError = normalizeError(errInfo);
 
 		if (isIErrResponse(normalizedError)) {
@@ -71,5 +91,5 @@ export class ResponseResult implements IPortResponseResult {
 			error: normalizedError,
 		};
 		return Result.resErr(res);
-	}
+	} */
 }

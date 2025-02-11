@@ -18,14 +18,19 @@
 			"@monomod/core/application": ["libs/core/src/application/index.ts"],
 			"@monomod/core/domain": ["libs/core/src/domain/index.ts"],
 			"@monomod/core/infra": ["libs/core/src/infra/index.ts"],
+			"@monomod/core/mocks": ["libs/core/test/mocks/index.ts"],
+
 			"@monomod/framework-express/domain": [
 				"libs/framework/express/src/domain/index.ts"
 			],
 			"@monomod/framework-express/infra": [
 				"libs/framework/express/src/infra/index.ts"
 			],
+
 			"@monomod/gateway": ["libs/gateway/src/index.ts"],
+
 			"@monomod/module-example": ["modules/example/src/index.ts"],
+
 			"@monomod/server-local/application": [
 				"apps/servers/server-local/src/application"
 			],

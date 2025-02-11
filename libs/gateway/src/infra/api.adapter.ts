@@ -7,8 +7,8 @@ import {
 	IResponseParams,
 	IServices,
 	IServicesDependencies,
+	SYMBOLS,
 	TMyModulesInstances,
-	TOKENS,
 } from '@monomod/core/domain';
 import {
 	Inject,

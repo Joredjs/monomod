@@ -38,12 +38,13 @@ export const createMockLogs = (): jest.Mocked<IPortLogs> => ({
 export const createMockErrors = (): jest.Mocked<IPortErrors> =>
 	({
 		normalize: jest.fn().mockImplementation((err) => err),
-		isIErrResponse: jest.fn(),
-		isIErrorMapping: jest.fn(),
+		// isIErrResponse: jest.fn(),
+		// isIErrorMapping: jest.fn(),
 	} as unknown as jest.Mocked<IPortErrors>);
 
 export const createMockMessages = (): jest.Mocked<IPortMessages> => ({
 	getMessage: jest.fn(),
+	getContext: jest.fn(),
 });
 
 export const createMockContainer = (): jest.Mocked<IPortContainer> => {
@@ -70,8 +71,6 @@ export const createMockFrameworkAdapter =
 
 export const createMockServerAdapter = (): jest.Mocked<IPortServerAdapter> => ({
 	start: jest.fn(),
-	errorHandler: jest.fn(),
-	gracefulShutdown: jest.fn(),
 });
 
 export const createMockServerController =

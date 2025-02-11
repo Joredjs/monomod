@@ -1,8 +1,8 @@
-import { IMessageConfig, IPortMessages, TOKENS } from '@monomod/core/domain';
+import { IMessageConfig, IPortMessages, SYMBOLS } from '@monomod/core/domain';
 import { Injectable, ServiceMessages } from '@monomod/core/application';
 import { messageConfig } from '../domain';
 
-@Injectable(TOKENS.server.ServiceMessagesServer)
+@Injectable(SYMBOLS.server.ServiceMessagesServer)
 export class ServiceMessagesServer
 	extends ServiceMessages
 	implements IPortMessages

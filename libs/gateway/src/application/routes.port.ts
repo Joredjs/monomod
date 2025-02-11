@@ -3,7 +3,6 @@ import {
 	IModuleRoute,
 	TDomainGroups,
 	TMyModulesInstances,
-	domainKeys,
 } from '@monomod/core/domain';
 import { modulesList, modulos } from '../domain';
 import { normalizeError } from '@monomod/core/application';

@@ -3,7 +3,7 @@ import {
 	IContainerComponent,
 	IPortContainer,
 	IPortRegistry,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { ControllerServerLocal } from './local.server.controller';
 import { localServerConfig } from '../domain';
@@ -11,18 +11,18 @@ import { localServerConfig } from '../domain';
 export class RegistryServerLocal implements IPortRegistry {
 	#components: IContainerComponent[] = [
 		{
-			token: TOKENS.server.IPortServerAdapter,
+			token: SYMBOLS.server.IPortServerAdapter,
 			value: AdapterServerLocal,
 		},
 		{
-			token: TOKENS.server.IPortServerController,
+			token: SYMBOLS.server.IPortServerController,
 			value: ControllerServerLocal,
 		},
 		{
-			token: TOKENS.server.ServiceLogsServer,
+			token: SYMBOLS.server.ServiceLogsServer,
 			value: ServiceLogsServer,
 		},
-		{ isConstant: true, token: TOKENS.server.config, value: localServerConfig },
+		{ isConstant: true, token: SYMBOLS.server.config, value: localServerConfig },
 	];
 
 	getName(): string {

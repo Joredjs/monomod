@@ -5,18 +5,18 @@ import {
 	IPortFrameworkFactory,
 	IPortFrameworkMiddleware,
 	IServerConfig,
-	TOKENS,
+	SYMBOLS,
 } from '@monomod/core/domain';
 import { Inject, Injectable } from '@monomod/core/application';
 import express from 'express';
 
-@Injectable(TOKENS.framework.IFrameworkFactory)
+@Injectable(SYMBOLS.framework.IFrameworkFactory)
 export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 	implements IPortFrameworkFactory
 {
-	@Inject(TOKENS.server.config) private appConfig: IServerConfig;
+	@Inject(SYMBOLS.server.config) private appConfig: IServerConfig;
 
-	@Inject(TOKENS.framework.IFrameworkMiddleware)
+	@Inject(SYMBOLS.framework.IFrameworkMiddleware)
 	private middleware: IPortFrameworkMiddleware<TFwRes, TFwReq, TFwNext>;
 
 	#setTestPath(
@@ -68,7 +68,6 @@ export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 	}
 
 	createMicroApp(domainGroup: IDomainGroup) {
-
 		const app = express();
 
 		let myApp: IFrameworkMicroApp = {
