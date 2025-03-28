@@ -15,6 +15,7 @@ export const createMockServer = () => ({
 	all: jest.fn(),
 });
 
+//TODO: move to the framework lib
 export const createMockMicroApp = (
 	name: TDomainGroups,
 	port: number,
@@ -24,6 +25,7 @@ export const createMockMicroApp = (
 	cors: {
 		dnsDomains: ['https://test.domain.com'],
 		localhostAllowed,
+		noOriginAllowed: false,
 	},
 	httpPort: port,
 	name,

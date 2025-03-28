@@ -1,37 +1,21 @@
 // @monomod/core/tests/application/services/storage.service.spec.ts
 import { ServiceStorage } from '@monomod/core/application';
 import { Readable } from 'stream';
+import { createMockStorageClient, mockSend } from '../../mocks/services.mock';
 
 describe('ServiceStorage', () => {
 	let service: ServiceStorage<any>;
-	let mockSend: jest.Mock;
 	let lastConstructedCommand: any;
 
 	beforeEach(() => {
-		mockSend = jest.fn().mockResolvedValue({
-			$metadata: { httpStatusCode: 200 },
-			ETag: 'test-etag',
-		});
-
 		lastConstructedCommand = null;
-
 		class MockCommand {
 			constructor(params: any) {
 				lastConstructedCommand = params;
 			}
 		}
 
-		const mockStorageClient = {
-			Add: MockCommand,
-			Get: MockCommand,
-			List: MockCommand,
-			Remove: MockCommand,
-			Client: jest.fn().mockImplementation(() => ({
-				send: mockSend,
-			})),
-		};
-
-		service = new ServiceStorage(mockStorageClient);
+		service = new ServiceStorage(createMockStorageClient(MockCommand));
 	});
 
 	describe('upload', () => {

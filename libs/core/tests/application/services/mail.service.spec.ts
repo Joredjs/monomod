@@ -1,15 +1,8 @@
 import { ServiceMail } from '@monomod/core/application';
+import { mockMailClient, mockTransporter } from '../../mocks/services.mock';
 
 describe('ServiceMail', () => {
 	let service: ServiceMail;
-	const mockTransporter = {
-		sendMail: jest.fn(),
-	};
-	const mockMailClient = {
-		client: {
-			createTransport: jest.fn().mockReturnValue(mockTransporter),
-		},
-	};
 
 	beforeEach(() => {
 		jest.clearAllMocks();

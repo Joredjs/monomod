@@ -62,3 +62,14 @@ export const createMockIErrorMapping = (
 	errorInfo.showDetail = showDetail;
 	return errorInfo;
 };
+
+
+export interface MockValidateFunction extends jest.Mock {
+	errors?: Array<{
+		keyword: string;
+		message?: string;
+		// otros campos que necesites
+	}>;
+}
+
+

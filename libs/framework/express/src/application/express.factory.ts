@@ -14,10 +14,18 @@ import express from 'express';
 export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 	implements IPortFrameworkFactory
 {
-	@Inject(SYMBOLS.server.config) private appConfig: IServerConfig;
+	readonly #middleware: IPortFrameworkMiddleware<TFwRes, TFwReq, TFwNext>;
 
-	@Inject(SYMBOLS.framework.IFrameworkMiddleware)
-	private middleware: IPortFrameworkMiddleware<TFwRes, TFwReq, TFwNext>;
+	readonly #serverConfig: IServerConfig;
+
+	constructor(
+		@Inject(SYMBOLS.framework.IFrameworkMiddleware)
+		middleware: IPortFrameworkMiddleware<TFwRes, TFwReq, TFwNext>,
+		@Inject(SYMBOLS.server.IServerConfig) serverConfig: IServerConfig
+	) {
+		this.#middleware = middleware;
+		this.#serverConfig = serverConfig;
+	}
 
 	#setTestPath(
 		microApp: IFrameworkMicroApp,
@@ -33,7 +41,7 @@ export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 			throw new Error(`Error de prueba para ${microApp.name}`);
 		});
 
-		microApp.app.all('*', this.middleware.notFound());
+		microApp.app.all('*', this.#middleware.notFound());
 		return microApp;
 	}
 
@@ -54,7 +62,7 @@ export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 				// Apply middleware and set locals for each route and version
 				microApp.app[domainInfo.method](
 					`${groupName}/${version}/${domainInfo.path}`,
-					this.middleware.setDomainInfo(
+					this.#middleware.setDomainInfo(
 						domainGroup,
 						microApp,
 						domainInfo,
@@ -78,14 +86,14 @@ export class ExpressFactory<TFwRes, TFwReq, TFwNext>
 		};
 
 		const groupName = `${
-			this.appConfig.addDomainName ? `/${domainGroup.name}` : ''
+			this.#serverConfig.addDomainName ? `/${domainGroup.name}` : ''
 		}`;
 
-		myApp.app.use(express.json({ limit: this.appConfig.bodyLimit }));
-		myApp.app.use(this.middleware.setCors(myApp));
+		myApp.app.use(express.json({ limit: this.#serverConfig.bodyLimit }));
+		myApp.app.use(this.#middleware.setCors(myApp));
 		myApp = this.#setPaths(domainGroup, myApp, groupName);
 		myApp = this.#setTestPath(myApp, groupName);
-		myApp.app.use(this.middleware.errorHandler());
+		myApp.app.use(this.#middleware.errorHandler());
 		return myApp;
 	}
 }

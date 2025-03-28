@@ -1,18 +1,10 @@
 // @monomod/core/tests/application/services/schema.service.spec.ts
 import { ServiceSchema } from '@monomod/core/application';
 import { ISchema } from '@monomod/core/domain';
-
-interface MockValidateFunction extends jest.Mock {
-	errors?: Array<{
-		keyword: string;
-		message?: string;
-		// otros campos que necesites
-	}>;
-}
+import { mockCompile, mockSchemaClient, mockValidate } from '../../mocks/services.mock';
 
 describe('ServiceSchema', () => {
 	let service: ServiceSchema;
-	const mockValidate = jest.fn() as MockValidateFunction;
 
 	let mockSchema: ISchema = {
 		name: {
@@ -29,15 +21,6 @@ describe('ServiceSchema', () => {
 			pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
 			errorMessage: 'Invalid email format',
 		},
-	};
-	const mockCompile = jest.fn().mockReturnValue(mockValidate);
-	const mockAjv = jest.fn(() => ({
-		compile: mockCompile,
-	}));
-	const mockSchemaClient = {
-		Validator: mockAjv,
-		defaultOptions: { allErrors: true, strict: false },
-		errors: jest.fn(),
 	};
 
 	beforeEach(() => {

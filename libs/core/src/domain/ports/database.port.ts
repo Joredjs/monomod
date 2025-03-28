@@ -5,7 +5,7 @@ import {
 	TItemsResult,
 } from '../interfaces';
 
-export interface IDatabase {
+export interface IPortDatabase {
 	login<TGItems>(
 		correo: string,
 		pass: string,
@@ -27,5 +27,5 @@ export interface IDatabase {
 }
 
 export interface IDatabaseAdapter {
-	[key: string]: IDatabase;
+	[key: string]: IPortDatabase;
 }

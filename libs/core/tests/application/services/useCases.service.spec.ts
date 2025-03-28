@@ -1,5 +1,6 @@
 import { ServiceUseCases } from '@monomod/core/application';
 import { HTTPCODES } from '@monomod/core/domain';
+import { createMockUseCase } from '../../mocks/services.mock';
 
 describe('ServiceUseCases', () => {
 	let service: ServiceUseCases;
@@ -14,15 +15,13 @@ describe('ServiceUseCases', () => {
 			reqHeader: { 'x-test': 'header' },
 		};
 
-		const successResponse = {
-			code: HTTPCODES[200].code,
-			body: { data: 'success' },
-		};
-
 		it('should execute external use case successfully', async () => {
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue(successResponse),
+			const successResponse = {
+				code: HTTPCODES[200].code,
+				body: { data: 'success' },
 			};
+
+			const mockUseCase = createMockUseCase(successResponse);
 
 			const useCaseParams = {
 				info: mockTransactionInfo,
@@ -51,12 +50,11 @@ describe('ServiceUseCases', () => {
 		});
 
 		it('should throw error when execution fails', async () => {
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue({
-					code: HTTPCODES[500].code,
-					error: { message: 'Execution failed' },
-				}),
+			const failResponse = {
+				code: HTTPCODES[500].code,
+				error: { message: 'Execution failed' },
 			};
+			const mockUseCase = createMockUseCase(failResponse);
 
 			const useCaseParams = {
 				info: mockTransactionInfo,
@@ -79,9 +77,7 @@ describe('ServiceUseCases', () => {
 				},
 			};
 
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue(errorResponse),
-			};
+			const mockUseCase = createMockUseCase(errorResponse);
 
 			const useCaseParams = {
 				info: mockTransactionInfo,
@@ -101,11 +97,9 @@ describe('ServiceUseCases', () => {
 		});
 
 		it('should throw normalized error for unexpected response format', async () => {
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue({
-					unexpectedFormat: true,
-				}),
-			};
+			const mockUseCase = createMockUseCase({
+				unexpectedFormat: true,
+			});
 
 			const useCaseParams = {
 				info: mockTransactionInfo,
@@ -125,9 +119,7 @@ describe('ServiceUseCases', () => {
 		});
 
 		it('should throw error when response is null', async () => {
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue(null),
-			};
+			const mockUseCase = createMockUseCase(null);
 
 			const useCaseParams = {
 				info: mockTransactionInfo,
@@ -147,12 +139,10 @@ describe('ServiceUseCases', () => {
 		});
 
 		it('should throw error when response body is missing', async () => {
-			const mockUseCase = {
-				execute: jest.fn().mockResolvedValue({
-					code: HTTPCODES[200].code,
-					// missing body
-				}),
-			};
+			const mockUseCase = createMockUseCase({
+				code: HTTPCODES[200].code,
+				// missing body
+			});
 
 			const useCaseParams = {
 				info: mockTransactionInfo,

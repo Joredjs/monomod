@@ -4,6 +4,7 @@ import {
 	IMessageConfig,
 } from '@monomod/core/domain';
 import { ServiceMessages } from '@monomod/core/application';
+import { mockI18n } from '../../mocks/services.mock';
 
 // Creamos una clase concreta para testing ya que ServiceMessages es abstracta
 class TestServiceMessages extends ServiceMessages {
@@ -20,11 +21,7 @@ class TestServiceMessages extends ServiceMessages {
 
 describe('ServiceMessages', () => {
 	let service: TestServiceMessages;
-	const mockI18n = {
-		getText: jest.fn(),
-		getCurrentLanguage: jest.fn(),
-		setLanguage: jest.fn(),
-	};
+
 
 	beforeEach(() => {
 		jest.clearAllMocks();

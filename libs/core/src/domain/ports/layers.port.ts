@@ -5,7 +5,6 @@ import {
 	TExternalUseCases,
 } from './useCases.port';
 import {
-	ICryptoClient,
 	IDatabaseClient,
 	ISchemaClient,
 	IStorageClient,
@@ -13,8 +12,8 @@ import {
 	TFrameworkResponse,
 } from '../interfaces';
 import { IMailClient, IServiceMail } from './mail.port';
+import { IPortCrypto, IPortCryptoClient } from './crypto.port';
 import { IDatabaseAdapter } from './database.port';
-import { IPortCrypto } from './crypto.port';
 import { IPortResponseResult } from './result.port';
 import { IServiceHeader } from './headers.port';
 import { IServiceSchema } from './schema.port';
@@ -61,7 +60,7 @@ export interface IServicesDependencies {
 		yourdbclientname: IDatabaseClient;
 	};
 	crypto?: {
-		client: ICryptoClient;
+		client: IPortCryptoClient;
 	};
 	mail?: {
 		client: IMailClient;

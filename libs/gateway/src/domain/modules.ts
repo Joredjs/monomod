@@ -14,6 +14,7 @@ export const modulos: TModules = {
 		cors: {
 			dnsDomains: ['https://mysubdomain.mydomain.com'],
 			localhostAllowed: true,
+			noOriginAllowed: false,
 		},
 		httpPort: puertos.example,
 		name: 'example',

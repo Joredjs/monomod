@@ -1,28 +1,21 @@
 import { ServiceLogs } from '@monomod/core/application';
-import { createMockIErrorMapping } from '../../mocks';
+import { createMockIErrorMapping, mockConsole } from '../../mocks';
+import { mockPortMessages } from '../../mocks';
+import { EMessageGroup } from '@monomod/core/domain';
 
 describe('ServiceLogs', () => {
 	let service: ServiceLogs;
-	const mockMessages = {
-		getMessage: jest.fn(),
-		getContext: jest.fn(),
-	};
 
 	beforeEach(() => {
 		jest.clearAllMocks();
 
 		// Mock console methods
-		global.console = {
-			...global.console,
-			debug: jest.fn(),
-			error: jest.fn(),
-			trace: jest.fn(),
-		};
+		global.console = mockConsole;
 
-		mockMessages.getContext.mockReturnValue('test-context');
-		mockMessages.getMessage.mockReturnValue('test message');
+		mockPortMessages.getContext.mockReturnValue(EMessageGroup.SYSTEM);
+		mockPortMessages.getMessage.mockReturnValue('test message');
 
-		service = new ServiceLogs(mockMessages);
+		service = new ServiceLogs(mockPortMessages);
 	});
 
 	describe('saveError', () => {
@@ -46,12 +39,12 @@ describe('ServiceLogs', () => {
 
 			service.debug(logInfo);
 
-			expect(mockMessages.getContext).toHaveBeenCalled();
+			expect(mockPortMessages.getContext).toHaveBeenCalled();
 			expect(console.debug).toHaveBeenCalled();
 			// Verificar que el log incluye el contexto y el mensaje
 			const logCall = (console.debug as jest.Mock).mock.calls[0];
 			expect(logCall[0]).toContain('[debug]');
-			expect(logCall[0]).toContain('test-context');
+			expect(logCall[0]).toContain('debug message');
 			expect(logCall[1]).toEqual(logInfo.detail);
 		});
 
@@ -75,7 +68,7 @@ describe('ServiceLogs', () => {
 
 			service.debug(logInfo);
 
-			expect(mockMessages.getMessage).toHaveBeenCalledWith(
+			expect(mockPortMessages.getMessage).toHaveBeenCalledWith(
 				logInfo.messageKey,
 				logInfo.messageParams
 			);
@@ -91,12 +84,12 @@ describe('ServiceLogs', () => {
 
 			service.error(logInfo);
 
-			expect(mockMessages.getContext).toHaveBeenCalled();
+			expect(mockPortMessages.getContext).toHaveBeenCalled();
 			expect(console.error).toHaveBeenCalled();
 			// Verificar que el log incluye el contexto y el mensaje
 			const logCall = (console.error as jest.Mock).mock.calls[0];
 			expect(logCall[0]).toContain('[error]');
-			expect(logCall[0]).toContain('test-context');
+			expect(logCall[0]).toContain('error message');
 			expect(logCall[1]).toEqual(logInfo.detail);
 		});
 
@@ -120,7 +113,7 @@ describe('ServiceLogs', () => {
 
 			service.error(logInfo);
 
-			expect(mockMessages.getMessage).toHaveBeenCalledWith(
+			expect(mockPortMessages.getMessage).toHaveBeenCalledWith(
 				logInfo.messageKey,
 				logInfo.messageParams
 			);
@@ -139,12 +132,12 @@ describe('ServiceLogs', () => {
 			const logCall = (console.debug as jest.Mock).mock.calls[0];
 			// Verificar formato: [timestamp] [level] [context] message
 			expect(logCall[0]).toMatch(
-				/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\] \[debug\] \[test-context\] test message/
+				/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\] \[debug\] \[system\] test message/
 			);
 		});
 
 		it('should handle undefined context', () => {
-			mockMessages.getContext.mockReturnValue(undefined);
+			mockPortMessages.getContext.mockReturnValue(undefined);
 
 			const logInfo = {
 				text: 'test message',

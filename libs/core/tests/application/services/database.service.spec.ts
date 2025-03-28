@@ -1,18 +1,8 @@
 import { ServiceDatabase } from '@monomod/core/application';
+import { mockDb } from '../../mocks/services.mock';
 
 describe('ServiceDatabase', () => {
 	let service: ServiceDatabase;
-	const mockDb = {
-		mydb: {
-			login: jest.fn(),
-			getById: jest.fn(),
-			getAll: jest.fn(),
-			getByQuery: jest.fn(),
-			add: jest.fn(),
-			update: jest.fn(),
-			delete: jest.fn(),
-		},
-	};
 
 	beforeEach(() => {
 		jest.clearAllMocks();

@@ -1,4 +1,4 @@
-// import { HEADERPREFIX } from './headers.const';
+// Import { HEADERPREFIX } from './headers.const';
 
 // Const globalCors: RegExp[] = [/mysubdomain\.mydomain\.com$/];
 

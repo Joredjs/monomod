@@ -11,12 +11,12 @@ import { Inject, Injectable } from '@monomod/core/application';
 @Injectable(SYMBOLS.server.IPortServerController)
 export class ControllerServerLocal implements IPortServerController {
 	constructor(
-		@Inject(SYMBOLS.server.ServiceLogsServer)
-		private readonly logs: IPortLogs,
+		@Inject(SYMBOLS.server.IPortServerAdapter)
+		private readonly serverAdapter: IPortServerAdapter,
 		@Inject(SYMBOLS.framework.IFrameworkAdapter)
 		private readonly frameworkAdapter: IPortFrameworkAdapter,
-		@Inject(SYMBOLS.server.IPortServerAdapter)
-		private readonly serverAdapter: IPortServerAdapter
+		@Inject(SYMBOLS.server.ServiceLogsServer)
+		private readonly logs: IPortLogs
 	) {}
 
 	async deploy() {

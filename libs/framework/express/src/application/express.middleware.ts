@@ -26,15 +26,18 @@ export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 {
 	#response: IPortResponseResult;
 
-	@Inject(SYMBOLS.framework.IFrameworkDebug)
-	private debug: IPortFrameworkDebug;
+	readonly #debug: IPortFrameworkDebug;
 
 	@Inject(SYMBOLS.framework.IFrameworkService)
 	private service: IPortFrameworkService<TFwRes>;
 
 	// eslint-disable-next-line max-params
-	constructor() {
+	constructor(
+		@Inject(SYMBOLS.framework.IFrameworkDebug)
+		debug: IPortFrameworkDebug
+	) {
 		this.#response = new ResponseResult();
+		this.#debug = debug;
 	}
 
 	// TODO: is it correct this to use here (resultErr)
@@ -78,17 +81,16 @@ export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 
 			res.locals.route = domainInfo;
 
-			this.debug.paths(microApp, req, domainInfo);
+			this.#debug.paths(microApp, req, domainInfo);
 
 			next();
 		};
 	}
 
 	setCors(microApp: IExpressMicroApp) {
-		const { debug } = this;
-
 		const corsOptions = {
-			origin(originCors, callback) {
+			origin: (originCors, callback) => {
+				console.debug('originCors', this);
 				originCors = originCors ?? false;
 
 				const isMyOrigin = originCors === DEFAULTS.cors.origin;
@@ -98,14 +100,20 @@ export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 					microApp.cors.localhostAllowed &&
 					originCors &&
 					originCors.includes('http://localhost:');
+				const isNoOriginAllowed = microApp.cors.noOriginAllowed;
 
-				debug.cors(microApp, originCors, {
+				this.#debug.cors(microApp, originCors, {
 					isDomainAllowed,
 					isLocalhostAllowed,
 					isMyOrigin,
 				});
 
-				if (isMyOrigin || isDomainAllowed || isLocalhostAllowed) {
+				if (
+					isMyOrigin ||
+					isDomainAllowed ||
+					isLocalhostAllowed ||
+					isNoOriginAllowed
+				) {
 					callback(null, true);
 				} else {
 					callback(new Error('Not allowed by CORS'));
@@ -152,3 +160,4 @@ export class ExpressMiddleware<TFwRes, TFwReq, TFwNext>
 		};
 	}
 }
+

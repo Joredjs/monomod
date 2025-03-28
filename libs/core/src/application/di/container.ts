@@ -1,16 +1,38 @@
-import 'reflect-metadata';
-import { IContainerComponent, IPortContainer } from '../../domain';
-import { INJECT_METADATA_KEY, PropertyMetadata } from './metadata';
+import {
+	IContainerComponent,
+	IContainerParameters,
+	IPortContainer,
+	IPortContainerAnalyzer,
+	IPortContainerRegistry,
+} from '../../domain';
+import { ContainerAnalyzer } from './analyzer';
+import { ContainerRegistry } from './registry';
 
-// Container.ts
 export class DIContainer implements IPortContainer {
 	static #instance;
 
-	#dependencies: Map<symbol, any> = new Map();
+	#parameters: IContainerParameters;
 
-	#instances: Map<symbol, any> = new Map();
+	#initializationComplete = false;
 
-	#constants: Map<symbol, any> = new Map();
+	readonly #analizer: IPortContainerAnalyzer;
+
+	readonly #registry: IPortContainerRegistry;
+
+	#debugContainer = false;
+
+	constructor() {
+		this.#parameters = {
+			constants: new Map(),
+			dependencies: new Map(),
+			instances: new Map(),
+			lazyResolutions: new Map(),
+			resolutionStack: new Set(),
+		};
+		// TODO: Take this from configuration file
+		this.#analizer = new ContainerAnalyzer(this.#debugContainer);
+		this.#registry = new ContainerRegistry(this.#analizer);
+	}
 
 	static getInstance(): DIContainer {
 		if (!DIContainer.#instance) {
@@ -20,93 +42,35 @@ export class DIContainer implements IPortContainer {
 	}
 
 	register(component: IContainerComponent) {
-		// Console.debug('Registering:', component);
-		if (component.isConstant) {
-			this.#constants.set(component.token, component.value);
-			return;
-		}
-
-		const existing = this.#dependencies.get(component.token);
-
-		if (existing && existing !== component.value) {
-			throw new Error(
-				`Token ${component.token.toString()} already has a different implementation registered`
-			);
-		}
-
-		if (existing) {
-			throw new Error(`Already registered ${component.token.toString()}`);
-		} else {
-			this.#dependencies.set(component.token, component.value);
-			// Console.debug('registering', token);
-		}
-
-		/* Console.debug('dependencies', this.#dependencies);
-		   console.debug('instances', this.#instances);
-		   console.debug('constants', this.#constants); */
-	}
-
-	#createInstance<T>(Implementation: new (...args: any[]) => T): T {
-		const constructorParams =
-			Reflect.getMetadata('design:paramtypes', Implementation) || [];
-
-		// Console.log('PARAMS', constructorParams);
-		const injections = constructorParams.map((param: any) =>
-			this.resolve(param)
-		);
-		const instance = new Implementation(...injections);
-
-		const propertyMetadata: PropertyMetadata[] =
-			Reflect.getMetadata(INJECT_METADATA_KEY, Implementation.prototype) || [];
-
-		// Console.log('METADATA', propertyMetadata);
-		propertyMetadata.forEach((metadata) => {
-			// Console.log('WILL RESOLVE', metadata.token);
-			Object.defineProperty(instance, metadata.propertyKey, {
-				configurable: false,
-				enumerable: true,
-				get: () => this.resolve(metadata.token),
-			});
-		});
-
-		return instance;
+		this.#parameters = this.#registry.register(this.#parameters, component);
 	}
 
 	resolve<T>(token: symbol): T {
-		// Console.debug('REsolving', token);
-
-		if (this.#instances.has(token)) {
-			return this.#instances.get(token);
-		}
-
-		if (this.#constants.has(token)) {
-			// Console.debug('constant', Target);
-			return this.#constants.get(token);
-		}
-
-		// Si encontramos una implementación registrada para el token (Symbol)
-		if (this.#dependencies.has(token)) {
-			const Implementation = this.#dependencies.get(token);
-
-			if (!Implementation) {
-				throw new Error(`No provider found for ${String(token)}`);
-			}
-
-			// Si la implementación es una clase, la instanciamos
-			if (typeof Implementation === 'function') {
-				const instance = this.#createInstance(Implementation) as T;
-				this.#instances.set(token, instance);
-				return instance;
-			}
-
-			// Si no es una clase, retornamos la implementación directamente
-			return Implementation;
-		}
-
-		throw new Error(`No provider found for ${String(token)}`);
+		const resolved = this.#registry.resolve<T>(
+			this.#parameters,
+			token,
+			this.#initializationComplete
+		);
+		this.#parameters = resolved.parameters;
+		return resolved.instance;
 	}
 
 	hasRegistration(token: symbol): boolean {
-		return this.#dependencies.has(token) || this.#constants.has(token);
+		return (
+			this.#parameters.dependencies.has(token) ||
+			this.#parameters.constants.has(token)
+		);
+	}
+
+	clear(): void {
+		this.#parameters.dependencies.clear();
+		this.#parameters.instances.clear();
+		this.#parameters.constants.clear();
+	}
+
+	complete(token: symbol): void {
+		this.#initializationComplete = true;
+		this.#analizer.analyze(this.#parameters);
+		this.#analizer.resolutionGraph(this.#parameters, token);
 	}
 }

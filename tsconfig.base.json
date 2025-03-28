@@ -18,7 +18,7 @@
 			"@monomod/core/application": ["libs/core/src/application/index.ts"],
 			"@monomod/core/domain": ["libs/core/src/domain/index.ts"],
 			"@monomod/core/infra": ["libs/core/src/infra/index.ts"],
-			"@monomod/core/mocks": ["libs/core/test/mocks/index.ts"],
+			"@monomod/core/mocks": ["libs/core/tests/mocks/index.ts"],
 
 			"@monomod/framework-express/domain": [
 				"libs/framework/express/src/domain/index.ts"

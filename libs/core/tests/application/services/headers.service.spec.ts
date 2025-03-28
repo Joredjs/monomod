@@ -1,13 +1,12 @@
 import { EPrivacyLevel } from '@monomod/core/domain';
 import { ServiceHeaders } from '@monomod/core/application';
-import { createMockITransactionParams } from '../../mocks/interfaces.mock';
+import {
+	createMockITransactionParams,
+	mockPortCrypto,
+} from '../../mocks';
 
 describe('ServiceHeaders', () => {
 	let service: ServiceHeaders;
-	const mockCryptoService = {
-		encrypt: jest.fn(),
-		decrypt: jest.fn(),
-	};
 
 	const validTokenValue = 'valid-token';
 	const headers = {
@@ -16,7 +15,7 @@ describe('ServiceHeaders', () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		service = new ServiceHeaders(mockCryptoService);
+		service = new ServiceHeaders(mockPortCrypto);
 	});
 
 	describe('validateToken', () => {
@@ -26,7 +25,7 @@ describe('ServiceHeaders', () => {
 		};
 
 		beforeEach(() => {
-			mockCryptoService.decrypt.mockReturnValue(JSON.stringify(mockTokenInfo));
+			mockPortCrypto.decrypt.mockReturnValue(JSON.stringify(mockTokenInfo));
 		});
 
 		it('should validate token successfully', () => {
@@ -36,7 +35,7 @@ describe('ServiceHeaders', () => {
 			const result = service.validateToken(info);
 
 			expect(result).toEqual(mockTokenInfo);
-			expect(mockCryptoService.decrypt).toHaveBeenCalledWith(validTokenValue);
+			expect(mockPortCrypto.decrypt).toHaveBeenCalledWith(validTokenValue);
 		});
 
 		it('should throw error when token is missing', () => {
@@ -49,9 +48,7 @@ describe('ServiceHeaders', () => {
 				privacy: EPrivacyLevel.public,
 				valid: Date.now() - 3600001, // más de una hora atrás
 			};
-			mockCryptoService.decrypt.mockReturnValue(
-				JSON.stringify(expiredTokenInfo)
-			);
+			mockPortCrypto.decrypt.mockReturnValue(JSON.stringify(expiredTokenInfo));
 
 			const info = createMockITransactionParams({}, []);
 
@@ -63,7 +60,7 @@ describe('ServiceHeaders', () => {
 				privacy: EPrivacyLevel.user,
 				valid: Date.now(),
 			};
-			mockCryptoService.decrypt.mockReturnValue(JSON.stringify(tokenInfo));
+			mockPortCrypto.decrypt.mockReturnValue(JSON.stringify(tokenInfo));
 
 			const info = createMockITransactionParams({}, [EPrivacyLevel.public]);
 

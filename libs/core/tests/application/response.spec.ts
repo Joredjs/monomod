@@ -1,5 +1,5 @@
 import { ERRORS, HTTPCODES } from '@monomod/core/domain';
-import { createMockIErrorMapping, mockServiceLogs } from '../mocks';
+import { createMockIErrorMapping, mockPortLogs } from '../mocks';
 import { ResponseResult } from '@monomod/core/application';
 
 describe('ResponseResult', () => {
@@ -9,7 +9,7 @@ describe('ResponseResult', () => {
 		jest.clearAllMocks();
 		responseResult = new ResponseResult();
 		// @ts-ignore - Inyectamos el mock del servicio de logs
-		responseResult.logs = mockServiceLogs;
+		responseResult.logs = mockPortLogs;
 	});
 
 	describe('resultOk', () => {
@@ -60,7 +60,7 @@ describe('ResponseResult', () => {
 		it('should log error when saveLog is true', () => {
 			const errorInfo = createMockIErrorMapping('invalid', true);
 			responseResult.resultErr(errorInfo);
-			expect(mockServiceLogs.saveError).toHaveBeenCalledWith(errorInfo);
+			expect(mockPortLogs.saveError).toHaveBeenCalledWith(errorInfo);
 		});
 
 		it('should not show detail when showDetail is false', () => {

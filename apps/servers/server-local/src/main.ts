@@ -15,6 +15,7 @@ async function bootstrap() {
 		SYMBOLS.server.IPortServerController
 	);
 	await serverController.deploy();
+	container.complete(SYMBOLS.server.IPortServerController);
 }
 
 bootstrap().catch((error) => {

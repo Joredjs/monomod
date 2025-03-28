@@ -5,7 +5,6 @@ import {
 	CipherInfo,
 	CipherKey,
 	Encoding,
-	Hash,
 } from 'crypto';
 
 export interface ICryptoOptions {
@@ -17,7 +16,6 @@ export interface ICryptoOptions {
 	key: { valor: string; size?: number; hash: CipherKey };
 	mode: CipherCCMTypes;
 	modeInfo?: CipherInfo;
-	// Tag: NodeJS.ArrayBufferView;
 	tag: Buffer;
 	texto: Buffer;
 	vector: { valor?: Buffer; size?: number; hash: BinaryLike };
@@ -25,7 +23,6 @@ export interface ICryptoOptions {
 
 export interface ICryptoRequest {
 	tag: Buffer;
-	// Tag: NodeJS.ArrayBufferView;
 	texto: Buffer;
 	vector: Buffer;
 }
@@ -40,17 +37,3 @@ export interface ICryptoResponse {
 	x0x3?: string;
 }
 
-/* Export interface ITypesCrypto {
-   	CCMCipher: any;
-   	CCMDecipher: any;
-   	CCMTypes: any;
-   } */
-
-export interface ICryptoClient {
-	decrypt: any;
-	encrypt: any;
-	getInfo(mode: CipherCCMTypes): CipherInfo;
-	getCiphers(): string[];
-	hash(hashType: string): Hash;
-	random: any;
-}

@@ -25,9 +25,6 @@ export interface IPortFrameworkDebug {
 
 export interface IPortFrameworkFactory {
 	createMicroApp(domainGroup: IDomainGroup): IFrameworkMicroApp;
-	/* GetService(): IPortFrameworkService<TFwRes>;
-	   getDebug(): IPortFrameworkDebug;
-	   getConfig(): IMicroAppConfig; */
 }
 
 export interface IPortFrameworkMiddleware<TFwReq, TFwRes, TFwNext> {

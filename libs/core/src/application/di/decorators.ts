@@ -6,13 +6,17 @@ export function Injectable(token: symbol) {
 	// Console.debug('Injectable decorator called for token:', token.toString());
 	return (target: any): void => {
 		const container = DIContainer.getInstance();
+
+		if (!container.hasRegistration(token)) {
+			const component: IContainerComponent = {
+				token,
+				value: target,
+			};
+			container.register(component);
+		}
 		Reflect.defineMetadata(INJECT_METADATA_KEY, token, target);
-		const component: IContainerComponent = {
-			token,
-			value: target,
-		};
-		container.register(component);
-		return target;
+
+		// Return target;
 	};
 }
 

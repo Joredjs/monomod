@@ -1,26 +1,13 @@
 import {
 	IDomainGroup,
 	IPortFrameworkService,
-	IPortLogs,
 	IPortResponseResult,
 	IRequestParams,
 	IResponseParams,
 	IServices,
 	IServicesDependencies,
-	SYMBOLS,
 	TMyModulesInstances,
 } from '@monomod/core/domain';
-import {
-	Inject,
-	ResponseResult,
-	ServiceCrypto,
-	ServiceEncode,
-	ServiceHeaders,
-	ServiceMail,
-	ServiceSchema,
-	ServiceUseCases,
-	normalizeError,
-} from '@monomod/core/application';
 import {
 	ModuleExampleController,
 	ModuleExamplePort,
@@ -32,6 +19,16 @@ import {
 	PortRoutes,
 	ServiceLayers,
 } from '../application';
+import {
+	ResponseResult,
+	ServiceCrypto,
+	ServiceEncode,
+	ServiceHeaders,
+	ServiceMail,
+	ServiceSchema,
+	ServiceUseCases,
+	normalizeError,
+} from '@monomod/core/application';
 import { clientAjv, clientCrypto, clientNodemailer } from './dependencies';
 
 export class AdapterApi<

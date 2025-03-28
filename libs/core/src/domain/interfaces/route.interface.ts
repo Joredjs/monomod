@@ -18,6 +18,7 @@ export interface IRoute {
 export interface ICorsInfo {
 	dnsDomains: string[];
 	localhostAllowed: boolean;
+	noOriginAllowed: boolean;
 }
 
 export interface IDomainGroup {

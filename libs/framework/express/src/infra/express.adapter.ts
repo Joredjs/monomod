@@ -12,11 +12,19 @@ import { ApiCore } from '@monomod/gateway';
 
 @Injectable(SYMBOLS.framework.IFrameworkAdapter)
 export class AdapterExpress implements IPortFrameworkAdapter {
-	@Inject(SYMBOLS.framework.IFrameworkFactory)
-	private appFactory: IPortFrameworkFactory;
+	readonly #debug: IPortFrameworkDebug;
 
-	@Inject(SYMBOLS.framework.IFrameworkDebug)
-	private debug: IPortFrameworkDebug;
+	readonly #appFactory: IPortFrameworkFactory;
+
+	constructor(
+		@Inject(SYMBOLS.framework.IFrameworkFactory)
+		appFactory: IPortFrameworkFactory,
+		@Inject(SYMBOLS.framework.IFrameworkDebug)
+		debug: IPortFrameworkDebug
+	) {
+		this.#appFactory = appFactory;
+		this.#debug = debug;
+	}
 
 	getApps(): IMicroApp {
 		const apps: IMicroApp = {};
@@ -28,10 +36,10 @@ export class AdapterExpress implements IPortFrameworkAdapter {
 
 			domains.forEach((domainGroup) => {
 				const appName = `${domainGroup.name}App`;
-				apps[appName] = this.appFactory.createMicroApp(domainGroup);
+				apps[appName] = this.#appFactory.createMicroApp(domainGroup);
 			});
 
-			this.debug.routes(apps);
+			this.#debug.routes(apps);
 		} catch (error) {
 			throw normalizeError(error);
 		}

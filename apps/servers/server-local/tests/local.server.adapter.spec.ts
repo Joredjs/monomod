@@ -1,31 +1,25 @@
-import {
-	createMockLogs,
-	createMockMessages,
-	createMockErrors,
-	createMockMicroApp,
-	createMockServer,
-	createMockErrorMapping,
-} from './mocks';
+import { createMockMicroApp, createMockServer } from './mocks';
 import { AdapterServerLocal } from '@monomod/server-local/application';
+import {
+	createMockIErrorMapping,
+	mockPortErrors,
+	mockPortLogs,
+	mockPortMessages,
+} from '@monomod/core/mocks';
+import { IPortErrors, IPortLogs } from '@monomod/core/domain';
 
 describe('AdapterServerLocal', () => {
 	let adapter: AdapterServerLocal;
-	let mockLogs: ReturnType<typeof createMockLogs>;
-	let mockMessages: ReturnType<typeof createMockMessages>;
-	let mockErrors: ReturnType<typeof createMockErrors>;
 	let mockServer: ReturnType<typeof createMockServer>;
 
 	beforeEach(() => {
-		mockLogs = createMockLogs();
-		mockMessages = createMockMessages();
-		mockErrors = createMockErrors();
+		jest.resetAllMocks();
 		mockServer = createMockServer();
-
-		adapter = new AdapterServerLocal(mockLogs, mockErrors);
+		adapter = new AdapterServerLocal(mockPortLogs, mockPortErrors);
 		Object.assign(adapter, {
-			logs: mockLogs,
-			messages: mockMessages,
-			errors: mockErrors,
+			logs: mockPortLogs,
+			messages: mockPortMessages,
+			errors: mockPortErrors,
 		});
 	});
 
@@ -34,7 +28,7 @@ describe('AdapterServerLocal', () => {
 			const puerto = 3000;
 			const microApp = createMockMicroApp('example', puerto);
 			const listenMessage = `Server listening on port ${puerto}`;
-			mockMessages.getMessage.mockReturnValue(listenMessage);
+			mockPortMessages.getMessage.mockReturnValue(listenMessage);
 
 			await adapter.start(microApp);
 
@@ -48,16 +42,12 @@ describe('AdapterServerLocal', () => {
 		it('should throw error for invalid microapp', async () => {
 			const invalidMicroApp = null;
 			const errorMessage = 'Invalid microapp configuration';
-			mockMessages.getMessage.mockReturnValue(errorMessage);
+			mockPortMessages.getMessage.mockReturnValue(errorMessage);
 
 			try {
 				await adapter.start(invalidMicroApp);
 			} catch (err) {
-				const errObj = createMockErrorMapping(
-					invalidMicroApp,
-					'badConfigured',
-					errorMessage
-				);
+				const errObj = createMockIErrorMapping('badConfigured');
 				// expect(err).toMatchObject(errObj);
 			}
 		});

@@ -1,52 +1,46 @@
 import { ServiceCrypto } from '@monomod/core/application';
+import {
+	createMockCipher,
+	createMockCryptoClient,
+	createMockDecipher,
+	mockPortCryptoClient,
+} from '../../mocks';
 
 describe('ServiceCrypto', () => {
 	let service: ServiceCrypto;
-	const mockClientCrypto = {
-		encrypt: jest.fn(),
-		decrypt: jest.fn(),
-		hash: jest.fn(),
-		random: jest.fn(),
-		getCiphers: jest.fn(),
-		getInfo: jest.fn(),
-	};
+	let mockCryptoClient: ReturnType<typeof createMockCryptoClient>;
+	let mockCipher: ReturnType<typeof createMockCipher>;
+	let mockDecipher: ReturnType<typeof createMockDecipher>;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		process.env.CRYPTO_aad = 'test-aad';
-		process.env.CRYPTO_key = 'test-key';
+		process.env.CRYPTO_aad = 'myencryptionkey';
+		process.env.CRYPTO_key = '123456789';
 
-		// Mock de funciones básicas
-		mockClientCrypto.getCiphers.mockReturnValue(['aes-256-ccm']);
-		mockClientCrypto.getInfo.mockReturnValue({
-			keyLength: 32,
-			ivLength: 16,
-		});
-		mockClientCrypto.hash.mockReturnValue({
-			update: jest.fn().mockReturnThis(),
-			digest: jest.fn().mockReturnValue('mocked-hash'),
-		});
-		mockClientCrypto.random.mockReturnValue(Buffer.from('random-bytes'));
+		mockCryptoClient = createMockCryptoClient(
+			['aes-256-ccm'],
+			{
+				keyLength: 32,
+				ivLength: 16,
+			},
+			'random-bytes'
+		);
+		mockCipher = createMockCipher();
+		mockDecipher = createMockDecipher();
 
-		service = new ServiceCrypto(mockClientCrypto);
+		service = new ServiceCrypto(mockCryptoClient);
 	});
 
 	describe('encrypt', () => {
 		it('should encrypt string data successfully', async () => {
 			const testData = 'test-data';
-			const mockCipher = {
-				update: jest.fn().mockReturnValue(Buffer.from('encrypted')),
-				final: jest.fn(),
-				setAAD: jest.fn(),
-				getAuthTag: jest.fn().mockReturnValue(Buffer.from('auth-tag')),
-			};
 
-			mockClientCrypto.encrypt.mockReturnValue(mockCipher);
+			mockPortCryptoClient.encrypt.mockReturnValue(mockCipher);
 
 			const result = service.encrypt(Buffer.from(testData));
 
 			expect(result).toBeDefined();
-			expect(mockClientCrypto.encrypt).toHaveBeenCalled();
+			expect(mockPortCryptoClient.encrypt).toHaveBeenCalled();
 			expect(mockCipher.setAAD).toHaveBeenCalled();
 			expect(mockCipher.getAuthTag).toHaveBeenCalled();
 
@@ -56,24 +50,18 @@ describe('ServiceCrypto', () => {
 
 		it('should encrypt object data successfully', () => {
 			const testData = { key: 'value' };
-			const mockCipher = {
-				update: jest.fn().mockReturnValue(Buffer.from('encrypted')),
-				final: jest.fn(),
-				setAAD: jest.fn(),
-				getAuthTag: jest.fn().mockReturnValue(Buffer.from('auth-tag')),
-			};
 
-			mockClientCrypto.encrypt.mockReturnValue(mockCipher);
+			mockPortCryptoClient.encrypt.mockReturnValue(mockCipher);
 
 			const result = service.encrypt(Buffer.from(JSON.stringify(testData)));
 
 			expect(result).toBeDefined();
-			expect(mockClientCrypto.encrypt).toHaveBeenCalled();
+			expect(mockPortCryptoClient.encrypt).toHaveBeenCalled();
 		});
 
 		it('should handle encryption errors', () => {
 			const testData = 'test-data';
-			mockClientCrypto.encrypt.mockImplementation(() => {
+			mockPortCryptoClient.encrypt.mockImplementation(() => {
 				throw new Error('Encryption failed');
 			});
 
@@ -91,19 +79,12 @@ describe('ServiceCrypto', () => {
 				})
 			).toString('base64');
 
-			const mockDecipher = {
-				update: jest.fn().mockReturnValue('decrypted'),
-				final: jest.fn().mockReturnValue(''),
-				setAAD: jest.fn(),
-				setAuthTag: jest.fn(),
-			};
-
-			mockClientCrypto.decrypt.mockReturnValue(mockDecipher);
+			mockPortCryptoClient.decrypt.mockReturnValue(mockDecipher);
 
 			const result = service.decrypt(encryptedData);
 
 			expect(result).toBe('decrypted');
-			expect(mockClientCrypto.decrypt).toHaveBeenCalled();
+			expect(mockPortCryptoClient.decrypt).toHaveBeenCalled();
 			expect(mockDecipher.setAAD).toHaveBeenCalled();
 			expect(mockDecipher.setAuthTag).toHaveBeenCalled();
 		});
@@ -128,7 +109,7 @@ describe('ServiceCrypto', () => {
 				})
 			).toString('base64');
 
-			mockClientCrypto.decrypt.mockImplementation(() => {
+			mockPortCryptoClient.decrypt.mockImplementation(() => {
 				throw new Error('Decryption failed');
 			});
 

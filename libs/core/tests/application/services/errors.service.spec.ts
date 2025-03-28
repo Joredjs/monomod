@@ -1,17 +1,16 @@
 // @monomod/core/tests/application/services/errors.service.spec.ts
 import { IErrorMapping } from '@monomod/core/domain';
 import { ServiceErrors } from '@monomod/core/application';
+import { mockPortMessages } from '../../mocks';
 
 describe('ServiceErrors', () => {
 	let service: ServiceErrors;
-	const mockMessages = {
-		getMessage: jest.fn(),
-		getContext: jest.fn(),
-	};
+	// let mockMessages: jest.Mocked<IPortMessages>;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		service = new ServiceErrors(mockMessages);
+		// mockMessages = createMockMessages();
+		service = new ServiceErrors(mockPortMessages);
 	});
 
 	describe('normalize', () => {
@@ -22,11 +21,11 @@ describe('ServiceErrors', () => {
 				messageKey: 'test.error',
 			};
 			const translatedMessage = 'Error traducido';
-			mockMessages.getMessage.mockReturnValue(translatedMessage);
+			mockPortMessages.getMessage.mockReturnValue(translatedMessage);
 
 			const result = service.normalize(errorInfo);
 
-			expect(mockMessages.getMessage).toHaveBeenCalledWith(
+			expect(mockPortMessages.getMessage).toHaveBeenCalledWith(
 				errorInfo.messageKey
 			);
 			expect((result as IErrorMapping).text).toBe(translatedMessage);

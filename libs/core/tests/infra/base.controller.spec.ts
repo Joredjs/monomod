@@ -1,18 +1,16 @@
-import { mockResponseResult, mockServiceFramework } from '../mocks';
+import { mockPortResponseResult, mockPortFrameworkService } from '../mocks';
 import { BaseController } from '@monomod/core/infra';
+import { mockTransactionInfo, mockValidations } from '../mocks/services.mock';
 
 describe('BaseController', () => {
 	let controller: BaseController<any, any>;
-	const mockValidations = {
-		manager: jest.fn(),
-	};
 
 	beforeEach(() => {
 		jest.clearAllMocks();
 		controller = new BaseController(
 			mockValidations,
-			mockServiceFramework,
-			mockResponseResult
+			mockPortFrameworkService,
+			mockPortResponseResult
 		);
 	});
 
@@ -21,19 +19,10 @@ describe('BaseController', () => {
 		const mockResponse = { locals: {} };
 
 		it('should handle successful request', async () => {
-			// Setup
-			const mockTransactionInfo = {
-				handler: jest.fn().mockResolvedValue({
-					code: 200,
-					body: 'success',
-				}),
-			};
 			mockValidations.manager.mockReturnValue(mockTransactionInfo);
 
-			// Act
 			await controller.handler(mockRequest, mockResponse);
 
-			// Assert
 			expect(mockValidations.manager).toHaveBeenCalledWith(
 				mockRequest,
 				mockResponse
@@ -41,7 +30,7 @@ describe('BaseController', () => {
 			expect(mockTransactionInfo.handler).toHaveBeenCalledWith(
 				mockTransactionInfo
 			);
-			expect(mockServiceFramework.returnInfo).toHaveBeenCalledWith({
+			expect(mockPortFrameworkService.returnInfo).toHaveBeenCalledWith({
 				resBody: { code: 200, body: 'success' },
 				resInstance: mockResponse,
 				status: 200,

@@ -1,21 +1,21 @@
 import {
 	DEFAULTS,
 	ERRORS,
-	ICryptoClient,
 	ICryptoOptions,
 	ICryptoRequest,
 	ICryptoResponse,
 	IPortCrypto,
+	IPortCryptoClient,
 } from '../../domain';
 import { CipherCCMTypes } from 'crypto';
 import { normalizeError } from '../errors';
 
 export class ServiceCrypto implements IPortCrypto {
-	#client: ICryptoClient;
+	#client: IPortCryptoClient;
 
 	#cryptoOptions: ICryptoOptions;
 
-	constructor(client: ICryptoClient, options?: ICryptoOptions) {
+	constructor(client: IPortCryptoClient, options?: ICryptoOptions) {
 		this.#client = client;
 
 		this.#cryptoOptions = {
